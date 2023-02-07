@@ -17,6 +17,66 @@
 构建出支气管气道树的分割模型后，输入患者的肺部CT扫描图像数据，就可以输出包含精确的三维空间信息的支气管气道树结构。将这个支气管气道树的结构模型“喂给”支气管镜导航机器人
 (Bronchoscopy and endobronchical navigation robot)，在医生的监视与操纵下，机器人就可以被引导进入支气管管腔内，进行疾病的诊断与治疗了。
 
+{\heiti 支气管气道树的分支结构。} 本文研究支气管气道树的分割，有必要先了解一下支气管数状结构的气道解剖结构。从图\ref{fig:branches_of_bronchial_tree}中可以看出，支气管气道树的分支结构非常复杂，从气管(Trachea)往下分为左、右两支主支气管(Main bronchus)，左右两支主支气管各自分岔为上叶支气管(Superior lobar bronchus)、中叶支气管(Middle lobar bronchus)和下叶支气管(Inferior
+ lobar bronchus)。在每个肺叶内，起于肺叶的支气管继续分岔为多个肺段支气管(Segmental bronchi)。肺段支气管最后分为更细小的支气管到达肺泡。
+
+\begin{figure}[!htp]
+	\centering
+	\includegraphics[width=0.9 \textwidth]{branches_of_the_bronchial_tree}
+	\bicaption[肺部支气管气道树的分支结构]
+		{肺部支气管气道树的分支结构\parencite{humananatomy2nd}}
+		{The branch structure of pulmonary bronchial airway tree}
+	\label{fig:branches_of_bronchial_tree}	
+\end{figure}
+
+如此繁复，从粗到细不断分化，面对如此稠密细小的支气管气道树，进行分割前需要经验丰富的临床专家进行非常细粒度的标注。手工标注耗费大量时间，
+成本高昂且支气管越细小，标注越困难，易于出错。 标注任务艰巨繁重，急需开发新的算法或模型来帮助临床医生解决支气管气道树分割的问题。
+
+\section{本研究的应用前景}
+
+肺部支气管气道树的自动化分割是呼吸系统肺部疾病诊断治疗的一个重要问题和研究领域，在实际应用中具有非常重要的作用，提高医疗技术水平。当前，在
+作者所在的医疗机器人行业，本研究项目有如下的应用前景：
+\begin{itemize}
+	\item {\heiti 导管手术机器人 }
+	由于肺部支气管气道树三维模型具有精确的空间位置信息，CT扫描建立的坐标系赋予DICOM医疗图像每个像素都有相应的坐标位置信息，如图\ref{fig:coordinate}所示。
+	\begin{figure}[!htp]
+		\centering
+		\includegraphics{Coordinate_sytems.png}
+		\bicaption[CT扫描仪坐标系，人体坐标系和DICOM图像坐标系对应关系]
+			{CT扫描仪坐标系，人体坐标系和DICOM图像坐标系对应关系\parencite{ctcoordinatesys2022, adaloglou2020dicomcoordinates}}
+			{CT scanner, human body and DICOM imaging coordinates}
+		\label{fig:coordinate}
+	\end{figure}
+	这样，分割出来的支气管气道树三维模型其每一个体素(Voxel)就具有精确的坐标位置信息，就可以计算出支气管管腔的中心线位置。
+	
+	导管机器人就是沿着管腔中心线的路径移动，导航至靶标位置。目前，美国Intuitive Surgical Company已经开发出肺部导管机器人ION，并投入了临床应用。
+	\begin{figure}[!htp]
+		\centering
+		\includegraphics[width=0.45 \textwidth]{ION_robot_navigating}
+		\hspace{2mm}
+		\includegraphics[width=0.45 \textwidth]{ION_bronchoscopy_robot.jpg}
+		\bicaption[ION肺部导管机器人]
+			{ION肺部导管机器人\parencite{ionrobot2021}}
+			{ION bronchoscopy robot}
+		\label{fig:ION_robot}
+	\end{figure}
+	
+	作者所在的工作单位正在开发国产的肺部导管机器人，已经完成全国首例机器人辅助经支气管镜肺结节活检手术。
+	
+	当然导管手术机器人除了依赖支气管气道树三维模型导航，还需要辅助术中实时定位、支气管镜视觉导航的技术。
+	
+	
+	\item {\heiti 智慧医疗辅助诊断}
+	基于CT扫描图像的医疗图像分割需要高质量的标注数据，这很大程度上依赖经验丰富的临床医生/专家的专业知识。 为了减轻临床医生的标注压力和负担，同时亦为了减少误诊和漏诊
+	的情况发生，医疗图像分割技术在医学辅助诊断上已经获得越来越多的应用。 具体到支气管气道树分割技术上，已经被用来辅助诊断一些慢性阻塞性肺部疾病COPD, 支气管扩张和肺气肿
+	等一些肺部疾病。 随着AI图像分割技术的不断的进步，可以辅助临床医生更准确更高效地诊断疾病，逐渐达成智慧医疗，提高医疗技术水平和能力。
+\end{itemize}
+
+
+
+\section{研究现状和发展趋势}
+
+
 
 
 
