@@ -77,6 +77,232 @@
 \section{研究现状和发展趋势}
 
 
+图像分割技术已经发展很多年，从过去十年的发展来看，图像分割技术的发展经历了传统的图像分割方法和基于深度学习的分割方法2个阶段。传统的图像分割方法产生了一些比较经典的算法，
+诸如基于阈值的最大类间方差Otsu方法\cite{otsu1979threshold}，基于聚类的K-Means算法\cite{macqueen1965some}等。而随着近年来深度学习的发展，深度学习应用于图像分割
+则是涌现了大量优秀的分割方法。Jonathan Long等人\cite{long2015fully}首次提出的全卷积网络(Fully Convolution Neural Network, FCN), 最经典的当属Olaf Ronneberger等人\cite{ronneberger2015u}提出的UNet结构，以及在UNet基础上改进提出的V-Net\cite{milletari2016v}结构模型、U-Net++\cite{zhou2019unet++}
+结构模型，还有针对医疗影像这类三维体数据的分割模型3D UNet结构\cite{cciccek20163d}，诸如这些基于深度学习的图像分割模型，其性能、精度、鲁棒性等指标都在不断进步，发展非常活跃。
+
+下面分别介绍传统的图像分割方法、基于深度学习的图像分割方法和具体针对肺部支气管气道树的分割方法，了解他们的基本思想和发展趋势。
+
+	\subsection{传统的图像分割方法}
+	
+	传统图像分割的方法是根据图像特征设计相应的算法对每个像素点进行分类，这些图像的特征包括颜色、纹理、亮度和形状等，其本质是根据特定标准确定一个合理的阈值，将每一个
+	像素点与此阈值比较，以确定每一个像素点的分类。综合分析传统的图像分割方法，我们可以总结出如下的划分：
+	\begin{enumerate}
+		\item 阈值法
+		
+		阈值法是根据图像的灰度特征信息进行与阈值比较的计算。对欲分割的图像设定一个或多个（不同）的阈值，然后将图像上的每一个像素点与阈值进行比较，得到每个像素点所属的
+		类别。这方面主要的工作有Sauvola法\cite{sauvola2000adaptive}、最大类间方差Otsu法\cite{otsu1979threshold}等。医疗图像（DICOM格式\cite{mustra2008overview}）都是典型的灰度图\ref{fig:medical_image}。
+		\begin{figure}[!htp]
+			\centering
+			\begin{subfigure}{\textwidth}
+				\centering
+				\includegraphics[scale=0.8]{DICOM image(axial view)}
+				\caption{轴向面视图}
+			\end{subfigure}
+			
+			\vspace{2mm}
+			
+			\begin{subfigure}{\textwidth}
+				\centering
+				\includegraphics[scale=0.8]{DICOM image(coronal view)}
+				\caption{冠状面视图}
+			\end{subfigure}
+			\bicaption[医疗图像(DICOM格式的灰度图)]
+				{医疗图像(DICOM格式的灰度图)}
+				{Medical image in DICOM format}
+			\label{fig:medical_image}
+		\end{figure}
+		
+		\item 区域法
+		
+		区域法是根据像素的灰度和纹理信息，以区域一致性规则进行分割。其包括：区域生长法、区域分裂、区域合并法。区域生长法通过指定一个种子点，向生长区域不断地添加满足
+		约束条件的新的像素，直到填满或无法再添加。这些新添加进来的像素即属于一个类别，在不同的生长区域的像素从属于不同的类别。区域法初始形式简单，计算速度也快，它比较
+		适合灰度均匀的图像分割。
+		
+		\item 聚类法
+		
+		聚类方法则根据像素间的特征相似程度进行迭代式的分类，将特征值相近的一组像素归为一个类别，然后计算这一组像素的中心位置。通过不断更新迭代直到完成所有像素的分类。
+		这种方法的代表性工作便是K-Means算法\cite{macqueen1965some}，聚类法使同类像素样本尽可能相近，而异类像素样本则拉大差异。聚类法的实现较为简单，但缺点就是
+		对噪声很敏感，稍微不同的聚类中心和类别选择等因素都会导致分割结果差异，鲁棒性较差。
+		
+		\item 图论法
+		
+		图论法源于聚类的分割方法，它是将图像转换成带权重的无向图，将无向图划分为各种子图，使每个子图内部保持最大相似性，而子图之间则是差异尽可能大，每个子图代表
+		一个类别。相关的图论分割方法就有归一化图分割、最小图分割、迭代式图分割等。
+	\end{enumerate}
+	
+	\subsection{基于深度学习的图像分割方法}
+	
+	传统的图像分割方法围绕着图像的某一个具体特征进行精心挑选，设计与之匹配的算法，不具备广泛性和普遍性。 对于医疗的CT扫描图像，如前文图\ref{fig:medical_image}
+	所述的都是对比度小的灰度图，传统的图像分割方法对于医疗图像不再适合。
+	
+	近年来随着深度学习技术在计算机视觉领域的应用，飞速发展并取得显著的进步。 基于深度卷积神经网络的语义分割方法对图像中的所有像素进行精确预测，预测像素属于哪一个类别
+	的概率，赋予其标签，通过不断地迭代，从而分割出来图像。自美国加州大学UC Berkeley的Jonathan Long等人\cite{long2015fully}首次提出端到端、像素到像素的全卷积网络
+	Fully Convolution Networks for Semantic Segmentation，取得的图像分割效果明显超过以往传统的图像分割法。以此为标志，打开了深度学习在图像分割领域应用的新通
+	道。全卷积网络FCN由多个卷积层和池化层组合而成，学习图像中每个像素的语义信息，最后生成像素级的类别概率预测图。
+	\begin{figure}[!htp]
+		\centering
+		\includegraphics[width = 0.7 \textwidth]{FCN网络的结构}
+		\bicaption[FCN网络的结构]
+			{FCN网络的结构\cite{long2015fully}}
+			{The structure of Fully Convolution Networks}
+		\label{fig:FCN}
+	\end{figure}
+	
+	但由于下采样路径上图像分辨率显著被降低，使得最后的预测结果比较粗糙。正如图\ref{fig:FCN}中分割结果只能看到2个物体的轮廓，无法看出是一只猫或是一只狗。在此基础上，
+	Hyeonwoo Noh等人\cite{Noh2015LearningDN}添加进去了上采样路径，亦即反卷积Deconvolution，同步加入反池化Unpooling，将图像分辨率逐步恢复到原来的分辨率。
+	\begin{figure}[!htp]
+		\centering
+		\includegraphics[width = 0.7 \textwidth]{Convolution_and_Deconvolution_network}
+		\bicaption[卷积下采样路径 vs. 反卷积上采样路径]
+			{卷积下采样路径 vs. 反卷积上采样路径\cite{Noh2015LearningDN}}
+			{Convolutuion in down-samping path vs. Deconvolution in up-samping path}
+		\label{fig:conv_deconv}
+	\end{figure}
+	\begin{figure}[!htp]
+		\centering
+		\includegraphics[width=0.6 \textwidth]{Deconvolution_and_unpooling_operations}
+		\bicaption[卷积与反卷积，池化与反池化的操作]
+			{卷积与翻卷积、池化与反池化的操作\cite{Noh2015LearningDN}}
+			{The operations of convolution/deconvolution, and pooling/unpooling}
+		\label{fig:conv_deconv_pooling_unpooling}
+	\end{figure}
+	
+	图\ref{fig:conv_deconv}中的Convolution network与Deconvolution network也分别被成为编码器Encoder与解码器Decoder，这两条对称路径构成了Encoder-Deconder
+	图像语义分割网络架构。
+	
+	后来，Olaf Ronneberger等人\cite{ronneberger2015u}则进一步改进，保留下采样路径用于提取深度特征信息，而在上采样路径则加入了跳跃连接,将下采样获取的深度特征信息
+	跳跃过来与上采样拼接起来，实现特征图融合。这就是经典的U-Net网络结构。U-Net网络实现了更精细的图像语义分割结果。
+	
+	\begin{figure}[!htp]
+		\centering
+		\includegraphics[width=0.7\textwidth]{UNet_architecture}
+		\bicaption[经典的图像分割U-Net网络结构]
+			{经典的图像分割U-Net网络结构\cite{ronneberger2015u}}
+			{The classic U-Net architecture for image segmentation}
+		\label{fig:UNet}
+	\end{figure}
+	
+	U-Net网络目前已成为医疗图像分割任务的基础网络，有很多研究人员在U-Net基础上改进，应用在医疗图像的分割。比如肝脏、肺癌结节、乳腺肿块等不同的疾病。Li Xiaomeng等人
+	\cite{Li2017HDenseUNetHD}提出一种基于U-Net混合式的稠密连接的新型网络结构H-DenseUNet用于肝癌的医疗CT图像的分割。它将UNet的保留低卷积层的细节特征，UNet网络
+	越来越深的层次增加了训练的长耗时，而H-DenseUNet又可以解决这些深层网络的长耗时训练困难。
+	
+	医疗CT扫描图像基本上都是三维体数据，基于此又引申发展出3D CNN， Jose Dolz等人\cite{Dolze3DFCN}就提出了3D Fully convolutional networks, {\"O}zg{\"u}n {\c{C}}i{\c{c}}ek等人\cite{cciccek20163d}则提出3D UNet用于稠密的体数据分割。如此众多的分割网络，各个作者在UNet的基础上加上自己的创新，形成一个个独具特色的新型
+	网络结构。那有没有一种广泛通用的网络来做图像分割呢？ Mathias Perslev等人\cite{PerslevGeneralUNetFusion}就提出了这样的一个想法和实施方案
+	One Network to segment them all一种通用	的轻量级的网络结构来精确分割3D图像。它是在UNet网络之后再加上一个Fusion model实现的。
+	\begin{figure}[!htp]
+		\centering
+		\includegraphics[width=0.8\textwidth]{Genral_UNet}
+		\bicaption[一种通用的轻量化的UNet网络]
+			{一种通用的轻量化的UNet网络\cite{PerslevGeneralUNetFusion}}
+			{A general, lightweight UNet to segment them all}
+		\label{fig:Genral_UNet}
+	\end{figure}
+	
+	最近三年，新冠肺炎疫情肆虐全球，为了抗击疫情，许多研究人员的兴趣都被COVID-19吸引过去，争相研究感染了新冠病毒的肺部CT影像，以期帮助医疗专家、临床医生理解被感染
+	后的肺部症状，预测是否感染了新冠肺炎。Zahid Ullah等人\cite{Ullah2023DenselyAM}提出一种稠密型注意力机制的网络来检测COVID-19的感染情况. 其网络结构（图
+	\ref{fig:COVID19}）在卷积层后插入通道注意力层和稠密区块层，使其聚焦于感兴趣的感染区域，从而高效地检测出感染情况。
+	\begin{figure}[!htp]
+		\centering
+		\includegraphics[width=0.5\textwidth]{Densely_attention_mechanism_based_network}
+		\bicaption[稠密型注意力机制网络用来检测 COVID-19的感染情况]
+			{稠密型注意力机制网络用来检测 COVID-19的感染情况\cite{Ullah2023DenselyAM}}
+			{Densely attention mechanism network to detect the COVID-19 infection}
+		\label{fig:COVID19}
+	\end{figure}
+	通过跟正常肺部影像和普通肺炎所造成阴影区域对比，比较明确地指出COVID-19感染区域(图\ref{fig:COVID19_detection}中COVID-19一栏所高亮显示的)，展现给临床医生，辅助诊断是否感染新冠肺炎。
+	\begin{figure}[!htp]
+		\centering
+		\includegraphics[width=0.8\textwidth]{Detect_COVID19_infection}
+		\bicaption[对比正常肺部阴影、普通肺炎和COVID-19新冠肺炎的阴影，突出新冠肺炎感染区域]
+			{对比正常肺部阴影、普通肺炎和COVID-19新冠肺炎的阴影，突出新冠肺炎感染区域\cite{Ullah2023DenselyAM}}
+			{Highlight the COVID-19 infection area by comparing with normal and pneumonia}
+		\label{fig:COVID19_detection}
+	\end{figure}
+	
+	最新的进展是，随着NLP的Transformer模型\cite{Devlin2019BERTPO, NIPS2017Attention}取得成功后，NVIDIA的Ali Hatamizadeh和Vanderbilt Unversity的Yucheng Tang
+	等人\cite{unetr}受此启发，率先将Transformer引入3D medical image segmentation中来，提出了UNETR网络结构（见图\ref{fig:UNETR}所示），实现了State-of-the-art (SOTA)医疗图像
+	分割性能新记录。
+	\begin{figure}[!htp]
+		\centering
+		\includegraphics[width=0.6\textwidth]{Overview_of_UNETR}
+		\bicaption[UNET网络基本结构]
+			{UNETR网络基本结构\cite{unetr}}
+			{The basic structure of UNETR network}
+		\label{fig:UNETR}
+	\end{figure}
+	
+	综上所述，基于深度学习的医疗图像分割技术发展非常活跃，研究进展迅速，进步巨大。
+	
+	
+	
+	\subsection{针对肺部支气管气道树的医疗图像分割方法}
+	对于肺部CT图像的分割，卷积神经网络CNN早就应用在上面了。最知名的LUng Nodule Analysis 2016大挑战竞赛要求参赛选手分割出Lung CT图像的肺结节，判断肺结节是
+	良性的还是恶性的，从而筛选出肺癌疑似患者，进行早期预防和针对性治疗。从LUNA16大挑战竞赛里诞生了两个具有重要影响力的公开数据集LUNA和LIDC-IDRI。 类似于LUNA
+	大挑战竞赛，针对肺部支气管气道树的分割也有一个比较著名的EXtraction of Ariways from CT 2009 (EXACT'09)竞赛项目。Marleen de Bruijne等
+	人\cite{Lo2012ExtractionOA}在2009年发起了EXACT'09这个竞赛项目，其研究目标就是提供一个公开通用的数据集，鼓励参赛选手开发出创新性算法，从胸部CT扫描图像中提取出
+	支气管气道树，评比参赛选手门提交的算法。
+	
+	自EXACT'09大挑战竞赛的激励后涌现了大量的研究成果， Zhao Tianyi等人\cite{Zhao2019BronchusSA}开发出来一个两阶段2D + 3D的神经网络和一个基于线性规划的气道
+	分割跟踪算法
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
