@@ -97,7 +97,7 @@
 			\centering
 			\begin{subfigure}{\textwidth}
 				\centering
-				\includegraphics[scale=0.8]{DICOM image(axial view)}
+				\includegraphics[scale=0.5]{DICOM image(axial view)}
 				\caption{轴向面视图}
 			\end{subfigure}
 			
@@ -105,7 +105,7 @@
 			
 			\begin{subfigure}{\textwidth}
 				\centering
-				\includegraphics[scale=0.8]{DICOM image(coronal view)}
+				\includegraphics[scale=0.5]{DICOM image(coronal view)}
 				\caption{冠状面视图}
 			\end{subfigure}
 			\bicaption[医疗图像(DICOM格式的灰度图)]
@@ -143,7 +143,7 @@
 	道。全卷积网络FCN由多个卷积层和池化层组合而成，学习图像中每个像素的语义信息，最后生成像素级的类别概率预测图。
 	\begin{figure}[!htp]
 		\centering
-		\includegraphics[width = 0.7 \textwidth]{FCN网络的结构}
+		\includegraphics[width = 0.5 \textwidth]{FCN网络的结构}
 		\bicaption[FCN网络的结构]
 			{FCN网络的结构\cite{long2015fully}}
 			{The structure of Fully Convolution Networks}
@@ -203,7 +203,7 @@
 	最近三年，新冠肺炎疫情肆虐全球，为了抗击疫情，许多研究人员的兴趣都被COVID-19吸引过去，争相研究感染了新冠病毒的肺部CT影像，以期帮助医疗专家、临床医生理解被感染
 	后的肺部症状，预测是否感染了新冠肺炎。Zahid Ullah等人\cite{Ullah2023DenselyAM}提出一种稠密型注意力机制的网络来检测COVID-19的感染情况. 其网络结构（图
 	\ref{fig:COVID19}）在卷积层后插入通道注意力层和稠密区块层，使其聚焦于感兴趣的感染区域，从而高效地检测出感染情况。
-	\begin{figure}[!htp]
+	\begin{figure}[htp]
 		\centering
 		\includegraphics[width=0.5\textwidth]{Densely_attention_mechanism_based_network}
 		\bicaption[稠密型注意力机制网络用来检测 COVID-19的感染情况]
@@ -212,21 +212,21 @@
 		\label{fig:COVID19}
 	\end{figure}
 	通过跟正常肺部影像和普通肺炎所造成阴影区域对比，比较明确地指出COVID-19感染区域(图\ref{fig:COVID19_detection}中COVID-19一栏所高亮显示的)，展现给临床医生，辅助诊断是否感染新冠肺炎。
-	\begin{figure}[!htp]
+	\begin{figure}[ht]
 		\centering
-		\includegraphics[width=0.8\textwidth]{Detect_COVID19_infection}
-		\bicaption[对比正常肺部阴影、普通肺炎和COVID-19新冠肺炎的阴影，突出新冠肺炎感染区域]
-			{对比正常肺部阴影、普通肺炎和COVID-19新冠肺炎的阴影，突出新冠肺炎感染区域\cite{Ullah2023DenselyAM}}
+		\includegraphics[width=0.4\textwidth]{Detect_COVID19_infection}
+		\bicaption[对比正常肺部、普通肺炎和COVID-19新冠肺炎的阴影，突出新冠肺炎感染区域]
+			{对比正常肺部、普通肺炎和COVID-19新冠肺炎的阴影，突出新冠肺炎感染区域\cite{Ullah2023DenselyAM}}
 			{Highlight the COVID-19 infection area by comparing with normal and pneumonia}
 		\label{fig:COVID19_detection}
 	\end{figure}
 	
-	最新的进展是，随着NLP的Transformer模型\cite{Devlin2019BERTPO, NIPS2017Attention}取得成功后，NVIDIA的Ali Hatamizadeh和Vanderbilt Unversity的Yucheng Tang
-	等人\cite{unetr}受此启发，率先将Transformer引入3D medical image segmentation中来，提出了UNETR网络结构（见图\ref{fig:UNETR}所示），实现了State-of-the-art (SOTA)医疗图像
-	分割性能新记录。
-	\begin{figure}[!htp]
+	最新的进展是，随着NLP的Transformer模型\cite{Devlin2019BERTPO, NIPS2017Attention}取得成功后，受此启发，NVIDIA的Ali Hatamizadeh联合
+	Vanderbilt University的Yucheng Tang等人\cite{unetr}率先将Transformer引入3D medical image segmentation中来，提出了UNETR网络结构
+	（见图\ref{fig:UNETR}所示），实现了State-of-the-art (SOTA)医疗图像分割性能新记录。
+	\begin{figure}[hbp]
 		\centering
-		\includegraphics[width=0.6\textwidth]{Overview_of_UNETR}
+		\includegraphics[scale=0.2]{Overview_of_UNETR}
 		\bicaption[UNET网络基本结构]
 			{UNETR网络基本结构\cite{unetr}}
 			{The basic structure of UNETR network}
@@ -239,166 +239,176 @@
 	
 	\subsection{针对肺部支气管气道树的医疗图像分割方法}
 	对于肺部CT图像的分割，卷积神经网络CNN早就应用在上面了。最知名的LUng Nodule Analysis 2016大挑战竞赛要求参赛选手分割出Lung CT图像的肺结节，判断肺结节是
-	良性的还是恶性的，从而筛选出肺癌疑似患者，进行早期预防和针对性治疗。从LUNA16大挑战竞赛里诞生了两个具有重要影响力的公开数据集LUNA和LIDC-IDRI。 类似于LUNA
-	大挑战竞赛，针对肺部支气管气道树的分割也有一个比较著名的EXtraction of Ariways from CT 2009 (EXACT'09)竞赛项目。Pechin Lo等
-	人\cite{Lo2012ExtractionOA}在2009年发起了EXACT'09这个竞赛项目，其研究目标就是提供一个公开通用的数据集，鼓励参赛选手开发出创新性算法，从胸部CT扫描图像中提取出
-	支气管气道树，评比参赛选手门提交的算法。
+	良性的还是恶性的，从而筛选出肺癌疑似患者，进行早期预防和针对性治疗。从LUNA16大挑战竞赛里诞生了两个具有重要影响力的公开数据集LUNA和LIDC-IDRI
+	\cite{Charles2011LIDC}。 类似于LUNA	大挑战竞赛，针对肺部支气管气道树的分割也有一个比较著名的EXtraction of Ariways from CT 2009 (EXACT'09)竞赛项目。
+	Pechin Lo等人\cite{Lo2012ExtractionOA}在2009年发起了EXACT'09这个竞赛项目，其研究目标就是提供一个公开通用的数据集，鼓励参赛选手开发出创新性算法，从胸部CT扫描
+	图像中提取出支气管气道树，评比参赛选手门提交的算法。
 	
 	自EXACT'09大挑战竞赛的激励后涌现了大量的研究成果， Zhao Tianyi等人\cite{Zhao2019BronchusSA}开发出来一个两阶段2D + 3D的神经网络和一个基于线性规划的气道
-	分割跟踪算法
+	分割跟踪算法。之后2D CNN和2.5D CNN网络相继被提出来，Yun Jihye等人\cite{YUN201913}提出的2.5D卷积网络进行逐个体素分割。在轴向(Axial)、
+	矢状(Sagittal)和冠状(Coronal)三个正交方向上取相邻的三个切片，送入2个卷积层的网络，然后将他们合并起来。 这个方法在分割粗支气管时效果还不错，减少了假阳性，检测到
+	的气道树的长度也增长了不少。Qier Meng等人\cite{Meng2017TrackingAS}直接采用了3D FCN网络，沿着气道的中心线跟踪气道，并根据每个气道的直径和运行方向设置VOI
+	(感兴趣	的立方体体积)，3D FCN提取VOI内的气道树，最后将所有的VOI区域内的气道合并为一个完整的气道树。浙江大学医学院第二附属医院的Wu Xiaoming等人
+	\cite{Wu2021TACNet}在UNet网络结构的基础上设计了一个Tiny Atrous卷积网络，称为TACNet\cite{Wu2021TACNet}结构（见图\ref{fig:TACNet}），并在EXACT'09数据集
+	上对平均Tree Length Detected取得了SOTA性能。
+	\begin{figure}[!htp]
+		\centering
+		\begin{subfigure}{\textwidth}
+			\centering
+			\includegraphics[width=0.5\textwidth]{TACNet_Flowchart}
+			\caption{TACNet气道树分割流程}
+		\end{subfigure}
+		
+		\vspace{5mm}
+		
+		\begin{subfigure}{\textwidth}
+			\centering
+			\includegraphics[width=0.7\textwidth]{TACNet_architecture}
+			\caption{TACNet网络结构}
+		\end{subfigure}
+		\bicaption[TACNet气道树分割网络]
+			{TACNet气道树分割网络\cite{Wu2021TACNet}}
+			{Tiny Atrous Convolution network to segment the airway tree}
+		\label{fig:TACNet}
+	\end{figure}
+	
+	以上一些研究成果是基于基础的CNN卷积网络实现了对支气管气道树的分割，在当时提出来时都具有一些创新性，但对分割的精细程度显得不足。他们一般能分割到叶支气管
+	(Lobar bronchus)，但对于更纤细的段支气管(Segmental bronchi)，甚至伸到肺泡的末端小叶支气管(Lobular bronchi)，他们已经显得能力不够，难以分割更细小的支气了。
+	
+	 随着深度学习图像分割技术的发展，更新的技术，更强大的网络结构被开发出来。Guo Jinquan等人\cite{Guo2021CoarsetofineAS}利用多信息融合网络
+	 (图\ref{fig:MifCNN}所示)和基于CNN的区域生长网络（图\ref{fig:VCN}）相互结合的方式，由粗到细迭代式逐渐分割出更细小的支气管气道树。
+	 \begin{figure}[t]
+	 	\centering
+	 	
+	 	\begin{subfigure}{\textwidth}
+	 		\centering
+	 		\includegraphics[width=0.7\textwidth]{Mif_CNN}
+	 		\caption{多信息融合Mif-CNN网络}
+	 		\label{fig:MifCNN}
+	 	\end{subfigure}
+	 	
+	 	\vspace{5mm}
+	 	
+	 	\begin{subfigure}{\textwidth}
+	 		\centering
+	 		\includegraphics[scale=0.2]{VCN}
+	 		\caption{基于CNN的区域生长网络}
+	 		\label{fig:VCN}
+	 	\end{subfigure}
+	 	
+	 	\bicaption[多信息融合Mif-CNN网络和基于CNN区域生长网络的组合]
+	 		{多信息融合Mif-CNN网络和基于CNN区域生长网络的组合\cite{Guo2021CoarsetofineAS}}
+	 		{Corse-to-fine airway segmentation, Mif-CNN and CNN-based region growing combination}
+	 \end{figure}
+	 
+	 肺部支气管气道是一棵树的形状，从CT图像中提取支气管树可视为支气管镜手术导航的细粒度图。上海交通大学医疗机器人研究院的Yu Weihao等人\cite{Yu2022TNN}将图神
+	 经网络的概念迁移过来，创新性地提出了一种基于图神经网络的结构，并命名为树网络(Tree Neural Network, TNN)。这种树网络结构巧妙地将支气管分支看成是映射
+	 到图空间的节点，提取气道树视为构建节点之间连接的边，也就是支气管分支连接的超边(Hyperedges)，见图\ref{fig:TNN}所示。
+	 \begin{figure}[htpb]
+	 	\centering
+	 	\includegraphics[width=\textwidth]{TNN}
+	 	\bicaption[创新性的树网络结构]
+	 		{创新性的树网络结构，用GNN来提起支气管气道树\cite{Yu2022TNN}}
+	 		{The novel Tree Neural Network, extract the airway tree by virtue of GNN}
+		\label{fig:TNN}
+	 \end{figure}
+	 
+	 这种创新性的树网络结构带来了很大的性能提升，尤其对于分割叶支气管、段支气管和小叶支气管的分割分别能达到93.6\%和82.0\%\cite{Yu2022TNN}的精确度。
+
+
+
+\section{挑战和困难}
+
+尽管现有的一些研究取得很优秀的成果，肺部支气管气道树的分割性能不断提升，但仍有非常大的挑战需要克服。主要表现在如下方面：
+\begin{itemize}
+	\item {\heiti 类别严重不平衡}
+	
+	像肺部支气管、血管、动静脉等管状物体，在CT扫描的切片图像中，前景像素（指支气管管腔、管壁的像素）与背景像素（指除了支气管管腔管壁的像素之外的像素）个数对比
+	差别巨大，这就造成严重的类别不平衡。而绝大部分卷积网络都严重依赖标注数据，标注数据缺乏，高质量的标注数据更是稀少，这将导致分割效果大打折扣。肺部树状的支气管、
+	肺动脉和肺静脉都是非常纤薄的，在肺部都是发散地分布着。这完全不同于肝脏、肾脏和胰腺这些块状器官\footnote{块状器官指的是肝脏、肾脏和胰腺在CT图像上看起来是一个
+	大的区块，非常易于辨认，也容易做区块边缘分割。}，标注这些块状器官的前景像素(Pixel)或体素(Voxel)\footnote{注：像素Pixel指在平面图像中一个 高 $\times$ 宽 为
+	($H \times W = 1 \times 1$)的平面网格，体素Voxel指的是在CT这样的三维图像上一个 深 $\times$ 高 $\times$ 宽为
+	($D \times H \times W = 1 \times 1 \times 1$)的立方体格，其中$D = 1$指的是一个轴向切片的厚度。}与背景像素或体素相差不甚巨大，但对于肺部支气管，标注的
+	像素或体素个数与背景像素或体素个数相比则差距悬殊。在单张切片$H \times W = 512 \times 512$这样的高扫描分辨率下，叶支气管Lobar bronchus、段支气管
+	Segmental bronchi分别可能只有4个，3个到2个像素，而到肺泡的小叶支气管Lobular bronchi则只有1个像素甚至不到1个像素。这种毛细的管状物不仅加剧了精细标注的难度，
+	也导致标注的前景像素与背景像素对比，强烈不平衡。
+	
+	若卷积网络学习一张$H \times W = 512 \times 512$像素的灰度图像，而标记数据只有两、三个像素。即使将卷积核尺寸(Kernel size)调整到最小，移动步长(Stride)调整
+	到最小，最后得到的分割结果其假阳性率(False Positive Rate)也是非常高，精度也是非常差。尽管有加权交叉熵损失Weighted cross-entrophy loss
+	\cite{Yuri2019WeightedCrossEntrophy}函数和数据增强Data Augmentation技术，仍难以保证有效地学习到图像的特征信息。
+	
+	\item {\heiti 全局尺度和局部尺度的上下文信息难以同时兼顾}
+	
+	肺部支气管是在三维空间上分布的，其众多的分支分散在肺部各处。我们的分割当然不仅仅要学习到气道(Trachea)、左右主支气管(Left/Right main bronchus)、上/中/下肺
+	叶支气管(Superior/Middle/Inferior Lobar bronchus)的特征信息，还要学习从上/中/下肺叶支气管扩展出来的段支气管(Segmental bronchi)，甚至是延伸至肺泡
+	的小叶支气管(Lobular bronchi)的特征信息。细小的支气管这种局部尺度的上下文其实不需要多大的感受野，但对于粗大一些的气道、左右主支气管，我们又需要更大一些的感受野
+	来推测整体的气道树形状，也即全局尺度的上下文。面对这种矛盾，应该使用多少个池化层？如果简单地堆积更多的池化层，那么增加的参数可能会因为训练数据不足而导致过拟合。
+	如果为了避免这种参数爆炸而牺牲卷积网络的宽度（即特征通道的数量）来换取深度（卷积层的层数），那么模型的学习和拟合能力可能不够\cite{Qin2021TubuleSen}。
+	所以，全局尺度的上下文信心与局部尺度的上下文信息是否能够兼顾到呢？ 这是另一个困难与挑战之处。
+\end{itemize}
 
 
+\section{本文的研究内容和创新点}
 
+本文针对肺部CT扫描三维图像，建立基于深度学习的三维卷积网络3D-UNet模型\cite{ronneberger2015u}来分割提取人体肺部支气管树状的气道结构。我们使用来自MICCAI2022的
+Airway Tree Modeling(ATM) Challenge 2022(以下简写为ATM22\cite{Zhang2022CFDA, Qin2019AirwayNet, Yu2022Bronchi, Zhang2021Airway})的数据集，先将
+NiFTI格式的CT扫描三维图像裁剪切成长方体，只保留肺部区域。我们以3D-UNet作为基准模型，做一个基准实验，观察3D-UNet基准模型对支气管气道树的分割效果。研究3D-UNet分割
+模型的不足之处，我们提出三点改进方案，也就是本文的创新之处。
 
+\begin{enumerate}
 
+\item {\kaishu 引入一种新的损失函数Focal Loss, 重塑常用的交叉熵损失来解决类别严重不平衡问题}
 
+由于肺部支气管标记数据的稀疏性，造成前景标记像素与背景像素对比严重的类别不平衡。常规的交叉熵Cross-Entrophy Loss损失函数在训练过程中遇到极端的前景和背景类别不平衡时，
+分类器对于大量的无分类数据，其权重分配会越来越向这种无分类数据倾斜，而真正拥有分类的数据其获得的权重分配几乎被淹没了，所以导致分类精度下降严重。
+新的损失函数Focal Loss则是重塑交叉熵损失函数，使权重分配向有分类的数据倾斜，从而提高分割的精度。
 
+\item {\kaishu 引入注意力蒸馏机制，增加额外的梯度，聚焦于辨识更细小纤薄的支气管}
 
+自NLP研究中提出注意力机制\cite{NIPS2017Attention}后，我们认识到注意力图是在指导网络聚焦看图像的一些重要的地方，这些重要的地方是区分或辨识物体的显著特征。这种有价值
+的注意力图可以从教师网络逐层传递到学生网络，从知识蒸馏的角度说，就是知识是可传递的。教师网络学习到知识可以传递到学生网络。我们就是在注意力机制的启发下，将注意力蒸馏机制
+引入到我们的3D-UNet网络，在上采样路径上给相邻的两个反卷积层增加一个额外的梯度，使网络聚焦于辨识更细小纤薄的支气管，如段支气管和小叶支气管。
 
+\item {\kaishu 为改善池化层对支气管空间位置信息的捕捉，设计一个再校准模块，用于强化与任务相关的特征，即关键的空间位置信息。}
 
+在下采样路径上池化层收缩，在上采样路径上池化层膨胀，支气管空间位置信息在不同的分辨率下没有被区别对待，池化层没有对支气管空间位置信息有效地捕捉。而这些关键的空间位置信息
+对于支气管气道树的精细分割至关重要，因此为了强化于任务相关的特征，为了很好地捕捉支气管的空间位置信息，特地设计一个再校准模块。
 
+\end{enumerate}
 
 
+\section{论文组织结构}
 
+论文的各个章节安排如下：
 
+{\kaishu 第一章：绪论}
 
+介绍本论文的研究背景和意义，追踪关于肺部支气管气道树分割这个课题的研究现状和发展趋势。提出本论文的研究内容和有哪些创新点。
 
+{\kaishu 第二章：基准分割模型3D-UNet和分割效果分析}
 
+阐述3D-UNet基准模型的原理，设计实验对支气管气道树进行分割，研究与展示实验结果，分析不足之处。
 
+{\kaishu 第三章：注意力蒸馏机制对基准模型的改进}
 
+阐述注意力蒸馏的原理，取下采样路径上四个卷积层的输出结果，进行注意力蒸馏操作，然后对比研究其对分割效果的改进作用。
 
+{\kaishu 第四章：特征再校准模块的算法实现，对基准模型的改进效果评估}
 
+阐述特征再校准的基本原理和实现方法，实现特征再校准模块。将特征再校准模块加到基准模型3D-UNet进行训练，研究训练的结果，分析评估其对支气管气道树分割的改进效果。
 
+{\kaishu 第五章：注意力蒸馏机制 + 特征再校准模块的综合分割效果}
 
+将注意力机制和特征再校准模块这2项改进都加入到基准模型3D-UNet重新训练，展示综合分割效果和指标参数，在验证集和测试集上分割出精确完整的三维气道树结构。
 
+{\kaishu 第六章：总结与展望}
 
+对本文所作的工作进行总结，并对肺部支气管气道树分割这个课题的未来研究方向进行展望。
 
+需要指出的是，本文会穿插着进行对比实验，没有专门的章节来讲解消融研究Ablation Study，消融研究将体现在对比实验中。
 
+\section{本章小结}
 
+本章先介绍了支气管气道树分割课题的研究背景和意义，阐述与课题相关的研究现状和发展状况。 然后就本课题分析指出其挑战性和欲解决的问题，提出论文的创新点。最后展示论文的组织结构和章节安排。
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-\chapter{简介}
-
-这是 \sjtuthesis 的示例文档，基本上覆盖了模板中所有格式的设置。建议大家在使用模
-板之前，除了阅读《\sjtuthesis\ 使用文档》，这个示例文档也最好能看一看。
-
-\section{二级标题}
-
-\subsection{三级标题}
-
-\subsubsection{四级标题}
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-culpa qui officia deserunt mollit anim id est laborum.
-
-\section{脚注}
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-incididunt ut labore et dolore magna aliqua. \footnote{Ut enim ad minim veniam,
-quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-dolore eu fugiat nulla pariatur.}
-
-\section{字体}
-
-
-上海交通大学是我国历史最悠久的高等学府之一，是教育部直属、教育部与上海市共建的全
-国重点大学，是国家“七五”、“八五”重点建设和“211 工程”、“985 工程”的首批建
-设高校。经过 115 年的不懈努力，上海交通大学已经成为一所“综合性、研究型、国际化”
-的国内一流、国际知名大学，并正在向世界一流大学稳步迈进。 
-
-{\songti 十九世纪末，甲午战败，民族危难。中国近代著名实业家、教育家盛宣怀和一批
-  有识之士秉持“自强首在储才，储才必先兴学”的信念，于 1896 年在上海创办了交通大
-  学的前身——南洋公学。建校伊始，学校即坚持“求实学，务实业”的宗旨，以培养“第
-  一等人才”为教育目标，精勤进取，笃行不倦，在二十世纪二三十年代已成为国内著名的
-  高等学府，被誉为“东方MIT”。抗战时期，广大师生历尽艰难，移转租界，内迁重庆，
-  坚持办学，不少学生投笔从戎，浴血沙场。解放前夕，广大师生积极投身民主革命，学校
-  被誉为“民主堡垒”。}
-
-{\heiti 新中国成立初期，为配合国家经济建设的需要，学校调整出相当一部分优势专业、
-  师资设备，支持国内兄弟院校的发展。五十年代中期，学校又响应国家建设大西北的号
-  召，根据国务院决定，部分迁往西安，分为交通大学上海部分和西安部分。1959 年 3月
-  两部分同时被列为全国重点大学，7 月经国务院批准分别独立建制，交通大学上海部分启
-  用“上海交通大学”校名。历经西迁、两地办学、独立办学等变迁，为构建新中国的高等
-  教育体系，促进社会主义建设做出了重要贡献。六七十年代，学校先后归属国防科工委和
-  六机部领导，积极投身国防人才培养和国防科研，为“两弹一星”和国防现代化做出了
-  巨大贡献。}
-
-{\kaishu 改革开放以来，学校以“敢为天下先”的精神，大胆推进改革：率先组成教授代
-  表团访问美国，率先实行校内管理体制改革，率先接受海外友人巨资捐赠等，有力地推动
-  了学校的教学科研改革。1984 年，邓小平同志亲切接见了学校领导和师生代表，对学校
-  的各项改革给予了充分肯定。在国家和上海市的大力支持下，学校以“上水平、创一流”
-  为目标，以学科建设为龙头，先后恢复和兴建了理科、管理学科、生命学科、法学和人文
-  学科等。1999 年，上海农学院并入；2005 年，与上海第二医科大学强强合并。至此，学
-  校完成了综合性大学的学科布局。近年来，通过国家“985 工程”和“211 工程”的建
-  设，学校高层次人才日渐汇聚，科研实力快速提升，实现了向研究型大学的转变。与此同
-  时，学校通过与美国密西根大学等世界一流大学的合作办学，实施国际化战略取得重要突
-  破。1985 年开始闵行校区建设，历经 20 多年，已基本建设成设施完善，环境优美的现
-  代化大学校园，并已完成了办学重心向闵行校区的转移。学校现有徐汇、闵行、法华、七
-  宝和重庆南路（卢湾）5 个校区，总占地面积 4840 亩。通过一系列的改革和建设，学校
-  的各项办学指标大幅度上升，实现了跨越式发展，整体实力显著增强，为建设世界一流大
-  学奠定了坚实的基础。}
-
-{\ifcsname fangsong\endcsname\fangsong\else[无 \cs{fangsong} 字体。]\fi 交通大学
-  始终把人才培养作为办学的根本任务。一百多年来，学校为国家和社会培养了 20余万各
-  类优秀人才，包括一批杰出的政治家、科学家、社会活动家、实业家、工程技术专家和医
-  学专家，如江泽民、陆定一、丁关根、汪道涵、钱学森、吴文俊、徐光宪、张光斗、黄炎
-  培、邵力子、李叔同、蔡锷、邹韬奋、陈敏章、王振义、陈竺等。在中国科学院、中国工
-  程院院士中，有 200 余位交大校友；在国家 23 位“两弹一星”功臣中，有 6 位交大校
-  友；在 18 位国家最高科学技术奖获得者中，有 3 位来自交大。交大创造了中国近现代
-  发展史上的诸多“第一”：中国最早的内燃机、最早的电机、最早的中文打字机等；新中国
-  第一艘万吨轮、第一艘核潜艇、第一艘气垫船、第一艘水翼艇、自主设计的第一代战斗
-  机、第一枚运载火箭、第一颗人造卫星、第一例心脏二尖瓣分离术、第一例成功移植同种
-  原位肝手术、第一例成功抢救大面积烧伤病人手术等，都凝聚着交大师生和校友的心血智
-  慧。改革开放以来，一批年轻的校友已在世界各地、各行各业崭露头角。}
-
-{\ifcsname lishu\endcsname\lishu\else[无 \cs{lishu} 字体。]\fi 截至 2011 年 12
-  月 31 日，学校共有 24 个学院 / 直属系（另有继续教育学院、技术学院和国际教育学
-  院），19 个直属单位，12 家附属医院，全日制本科生 16802 人、研究生24495 人（其
-  中博士研究生 5059 人）；有专任教师 2979 名，其中教授 835 名；中国科学院院士 15
-  名，中国工程院院士 20 名，中组部“千人计划”49 名，“长江学者”95 名，国家杰出
-  青年基金获得者 80 名，国家重点基础研究发展计划（973 计划）首席科学家 24名，国
-  家重大科学研究计划首席科学家 9名，国家基金委创新研究群体 6 个，教育部创新团队
-  17 个。}
-
-{\ifcsname youyuan\endcsname\youyuan\else[无 \cs{youyuan} 字体。]\fi 学校现有本
-  科专业 68 个，涵盖经济学、法学、文学、理学、工学、农学、医学、管理学和艺术等九
-  个学科门类；拥有国家级教学及人才培养基地 7 个，国家级校外实践教育基地 5个，国
-  家级实验教学示范中心 5 个，上海市实验教学示范中心 4 个；有国家级教学团队 8个，
-  上海市教学团队 15 个；有国家级教学名师 7 人，上海市教学名师 35 人；有国家级精
-  品课程 46 门，上海市精品课程 117 门；有国家级双语示范课程 7 门；2001、2005 和
-  2009 年，作为第一完成单位，共获得国家级教学成果 37 项、上海市教学成果 157
-  项。}
