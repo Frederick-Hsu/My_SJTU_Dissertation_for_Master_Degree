@@ -1,5 +1,60 @@
 % !TEX root = ../main.tex
 
+\chapter{复现实验结果}\label{chap:reproduce_experiment}
+
+为复现注意力蒸馏后的效果，请查看以下一些代码片段:
+\begin{codeblock}[language=python]
+
+import numpy as np
+import SimpleITK as sitk
+from matplotlib import pyplot as plt
+
+def load_CT_scan_3D_image(niigz_file_name):
+    itkimage = sitk.ReadImage(niigz_file_name)
+    numpyImages = sitk.GetArrayFromImage(itkimage)
+    numpyOrigin = np.array(list(reversed(itkimage.GetOrigin())))
+    numpySpacing = np.array(list(reversed(itkimage.GetSpacing())))
+    return numpyImages, numpyOrigin, numpySpacing
+
+#================================================================================
+
+ATM_074_0000_niigz_files = ["ATM_074_0000-feat6.nii.gz", 
+                            "ATM_074_0000-feat7.nii.gz", 
+                            "ATM_074_0000-feat8.nii.gz", 
+                            "ATM_074_0000-feat9.nii.gz"]
+
+feat6_image_npy, feat6_origin, feat6_spacing = 
+	load_CT_scan_3D_image(ATM_074_0000_niigz_files[0])
+
+feat7_image_npy, feat7_origin, feat7_spacing = 
+	load_CT_scan_3D_image(ATM_074_0000_niigz_files[1])
+
+feat8_image_npy, feat8_origin, feat8_spacing = 
+	load_CT_scan_3D_image(ATM_074_0000_niigz_files[2])
+
+feat9_image_npy, feat9_origin, feat9_spacing = 
+	load_CT_scan_3D_image(ATM_074_0000_niigz_files[3])
+	
+
+depth, height, width = feat6_image_npy.shape
+
+plt.figure(figsize=(10, 10))
+plt.imshow(np.flipud(feat6_image_npy[:, height//2, :]))
+plt.imshow(np.flipud(feat6_image_npy[:, height//2, :]), cmap="gray")
+
+plt.figure(figsize=(10, 10))
+plt.imshow(np.flipud(feat7_image_npy[:, height//2, :]))
+plt.imshow(np.flipud(feat7_image_npy[:, height//2, :]), cmap="gray")
+
+plt.figure(figsize=(10, 10))
+plt.imshow(np.flipud(feat8_image_npy[:, height//2, :]))
+plt.imshow(np.flipud(feat8_image_npy[:, height//2, :]), cmap="gray")
+
+plt.figure(figsize=(10, 10))
+plt.imshow(np.flipud(feat9_image_npy[:, height//2, :]))
+plt.imshow(np.flipud(feat9_image_npy[:, height//2, :]), cmap="gray")
+\end{codeblock}
+
 \chapter{Maxwell Equations}
 
 选择二维情况，有如下的偏振矢量：
