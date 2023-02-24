@@ -12,6 +12,7 @@
 *.cb
 *.cb2
 *.pdf
+*.odg#
 
 ## Intermediate documents:
 *.dvi
