@@ -13,6 +13,11 @@
 *.cb2
 *.pdf
 *.odg#
+*.npy
+
+
+# Directories
+figures/**/*tensorboard/*
 
 ## Intermediate documents:
 *.dvi
