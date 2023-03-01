@@ -1,6 +1,6 @@
 % !TEX root = ../main.tex
 
-\chapter{注意力蒸馏方法对基准模型的改进}
+\chapter{注意力蒸馏方法对基准模型的改进}\label{chap:attention_distillation}
 
 我们在第\ref{chap:baseline_model}章讨论了3D-UNet网络这一基准模型对支气管气道树的分割， 仔细观察表\ref{tbl:visualize_airway_3d_model}
 中各个支气管气道树末端（ATM\_174\_0000和ATM\_505\_0000两个病例除外）出现很多红色的假阴性支气管体素，见图\ref{fig:distal_bronchus}
@@ -55,7 +55,7 @@ Improving the performance of convolutional neural networks via Attention Transfe
     
     \item 沿着通道维数，计算绝对值的$p$次幂的最大值
     \begin{equation}
-        \mathcal{F}_{max}^{p}({Feat}_{n}) = {max}_{c=1}^{C}{\left\lvert {Feat}_{n} \right\rvert}^{p}
+        \mathcal{F}_{max}^{p}({Feat}_{n}) = \max_{c=1}^{C}{\left\lvert {Feat}_{n} \right\rvert}^{p}
     \end{equation}
 \end{enumerate}
 在这里我们选择第2种计算方式，沿着通道维数，计算绝对值的$p$次幂之和。因为这种计算方式保留了该层特征的所有隐含的显著激活信息，
@@ -94,7 +94,7 @@ Improving the performance of convolutional neural networks via Attention Transfe
 注意力图的引入给卷积网络的层与层之间相当于增加里一个额外的梯度，使相邻两层之间更接近，可以使${AttMap}_{n}$与${AttMap}_{n+1}$
 之差最小化，即它们的累积损失最小。
 \begin{equation}\label{eq:attention_distillation_loss}
-    Loss = min \sum_{n=1}^{N-1}\lVert {AttMap}_{n} - {AttMap}_{n+1} \rVert_{F}^{2}
+    Loss = \min \sum_{n=1}^{N-1}\lVert {AttMap}_{n} - {AttMap}_{n+1} \rVert_{F}^{2}
 \end{equation}
 其中$\lVert \bullet \rVert_{F}$是指矩阵的Frobenius范数。
 
@@ -145,7 +145,7 @@ Improving the performance of convolutional neural networks via Attention Transfe
 
 \section{引入注意力蒸馏模块对3D-UNet基准网络进行改进}
 基于前文对注意力蒸馏方法的研究，我们决定对3D-UNet基准网络进行改进，引入注意力蒸馏方法，在3D-UNet上采样路径上对第6个、第7个、
-第8个和第9个卷积层添加注意力蒸馏模块。经过注意力蒸馏模块后，相邻的蒸馏后图像特征之间就自然增加里一个新的梯度，我们通过
+第8个和第9个卷积层添加注意力蒸馏模块。经过注意力蒸馏模块后，相邻的蒸馏后图像特征之间就自然增加了一个新的梯度，我们通过
 \ref{eq:attention_distillation_loss}式来计算它们之间的损失。
 
 改进后的网络结构如图\ref{fig:3dunet_ad}所示。
