@@ -228,7 +228,7 @@ $Cuboid_{pred} \cdot Cuboid_{gt}$表示这2个三维矩阵的点积。
 支气管气道树分割是属于数据分布稀疏的场景，即有效的支气管体素在整个CT体素中的占比非常小，我们可以从ATM22数据集中随机挑选5个
 病例，统计支气管体素在整个CT体素的占比来看稀疏程度。
 \begin{table}[!htp]
-    \bicaption[支气管体素占比]{支气管体素占比}{The percent of bronchus voxels over total voxels}
+    \bicaption[支气管体素占比]{支气管体素占比}{节The percent of bronchus voxels over total voxels}
     \label{tbl:bronchus_voxels}
     \centering
     \begin{tabular}{crrr}
@@ -537,8 +537,8 @@ GPU显存资源决定切割的长方体子块的大小，显存资源比较大�
 需要指出的，本中文对支气管气道树分割的颜色标记统一为绿色表示假阳性，红色表示假阴性，蓝色表示真阳性。全文保持一致的颜色标记，
 后文中若没有特别指出颜色标记的意义，均视为与此处一致，不再重复地给出图例说明。
 
-\section{实验结果与分析}
-\subsection{3D-UNet基准网络训练过程}
+\section{实验结果与分析}\label{sec:baseline_experiment}
+\subsection{3D-UNet基准网络训练过程}\label{sec:baseline_experiment_training}
 我们将3D-UNet基准网络放在上海交通大学高性能计算中心的AI超级计算机上进行训练，输入是从ATM22数据集上随机挑选66例肺部CT扫描图像，按照
 \ref{sec:ATM22}节介绍的裁切方法去掉无关的黑色背景区域，只保留肺部最小包围框作为有效学习区域。然后将这些经裁切的Cuboid体数据
 按照$D64 \times H96 \times W152$的滑动窗口步长随机切割成$D80 \times H192 \times W304$的子块，每个子块都经过
