@@ -31,12 +31,12 @@
 
   3D-UNet supervised learning has shortcomings of false positive and false negative issues, when applying it on the extremely sparse annotated volumetric 
   data. Motivated by the attention transfer and knowledge distillation, the attention distillation method is built to focus on the tree structure of bronchial
-  airway. It can discard the interference of massive useless background, extract the main airway branches and some small ones. We add AD modules onto the decoder
+  airway. It can discard the interference of massive useless background, extract the main airway branches and some small ones. We add AD module onto the decoder
   path to improve the 3D-UNet baseline. experiment has shown that attention distillation method can effectively reduce the FNR and FPR.
 
   The airway tree has both the coarse features of bronchial voxels and the fine features of distal bronchial voxels, the fine features could be gradually 
-  "erased" due to resolution reduction in the pooling layer. Different spatial positions have different degree of importance. FRL method recombines the feature channels which 
-  are output from convolutional layer, it has the crucial airway regions preferred gradually with higher weights, while has the uninformative regions negleted with lower weights.
+  "erased" due to resolution reduction in the pooling layer. Different spatial positions have different degrees of importance. FRL method recombines the feature channels which 
+  are produced from the convolutional layer, it has the crucial airway regions preferred gradually with higher weights, while has the uninformative regions negleted with lower weights.
   The FRL module is inserted between each convolutional layer and pooling layer of 3D-UNet, after that a comprehensive experiment showed that the distal bronchi had 
   been well segmented, and the performance metrics was improved obviously.
 \end{abstract*}
