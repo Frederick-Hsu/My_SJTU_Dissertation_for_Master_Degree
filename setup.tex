@@ -15,7 +15,7 @@
     % 标题
     %
     title           = {肺部CT平扫图像中的支气管分割技术研究},
-    title*          = {Research on the pulmonary bronchial segmentation technique in lung CT images},
+    title*          = {Research on the pulmonary bronchus segmentation technique in the lung CT-scanning images},
     %
     % 标题页标题
     %   可使用“\\”命令手动控制换行
@@ -30,13 +30,13 @@
     %
     % 关键词
     %
-    keywords        = {支气管气道树分割, 3D-UNet基准网络, 注意力蒸馏, 通道级特征再学习, ATM22数据集},
-    keywords*       = {Bronchial airway segmentation, 3D-UNet baseline network, Attention distillation, Channel-wise feature re-learning, ATM22 dataset},
+    keywords        = {支气管气道树分割, 3D-UNet基准网络, 注意力蒸馏, 通道级特征再学习, 三维卷积层},
+    keywords*       = {Bronchial airway segmentation, 3D-UNet baseline network, Attention distillation, Channel-wise feature re-learning, 3D convolutional layer},
     %
     % 姓名
     %
     author          = {徐\quad{}赞},
-    author*         = {Frederique Hsu},
+    author*         = {Xu \quad{} Zan},
     %
     % 指导教师
     %
@@ -45,8 +45,8 @@
     %
     % 副指导教师
     %
-    assisupervisor  = {刘维平副教授},
-    assisupervisor* = {Prof. Liu Wei Ping},
+    assisupervisor  = {刘维平高级工程师},
+    assisupervisor* = {Senior Engineer Liu Wei Ping},
     %
     % 学号
     %
@@ -112,7 +112,8 @@
 %   biblatex-gb7714-2015 常用选项
 %     gbnamefmt=lowercase     姓名大小写由输入信息确定
 %     gbpub=false             禁用出版信息缺失处理
-\usepackage[backend=biber,style=gb7714-2015]{biblatex}
+\usepackage[backend=biber,style=gb7714-2015, gbnamefmt=lowercase]{biblatex}
+% \usepackage[backend=biber,style=ieee]{biblatex}
 % 文献表字体
 % \renewcommand{\bibfont}{\zihao{-5}}
 % 文献表条目间的间距
@@ -129,6 +130,9 @@
 
 % 固定宽度的表格
 % \usepackage{tabularx}
+
+% 使用横向页面，以横向放置图片
+\usepackage{rotfloat}
 
 % 使用三线表：toprule，midrule，bottomrule。
 \usepackage{booktabs}
@@ -167,6 +171,7 @@
 
 % 代码环境宏包
 \usepackage{listings}
+% \usepackage[dvipsnames]{xcolor}
 \lstnewenvironment{codeblock}[1][]%
   {\lstset{style=lstStyleCode,#1}}{}
 
