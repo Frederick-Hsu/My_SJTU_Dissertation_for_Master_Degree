@@ -2,7 +2,7 @@
 
 \chapter{基准分割模型3D-UNet和分割效果分析}\label{chap:baseline_model}
 
-\section{医疗图像语义分割基础}
+\section{医疗图像语义分割网络层次}
 
 图像的语义分割是一种像素级的分类技术，输入一张（RGB彩色或灰度）图片，分类器输出图片上每一个像素所属的类别标签。基于深度
 学习的图像语义分割方法，其主要算法是卷积神经网络(Convolutional Neural Network, CNN)。卷积神经网络通常包含以下四层：
@@ -70,12 +70,12 @@ CT扫描图像在$H3 \times W3$窗口内的Hounsfield unit\cite{HU2016CT}灰度\
 其中$b$为偏置参数Bias
 
 式\ref{eq:conv}是在二维图像平面上的卷积操作，若在CT三维体数据上进行卷积运算，则卷积核尺寸扩展为$D3 \times H3 \times W3$
-，相应地Hounsfield unit灰度像素矩阵也同步扩展到三维。三维卷积的操作如图\ref{fig:3D_Conv}所阐述：
+，相应地Hounsfield unit灰度像素矩阵也同步扩展到三维。三维卷积的操作如图\ref{fig:3D_Conv}所阐述。
 \begin{figure}[!htp]
     \centering
     \includegraphics[width=0.5\textwidth]{Convolution_pricinple}
     \bicaption[三维卷积操作的原理]
-        {三维卷积操作的原理}
+        {三维卷积操作的原理\cite{dl2018Chollet}}
         {The principle of 3D convolution}
     \label{fig:3D_Conv}
 \end{figure}
@@ -112,16 +112,16 @@ CT扫描图像在$H3 \times W3$窗口内的Hounsfield unit\cite{HU2016CT}灰度\
 深度网络的数据维度一般是$[Batch, Channel, Height, Width]$，简写为$[N, C, H, W]$（$N$即为$Batch$）。
 因为这是四个维度，我们无法画出一个四维空间的图形，所以压缩特征的$H, W$至一个维度。
 
-\noindent{}批次归一化Batch Normalization沿Batch维度计算特征的均值和方差，归一化为$[N, H, W]$的维度，如图\ref{fig:4norm}
+批次归一化Batch Normalization沿Batch维度计算特征的均值和方差，归一化为$[N, H, W]$的维度，如图\ref{fig:4norm}
 的Batch Norm子图的蓝色方格所示。
 
-\noindent{}层次归一化Layer Normalization避开Batch维度，而是沿Channel维度计算特征的均值和方差，归一化为$[C, H, W]$的维度,
+层次归一化Layer Normalization避开Batch维度，而是沿Channel维度计算特征的均值和方差，归一化为$[C, H, W]$的维度,
 如图\ref{fig:4norm}的Layer Norm子图的蓝色方格所示。
 
-\noindent{}实例归一化Instance Normalization选择单个样本计算特征的均值和方差，单个样本（也即一张图片）的维度只有$Height$
+实例归一化Instance Normalization选择单个样本计算特征的均值和方差，单个样本（也即一张图片）的维度只有$Height$
 与$Weight$，所以归一化$[H, W]$的维度，如图\ref{fig:4norm}的Instance Norm子图的蓝色方格所示。
 
-\noindent{}群组归一化Group Normalization则是介于层次归一化和实例归一化之间，其将$Channel$维度切分为很多组$Group$，
+群组归一化Group Normalization则是介于层次归一化和实例归一化之间，其将$Channel$维度切分为很多组$Group$，
 在每一个组内计算特征的均值和方差，归一化为$[C//G, H, W]$的维度，如图\ref{fig:4norm}的Group Norm子图的蓝色方格所示。
 
 此外还有权重标准化(Weight Standardization\cite{Qiao2019WeightS})、 
@@ -148,10 +148,13 @@ CT扫描图像在$H3 \times W3$窗口内的Hounsfield unit\cite{HU2016CT}灰度\
     池化层与卷积层不一样，它没有要学习的参数。池化只是计算目标区域内的最大值或者平均值，所以不存在参数需要学习而改变。
     \item {\heiti 卷积的通道数保持不变}
     
-    经过池化层，输入数据跟输出数据的通道数保持不变，是按照通道独立计算的。
+    经过池化层，输入数据跟输出数据的通道数保持不变，是按照通道独立计算的，如图\ref{fig:keep_same_channel}所示。
     \begin{figure}[h]
         \centering
         \includegraphics[scale=0.3]{Pooling_channels}
+        \bicaption[池化层按通道独立计算]{池化层按通道独立计算，通道数保持不变}
+        	{Pooling layer will keep the same number of channels}
+		 \label{fig:keep_same_channel}
     \end{figure}
 \end{enumerate}
 
@@ -161,28 +164,28 @@ CT扫描图像在$H3 \times W3$窗口内的Hounsfield unit\cite{HU2016CT}灰度\
 网络从平面图像分割扩展到三维体数据的。跟UNet网络的U型结构相似，我们将卷积层换成3D卷积，归一化层换成3D归一化，相应地池化层也更换为3D池化。
 CT图像是一种体数据形式，它由一层一层的切片堆叠而成，每一层切片是一张二维的灰度图像。相比于平面图像中的像素，在CT图像中我们
 定义体素Voxel为$D \times H \times W = 1 \times 1 \times 1$的立方体所含的像素，$D = 1$表明是一层切片。3D-UNet
-网络的输入是$D \times H \times W$的体数据，我们称之为Cuboid，输出是每个体素的二分类分割概率图。我们在下采样路径上设计
-4个卷积层块，每个卷积层块包含2层卷积。而在上采样路径上同样设计4个反卷积层块，每个反卷积层块包含2层反卷积。
+网络的输入是$D \times H \times W$的体数据，我们称之为Cuboid，输出是每个体素的二分类分割概率图。我们在下采样路径设计
+4个卷积层块，每个卷积层块包含2层卷积。而在上采样路径同样设计4个反卷积层块，每个反卷积层块包含2层反卷积。
 
 \subsection{网络结构设计}
 
-下采样路径上，每个卷积层块的结构如图\ref{fig:convblock}所示，将输入的体数据图像的通道数扩增一倍，从输入的$n$个特征通道
+沿着下采样路径，每个卷积层块的结构如图\ref{fig:convblock}所示，将输入的体数据图像的通道数扩增一倍，从输入的$n$个特征通道
 扩增到$2n$个特征通道。经过3D最大池化后，分辨率降低一半。
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.8\textwidth]{Down_Conv_block}
+    \includegraphics[width=0.7\textwidth]{Down_Conv_block}
     \bicaption[3D-UNet下采样路径上卷积层块和池化层的结构]
         {3D-UNet下采样路径上卷积层块和池化层的结构}
         {The convolution block and pooling layer in the down-sampling path of 3D-UNet}
     \label{fig:convblock}
 \end{figure}
 
-在上采样路径上，每个反卷积层块的结构如图\ref{fig:deconvblock}所示，将输入的体数据图像的通道数缩减一半。从输入的$n$个特征
+沿着上采样路径，每个反卷积层块的结构如图\ref{fig:deconvblock}所示，将输入的体数据图像的通道数缩减一半。从输入的$n$个特征
 通道缩减到$\frac{n}{2}$个特征通道。经过上采样池化后，分辨率升高一倍。将下采样路径降低的分辨率恢复起来，这样就实现端到端，
 体素到体素的分割。
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.8\textwidth]{Up_Conv_block}
+    \includegraphics[width=0.7\textwidth]{Up_Conv_block}
     \bicaption[3D-UNet上采样路径上反卷积层块和池化层的结构]
         {3D-UNet上采样路径上翻卷积层块和池化层的结构}
         {The deconvolution block and pooling layer in the up-sampling path of 3D-UNet}
@@ -192,13 +195,13 @@ CT图像是一种体数据形式，它由一层一层的切片堆叠而成，每
 我们的3D-UNet主干网络包括编码器Encoder和解码器Decoder两大部分，编码器主要用来实现图像的特征提取，扩大感受野，输出具有
 类别信息的高层语义特征。解码器则逐步恢复分辨率，从而提取到低层的位置信息。更重要的是，在编码器和解码器对应的层次之间，引入
 跳跃连接，将包含丰富细节信息的编码器特征拼接到解码器的高级分类特征信息中来，这样两种特征信息互相补充，最后输出每个像素的分类
-概率图。我们的3D-UNet网络结构详情如图\ref{fig:3DUNetStructure}所示。由于图形宽度较大，我将其横向放置。将CT体数据(网络左侧)
-\begin{figure}[ht]
+概率图。我们的3D-UNet网络结构详情如图\ref{fig:3DUNetStructure}所示。由于图形横向宽度较大，所以将其横向放置。将CT体数据(网络左侧)
+\begin{figure}[!ht]
     \centering
-    \includegraphics[height=0.72\textheight]{3DUNet_Structure_portrait}
+    \includegraphics[height=\textwidth, width=0.83\textheight, angle=90]{3DUNet_Structure_landscape}
     \bicaption[本文所设计与使用的3D-UNet网络结构]
         {本文所设计与使用的3D-UNet网络结构}
-        {The 3D-UNet structure we designed in this paper}
+        {The 3D-UNet structure we designed in this thesis}
     \label{fig:3DUNetStructure}
 \end{figure}
 送入网络之前，我们将其裁切为一个一个$D80 \times H192 \times W304$规格的长方体\footnote{我们将在后文讲述为什么裁切
@@ -214,7 +217,7 @@ CT图像是一种体数据形式，它由一层一层的切片堆叠而成，每
 我们的改进方法。我们将在后面的章节展开讲述我们的改进方法，并通过实验来对比验证我们的改进方法是否有效，是否提高了分割效果和性能。
 
 \subsection{损失函数、优化器与学习率调整}
-\subsubsection{Dice损失函数}
+\subsubsection{Dice Loss损失函数}
 我们为3D-UNet网络基准模型采用普遍的骰子损失函数Dice Loss, 其计算公式\ref{eq:dice_loss}
 \begin{equation}\label{eq:dice_loss}
     L_{dice}\left(Cuboid_{pred}, Cuboid_{gt}\right) = 1 - \frac{2\sum{\left(Cuboid_{pred} \cdot Cuboid_{gt}\right)} + \epsilon}
@@ -224,11 +227,88 @@ CT图像是一种体数据形式，它由一层一层的切片堆叠而成，每
 节中切割出来的长方体子块的大小$z \times y \times x = 80 \times 192 \times 304$. 而$\epsilon$是为防止除零而加入的平滑常数，
 $Cuboid_{pred} \cdot Cuboid_{gt}$表示这2个三维矩阵的点积。
 
+\subsubsection{Focal Loss损失函数}
+
+一个肺部CT扫描图像中，支气管体素占全部体素的比例是很低的，从表\ref{tbl:bronchus_voxels}就可以看出，前景体素（即支气管体素）与背景体素（即除支气管体素之外的体素）的比例分别达到了$5:1000$、$3:10000$、$9:10000$、$7:10000$、 $6:10000$，这是一种严重的类别不平衡。正是这种严重类别不平衡，就会使得训练过程中损失会逐渐偏向背景体素，直至完全主导了损失，完全压过了前景体素对损失的贡献。类别不平衡会带来如下问题：
+\begin{enumerate}
+	\item[1)]训练效率低下。因为绝大部分是无用的背景体素，没有贡献有用的学习信息。这也是为什么我们要对原始的CT图像进
+					行裁切（见\ref{sec:ATM22}小节），裁切掉大部分的黑色背景，只保留肺的最小包围框作为有效的区域。即使裁
+					切掉了大部分背景区域，但前景体素占比仍然极端稀疏。
+	\item[2)]这些无用的背景体素主导了损失，压倒了训练，导致模型退化。
+\end{enumerate}
+为了对抗这种严重的类别不平衡，我们引入了Focal Loss损失函数\cite{Lin2017FocalLF}。
+
+支气管气道树分割任务是属于二分类问题，即对肺部CT扫描三维体数据的每一个体素来说，要么属于支气管，要么属于背景。传统的
+二分类图像分割都采用交叉熵损失Cross Entrophy Loss作为损失函数。令$p$为预测某一体素属于支气管体素的概率值，
+$\mathit{gt}$为该体素的真实值，则交叉熵损失$\mathit{CELoss}(p, \mathit{gt})$为：
+\begin{equation}
+	\mathit{CELoss}(p, \mathit{gt}) = \begin{cases}
+		-\log{\left(p\right)} & \text{if } \mathit{gt} = 1; \\
+		-\log{\left(1 - p\right)} & \text{if } \mathit{gt} = 0. 
+	\end{cases}
+\end{equation}
+概率$p \in [0, 1]$。为表示方便起见，令
+\begin{equation}
+	p_t = \begin{cases}
+		p & \text{if } \mathit{gt} = 1; \\
+		1 - p & \text{if } \mathit{gt} = 0.
+	\end{cases}
+\end{equation}
+则交叉熵损失$\mathit{CELoss}(p, gt)$可简写为：
+\begin{equation}
+	\mathit{CELoss}(p, \mathit{gt}) = \mathit{CELoss}(p_t) = -\log{\left(p_t\right)}
+\end{equation}
+在交叉熵损失函数中，为了对抗这种类别不平衡问题，我们通常会引入一个权重因子$\alpha_t$将交叉熵损失函数改进为加权交叉
+熵损失函数Weighted Cross Entrophy Loss，也有论文称其为$\alpha$平衡交叉熵损失函数。
+\begin{equation}
+	\mathit{WCELoss}(p_t) = -\alpha_t \log{\left(p_t\right)}
+\end{equation}
+尽管加权交叉熵损失函数平衡了一些前景体素与背景体素不平衡的类别比例问题，但还不够，它仍然难以区分易于分割的（粗大）支
+气管体素和难以分割的（细微）支气管体素。何为易于分割的支气管体素，什么是难以分割的支气管体素？以图
+\ref{fig:easy_hard_bronchus}中的枝干气管和末梢支气管为例来讲，
+\begin{figure}[!ht]
+	\centering
+	\includegraphics[width=0.8\textwidth]{easy_and_hard_features}
+	\bicaption[易于分割的枝干气管和难以分割的末梢支气管]
+		{易于分割的枝干气管和难以分割的末梢支气管}
+		{Trunk trachea is easy to segment, but distall bronchus are quite hard to segment.}
+	\label{fig:easy_hard_bronchus}
+\end{figure}
+同一个ATM\_060\_0000病例，在第392层切片处截取到的是粗大的气管，而在第119层切片处截取的却是细微的末梢支气管。很显然，分割粗大的枝干气管体素比细微的末梢支气管体素要容易得多。因此在训练中我们需要做出一些调整，降低易于分割的体素的权重，提升难以分割的体素的权重，为了分割出更多的支气管体素，做出这种倾斜是十分必要的。基于这种考虑，我们对加权交叉熵损失函数引入一个调节因素$(1 - p_t)^{\gamma}$，改变加权交叉熵损失为
+\begin{equation}
+	\mathit{WCELoss}\left(p_t\right) \longrightarrow \mathit{FLoss}\left(p_t\right) = - \alpha_{t} \cdot \left(1 - p_t\right)^{\gamma} \cdot \log{\left(p_t\right)}
+\end{equation}
+这种损失函数称为Focal Loss损失函数。其中两个超参数$\gamma$称为聚焦因子，
+$\alpha_{t}$称为平衡因子。
+
+Focal Loss损失函数最初是由Facebook AI Research的Tsung-Yi Lin、Kaiming He等人\cite{Lin2017FocalLF}提出
+来用于稠密的物体检测的新型损失函数，我们将其引入到支气管气道树分割任务这种存在严重类别不平衡的场景中来。其目的是为了
+对抗前景体素与背景体素的类别严重不平衡的问题，也为了在训练过程中调整(倾斜)权重给难以分割的体素，使模型聚焦于有用的前
+景信息和难以分割的体素，从而帮助提升分割模型的精度和真阳性率（也称为灵敏度）等指标。
+
+Focal Loss损失函数的$\alpha$、$\gamma$两个超参数，我们通过不断的实验调参，最终确定$\alpha = 0.25, \gamma = 2.0$. 本文中使用的Focal Loss损失函数为：
+\begin{equation}里\label{eq:focal_loss}
+	L_{focal}(p, gt) = \begin{cases}
+		- 0.25 (1 - p)^{2.0} \log{(p)} & \text{if } gt = 1; \\
+		- 0.25 (1 - p)^{2.0} \log{(1 - p)}  & \text{if } gt = 0.
+	\end{cases}
+\end{equation}
+
+最后，我们综合Dice Loss和Focal Loss两个损失函数，将它们相加。因此，本文对3D-UNet网络基准模型使用的最终的损失函数为：
+\begin{equation}\label{eq:total_loss}
+	\mathit{TotalLoss} = L_{dice}\left(Cuboid_{pred}, Cuboid_{gt}\right) + L_{focal}(p, gt)
+\end{equation}
+特别需要指出的是，我们将Dice Loss损失与Focal Loss损失相加求和，从数值上看可能有相互抵消或增强的意味，但它们对梯度的计
+算是相互独立的。根据梯度的计算方法，$\mathit{TotalLoss}$的梯度$\nabla{\mathit{TotalLoss}}$由$L_{dice}$和$L_{focal}$的梯度$\nabla{L_{dice}}$、$\nabla{L_{focal}}$分别计算而来，在误差反向传播的过程中，它们都会更新参
+数的，而不会相互抵消或增强的。
+
+
+
 \subsubsection{Adam优化器与动态调整学习率}
 支气管气道树分割是属于数据分布稀疏的场景，即有效的支气管体素在整个CT体素中的占比非常小，我们可以从ATM22数据集中随机挑选5个
 病例，统计支气管体素在整个CT体素的占比来看稀疏程度。
 \begin{table}[!htp]
-    \bicaption[支气管体素占比]{支气管体素占比}{节The percent of bronchus voxels over total voxels}
+    \bicaption[支气管体素占比]{支气管体素占比}{The percent of bronchus voxels over total voxels}
     \label{tbl:bronchus_voxels}
     \centering
     \begin{tabular}{crrr}
@@ -248,7 +328,7 @@ Descend, SGD)优化器。为了更好地利用稀疏梯度信息，达到更好�
 采用动态调整学习率。
 让我们来看看Adam优化器\cite{Kingma2014AdamAM}计算梯度和更新参数的过程，来解释我们为什么采用动态调整学习率的方法。
 
-\noindent{}网络模型的参数向量$\theta$在$t$时间步
+令网络模型的参数向量$\theta$在$t$时间步
 \begin{equation}
 \theta_{t} = \begin{bmatrix}
     \theta_{1} \\
@@ -257,7 +337,7 @@ Descend, SGD)优化器。为了更好地利用稀疏梯度信息，达到更好�
     \theta_{n}
 \end{bmatrix}_{t}
 \end{equation}
-计算在$t$时间步的梯度$grad_{t}$
+Adam优化器会首先计算在$t$时间步的梯度$grad_{t}$
 \begin{equation}
     {grad}_{t} = \nabla_{t}J(\theta_{t})
 \end{equation}
@@ -331,12 +411,12 @@ $\sqrt{\widehat{v_t}}$之比。为防止除零而引入平滑常数$\epsilon = 1
 在上海交通大学高性能计算中心提供的AI超算平台上进行的。该AI超算平台由8台DGX-2组成，每台DGX-2配备16块NVIDIA Tesla V100显卡，
 深度学习张量计算能力达到16PFLOPS。详细的配置与计算能力如表\ref{tbl:AT_platform}所示：
 \begin{table}[!htp]
-    \caption{人工智能超算平台资源}
+    \bicaption[人工智能超算平台资源]{人工智能超算平台资源}{The computation resource of AI supercomputer platform}
     \label{tbl:AT_platform}
     \centering
     \begin{tabular}{c|l|c}
         \toprule
-        队列 & 参数 & 节点数量 \\
+        队列 & \makecell{每个节点的配置参数} & 节点数量 \\
         \midrule
         dgx2 & CPU: 2*Intel Xeon Scalable Cascade Lake 8168 (2.7GHz, 24 cores) & 8 (16卡/节点) \\
              & Memory: 1.5TB DDR4 ECC REG 2666 & \\
@@ -359,7 +439,8 @@ $\sqrt{\widehat{v_t}}$之比。为防止除零而引入平滑常数$\epsilon = 1
 \end{figure}
 Slurm脚本里指定当前作业需要用到的CPU核数，需要用到多少张GPU显卡，多少个进程，占用多少个计算节点。这是大规模并行计算需要指定
 的计算资源。除此之外，还要配置Python-PyTorch环境，用户准备好可执行程序启动方式，设置好参数选项。最后通过 
-\$sbatch Airway3DSegment\_Baseline.slurm命令提交作业，Slurm作业调度系统分配好计算资源后才开始执行计算任务。
+\$sbatch Airway3DSegment\_Baseline.slurm命令提交作业，Slurm作业调度系统分配好计算资源后才开始执行计算任务。详情
+请见附录\ref{code:slurm_job_script}的Airway3DSegment\_Baseline.slurm作业脚本代码。
 
 \section{数据集ATM22}\label{sec:ATM22dataset}\label{sec:ATM22}
 本文使用的数据集是公开的ATM22数据集\cite{Zhang2022CFDA, Zhang2021Airway, Yu2022Bronchi, Qin2019AirwayNet}，
@@ -370,21 +451,22 @@ Slurm脚本里指定当前作业需要用到的CPU核数，需要用到多少张
 在$[-1000, 400]$亨式单位Hounsfield unit的窗口范围内，并归一化到$[0, 1]$范围。
 
 ATM22数据集里的CT图像切片的尺寸基本都是H512 $\times$ W512个像素，存在很大面积的黑色背景，为了避免学习到肺部之外的无关
-区域，我们对其进行裁切，只保留肺的最小包围框作为有效的区域，“喂给”深度网络进行学习。裁切前后的肺部区域效果对比如图
+区域，我们对其进行裁切，只保留肺的最小包围框作为有效的区域，输入给深度网络进行学习。裁切前后的肺部区域效果对比如图
 \ref{fig:cropimage}所示，
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.7\textwidth]{image_crop}
-    \caption{裁切CT图像切片的效果对比}
+    \bicaption[裁切CT图像切片的效果对比]{裁切CT图像切片的效果对比}
+    	{The pulmonary region comparison before and after cropping CT image slice}
     \label{fig:cropimage}
 \end{figure}
 裁切后不仅可以减少计算量，最重要的是排除无关区域对网络的权重与偏置参数产生影响。
 
-经过上述的裁切后，CT图像体的体积大幅缩小，就拿图\ref{fig:cropimage}的ATM-001-0000病例来说，CT图像体从
+经过上述的裁切后，CT图像体的体积大幅缩小，就拿图\ref{fig:cropimage}的ATM\_001\_0000病例来说，CT图像体从
 $D679 \times H512 \times W512$缩减到$D595 \times H225 \times W333$。但即使如此，对于单个GPU单元显存来说仍然比较大，
 为此，我们将CT图像体切割成$D80 \times H192 \times W304$尺寸的长方体子块。本文使用由上海交通大学高性能计算中心提供的AI超算平台
 来进行训练与计算的。AI超算的显卡型号为NVIDIA Tesla V100，切割成这样的长方体子块最大化利用了GPU的资源又不至于撑爆，可以
-允许调整Batch size。本文的网络在训练时分别使用了1/2/4/8四种不同的Batch size， 经测试验证$D80 \times H192 \times W304$
+允许调整Batch size。本文的网络在训练时分别使用了$1 / 2 / 4 / 8$四种不同的Batch size， 经测试验证$D80 \times H192 \times W304$
 的长方体子块在GPU显存中均运行良好。我们对训练集、验证集和测试集的CT图像体采用了如此相同的切割方法和尺寸。当然，你可能根据你的
 GPU显存资源决定切割的长方体子块的大小，显存资源比较大则可以选择切割成更大的长方体子块。我们对CT图像体采用滑动窗口的切割方式，
 在训练阶段滑动窗口的大小为$D64 \times H96 \times W152$，在验证和测试阶段则的滑动窗口大小为$D64 \times H72 \times W72$.
@@ -392,14 +474,13 @@ GPU显存资源决定切割的长方体子块的大小，显存资源比较大�
 
 为了增强训练效果，也是为了大幅扩大数据量，我们对每个切割的长方体子块图像块进行了数据增强，具体的数据增强方式有：
 \begin{enumerate}\label{enum:data_augmentation}
-    \item {\heiti 沿深度、高度、宽度三个轴随机翻转 RandomFlip}
-    \item {\heiti 随机仿射变换并重采样 RandomAffine}
-    \item {\heiti 随机高斯滤镜模糊图像 RandomBlur}
-    \item {\heiti 给图像添加随机高斯噪声 RandomNoise}
-    \item {\heiti 随机运动模糊，使图像产生运动伪影 RandomMotion}
-    \item {\heiti 添加随机偏差场伪影 RandomBiasField}
-    \item {\heiti 添加随机spike伪影，在图像空间产生不同方向的条纹 RandomSpike}
-    \item {\heiti 添加随机残影 RandomGhosting}
+    \item {沿深度、高度、宽度三个轴随机翻转 RandomFlip}
+    \item {随机仿射变换并重采样 RandomAffine}
+    \item {随机高斯滤镜模糊图像 RandomBlur}
+    \item {给图像添加随机高斯噪声 RandomNoise}
+    \item {随机运动模糊，使图像产生运动伪影 RandomMotion}
+    \item {添加随机spike伪影，在图像空间产生不同方向的条纹 RandomSpike}
+    \item {添加随机残影 RandomGhosting}
 \end{enumerate}
 以上数据增强方式，我们通过组合不同的增强方式来联合增强切割的长方体子块图像数据。我们还加入随机概率作用于这些数据增强方式，
 进一步增强图像数据。
@@ -440,7 +521,7 @@ GPU显存资源决定切割的长方体子块的大小，显存资源比较大�
     
     树长为模型检测到的所有分支的中心线长度之和，TLD表示检测到的树长相比于参考的真实的树长。
 \end{enumerate}
-上述这些评价指标是在EXACT'09\cite{Lo2012ExtractionOA}上被提出，并被普遍接受和广泛使用的评价指标。评估的重点是放在提取
+上述这些评价指标是在EXACT'09\cite{Lo2012ExtractionOA}上被提出来的，并被普遍接受和广泛使用的评价指标。评估的重点是放在提取
 最完整的气道树，进入更高代的气道\footnote{注：在医学上通常使用代来表示支气管分支的相对关系。从咽喉部一直到肺部气管第一个分岔
 前的气管称为第0代气管，从第一个分岔出来的左右肺主气管称为第1代气管，然后分岔到上/中/下肺叶的气管称为第2代气管，再分岔到段支气管
 的称为第3代气管。如此类推，每分岔一个支气管，气管的代就增加1。气管的代越高，表示气管管腔直径就越细小。}并提取尽可能多的分支。
@@ -542,7 +623,7 @@ GPU显存资源决定切割的长方体子块的大小，显存资源比较大�
 我们将3D-UNet基准网络放在上海交通大学高性能计算中心的AI超级计算机上进行训练，输入是从ATM22数据集上随机挑选66例肺部CT扫描图像，按照
 \ref{sec:ATM22}节介绍的裁切方法去掉无关的黑色背景区域，只保留肺部最小包围框作为有效学习区域。然后将这些经裁切的Cuboid体数据
 按照$D64 \times H96 \times W152$的滑动窗口步长随机切割成$D80 \times H192 \times W304$的子块，每个子块都经过
-\ref{enum:data_augmentation}节所述的8种数据增强方法进行增强。Label数据也是66例同病例的CT体数据，按照同样的方式进行
+\ref{enum:data_augmentation}节所述的7种数据增强方法进行增强。Label数据也是66例同病例的CT体数据，按照同样的方式进行
 裁切和切割成$D80 \times H192 \times W304$的子块，但这些Label子块不进行数据增强。每一个图像Cuboid体数据子块与对应的
 Label体数据子块绑定在一起。训练集、验证集和测试集的CT图像切割情况如表\ref{tbl:dataset_overview}所示。
 \begin{table}[!htp]
@@ -551,13 +632,13 @@ Label体数据子块绑定在一起。训练集、验证集和测试集的CT图�
     \label{tbl:dataset_overview}
     \centering
     \begin{tabular}{c|c|c}
-        \toprule
+        \hline
           & \makecell{CT扫描图像\\例数} & \makecell{切割成$D80 \times H192 \times W304$\\的子块总数} \\
-        \midrule
+        \hline
         训练集 & 66 & 2202 \\
         验证集 & 9  & 415 \\
         测试集 & 19 & 770 \\
-        \bottomrule 
+        \hline
     \end{tabular}
 \end{table}
 我们还会在将这些子块送给网络进行学习前会进行一次洗牌，完全打乱2202个子块的顺序，每一个迭代周期都会洗牌一次。同样地，我们也对
@@ -763,7 +844,7 @@ Precision和DSC都已经达到了92\%以上的优秀表现。不管是对于左�
 证明3D-UNet基准网络性能基本上能达到临床应用的水平。
 
 最后我们来看看3D-UNet网络对整个支气管气道树的分割表现。对于测试集的19例CT图像的分割，其性能指标如表
-\ref{tbl:testset_airway_tree_metrics}所示。其中打下划线强调的表示在当前指标表现最出色的。
+\ref{tbl:testset_airway_tree_metrics}所示。其中黑色加粗打双下划线的表示在当前指标表现最出色的。
 \begin{table}[ht]
     \bicaption[测试集上3D-UNet基准网络对支气管气道树分割的性能指标表现]
         {测试集上3D-UNet基准网络对支气管气道树分割的性能指标表现}
@@ -774,7 +855,7 @@ Precision和DSC都已经达到了92\%以上的优秀表现。不管是对于左�
         \toprule
         病例名称          & FPR           & FNR            & Sensitivity     & Precision      & DSC           & BD            & TLD           \\
         \midrule
-        ATM\_001\_0000 & \uline{0.006} & 7.24           & 92.76           & \uline{98.089} & 95.35         & 68.95         & 84.17         \\
+        ATM\_001\_0000 & \uuline{\bf 0.006} & 7.24           & 92.76           & \uuline{\bf 98.089} & 95.35         & 68.95         & 84.17         \\
         ATM\_024\_0000 & 0.031         & 7.236          & 92.764          & 90.916         & 91.83         & 84.18         & 92.86         \\
         ATM\_034\_0000 & 0.022         & 3.705          & 96.295          & 96.251         & 96.27         & 90.75         & 93.93         \\
         ATM\_041\_0000 & 0.047         & 4.808          & 95.192          & 87.189         & 91.02         & 82.38         & 90.38         \\
@@ -787,9 +868,9 @@ Precision和DSC都已经达到了92\%以上的优秀表现。不管是对于左�
         ATM\_158\_0000 & 0.044         & 3.461          & 96.539          & 86.953         & 91.5          & 80.75         & 90.48         \\
         ATM\_163\_0000 & 0.035         & 4.301          & 95.699          & 91.958         & 93.79         & 83.23         & 91.34         \\
         ATM\_197\_0000 & 0.032         & 9.234          & 90.766          & 90.81          & 90.79         & 59.71         & 78.46         \\
-        ATM\_245\_0000 & 0.038         & \uline{0.309}  & \uline{99.691}  & 83.496         & 90.88         & \uline{100}   & \uline{100}   \\
-        ATM\_246\_0000 & 0.04          & 0.611          & 99.389          & 82.853         & 90.37         & \uline{100}   & \uline{100}   \\
-        ATM\_260\_0000 & 0.016         & 1.041          & 98.959          & 94.227         & \uline{96.53} & 98.34         & 97.93         \\
+        ATM\_245\_0000 & 0.038         & \uuline{\bf 0.309}  & \uuline{\bf 99.691}  & 83.496         & 90.88         & \uuline{\bf 100}   & \uuline{\bf 100}   \\
+        ATM\_246\_0000 & 0.04          & 0.611          & 99.389          & 82.853         & 90.37         & \uuline{\bf 100}   & \uuline{\bf 100}   \\
+        ATM\_260\_0000 & 0.016         & 1.041          & 98.959          & 94.227         & \uuline{\bf 96.53} & 98.34         & 97.93         \\
         ATM\_266\_0000 & 0.019         & 2.351          & 97.649          & 93.112         & 95.33         & 99.38         & 98.39         \\
         ATM\_271\_0000 & 0.049         & 1.044          & 98.956          & 86.544         & 92.33         & 97.6          & 97.62         \\
         ATM\_638\_0000 & 0.014         & 3.152          & 96.848          & 95.199         & 96.02         & 90.48         & 95.45         \\
@@ -839,15 +920,15 @@ Precision和DSC都已经达到了92\%以上的优秀表现。不管是对于左�
         \toprule
         病例名称          & FPR           & FNR            & Sensitivity     & Precision      & DSC           & BD            & TLD           \\
         \midrule
-        ATM\_029\_0000 & 0.017           & 9.222          & 90.778          & 93.232         & 91.99         & 80.34         & 88.48         \\
+        ATM\_029\_0000 & \uuline{\bf 0.017}           & 9.222          & 90.778          & 93.232         & 91.99         & 80.34         & 88.48         \\
         ATM\_054\_0000 & 0.032           & 3.876          & 96.124          & 93.343         & 94.71         & 76.78         & 85.61         \\
         ATM\_055\_0000 & 0.031           & 3.571          & 96.429          & 91.66          & 93.98         & 82.51         & 89.9          \\
         ATM\_057\_0000 & 0.03            & 5.757          & 94.243          & 92.35          & 93.29         & 72.85         & 84.36         \\
         ATM\_091\_0000 & 0.034           & 3.432          & 96.568          & 91.148         & 93.78         & 84.04         & 91.09         \\
-        ATM\_174\_0000 & 0.019           & 26.864         & 73.136          & 94.026         & 82.28         & \colorbox{red}{32.38}         & \colorbox{red}{47.19}         \\
+        ATM\_174\_0000 & 0.019           & 26.864         & 73.136          & \uuline{\bf 94.026}         & 82.28         & \colorbox{red}{32.38}         & \colorbox{red}{47.19}         \\
         ATM\_215\_0000 & 0.023           & 9.419          & 90.581          & 91.951         & 91.26         & 73.3          & 84.83         \\
         ATM\_505\_0000 & 0.05            & 55.899         & 44.101          & 84.808         & 58.03         & \colorbox{red}{21.5}          & \colorbox{red}{39.1}          \\
-        ATM\_688\_0000 & 0.023           & 2.217          & 97.783          & 93.409         & 95.55         & 93.07         & 95.73         \\
+        ATM\_688\_0000 & 0.023           & \uuline{\bf 2.217}          & \uuline{\bf 97.783}          & 93.409         & \uuline{\bf 95.55}         & \uuline{\bf 93.07}         & \uuline{\bf 95.73}         \\
         \bottomrule
     \end{tabular}
 \end{table}
