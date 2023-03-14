@@ -514,7 +514,8 @@
       bib               = {参考文献},
       index             = {索\hspace{\ccwd}引},
       ack               = {致\hspace{\ccwd}谢},
-      achv              = {学术论文和科研成果目录},
+      % achv              = {学术论文和科研成果目录},
+      achv              = {攻读学位期间发表的学术论文},
       resume            = {个人简历},
       digest            = {大摘要},
     }
