@@ -386,7 +386,7 @@ $\sqrt{\widehat{v_t}}$之比。为防止除零而引入平滑常数$\epsilon = 1
 在式\ref{eq:adam_update_params}中，若分母$\sqrt{\widehat{v_t}}+\epsilon$过小，就会产生过大的参数$\theta_{t}$，
 这会导致在接近最优值的“山峰”或“山谷”时会反复振荡，所以我们采取降低学习率的方法来稍微抵消一些。在训练的过程中，我们会逐渐地
 动态地降低学习率。具体降低学习率的策略是：如果训练时的损失保持在一个平台超过10个epoch，我们就会降低学习率10倍, 
-在训练后期我们会将这个周期拉长为20g个epoch。初始学习率设置为$3 \times {10}^{-3}$，动态降低学习率按照表
+在训练后期我们会将这个周期拉长为20个epoch。初始学习率设置为$3 \times {10}^{-3}$，动态降低学习率按照表
 \ref{tbl:descend_lr}的规律来进行调整。
 \begin{table}[!htp]
     \bicaption[动态降低学习率]{动态降低学习率}{Dynamically descent the learning rate}
@@ -846,6 +846,7 @@ Precision和DSC都已经达到了92\%以上的优秀表现。不管是对于左�
 最后我们来看看3D-UNet网络对整个支气管气道树的分割表现。对于测试集的19例CT图像的分割，其性能指标如表
 \ref{tbl:testset_airway_tree_metrics}所示。其中黑色加粗打双下划线的表示在当前指标表现最出色的。
 \begin{table}[ht]
+    \zihao{8}
     \bicaption[测试集上3D-UNet基准网络对支气管气道树分割的性能指标表现]
         {测试集上3D-UNet基准网络对支气管气道树分割的性能指标表现}
         {The metrics table of 3D-UNet baseline model segmenting airway tree in testset}
