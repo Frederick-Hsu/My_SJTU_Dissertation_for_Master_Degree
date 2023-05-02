@@ -386,21 +386,35 @@ ATM\_688\_0000这个病例稍微有点例外，但仔细研究是在上叶支气
 管内壁蓝色真阳性体素。
 
 特别需要指出的是，ATM\_074\_0000和ATM\_271\_0000两个病例在气管最上端有非常明显的绿色假阳性体素，其实这并不是分割模型判断错误了。通过查看原始CT图像
-\ref{tbl:two_special_cases}，确认这段绿色假阳性体素确实是咽喉处的气管。
-\begin{table}[!htp]
-    \bicaption[ATM\_074\_0000和ATM\_271\_0000两个特殊病例的分割结果分析]
+\ref{fig:two_special_cases}，确认这段绿色假阳性体素确实是咽喉处的气管。
+%\begin{table}[!htp]
+%    \bicaption[ATM\_074\_0000和ATM\_271\_0000两个特殊病例的分割结果分析]
+%        {ATM\_074\_0000和ATM\_271\_0000两个特殊病例的分割结果分析}
+%        {The segmentation results analysis for 2 special cases: ATM\_074\_0000 and ATM\_271\_0000}
+%    \label{tbl:two_special_cases}
+%    \centering
+%    \begin{tabular}{|c|c|}
+%        \hline
+%        ATM\_074\_0000 & ATM\_271\_0000 \\
+%        \includegraphics[width=0.45\textwidth]{results/baseline_ds_ad/test040/ATM_074_0000} &
+%        \includegraphics[width=0.45\textwidth]{results/baseline_ds_ad/test040/ATM_271_0000} \\
+%        \hline
+%    \end{tabular}
+%\end{table}
+\begin{figure}[!htp]
+	\centering
+	\begin{subfigure}{0.48\textwidth}
+		\includegraphics[width=\textwidth]{results/baseline_ds_ad/test040/ATM_074_0000}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.48\textwidth}
+		\includegraphics[width=\textwidth]{results/baseline_ds_ad/test040/ATM_271_0000}
+	\end{subfigure}
+	\bicaption[ATM\_074\_0000和ATM\_271\_0000两个特殊病例的分割结果分析]
         {ATM\_074\_0000和ATM\_271\_0000两个特殊病例的分割结果分析}
         {The segmentation results analysis for 2 special cases: ATM\_074\_0000 and ATM\_271\_0000}
-    \label{tbl:two_special_cases}
-    \centering
-    \begin{tabular}{|c|c|}
-        \hline
-        ATM\_074\_0000 & ATM\_271\_0000 \\
-        \includegraphics[width=0.45\textwidth]{results/baseline_ds_ad/test040/ATM_074_0000} &
-        \includegraphics[width=0.45\textwidth]{results/baseline_ds_ad/test040/ATM_271_0000} \\
-        \hline
-    \end{tabular}
-\end{table}
+	\label{fig:two_special_cases}
+\end{figure}
 它们是真实存在的气管，但为什么会发生分割模型误判了这些真实存在的气管，原因就是医生遗漏了标注咽喉部位的气管。从这一角度来说，3D-UNet + AD网络分割模型其实
 并没有错误判断，反而帮助提高了真阳性率，分割出更多真实的支气管气道树。
 
