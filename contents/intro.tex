@@ -96,17 +96,15 @@
 		类别。这方面主要的工作有Sauvola法\cite{sauvola2000adaptive}、最大类间方差Otsu法\cite{otsu1979threshold}等。医疗图像（DICOM格式\cite{mustra2008overview}）都是典型的灰度图（如图\ref{fig:medical_image}所示），阈值法很多都是根据灰度来确定阈值的。
 		\begin{figure}[!htp]
 			\centering
-			\begin{subfigure}{\textwidth}
+			\begin{subfigure}{0.45\textwidth}
 				\centering
-				\includegraphics[scale=0.5]{DICOM image(axial view)}
+				\includegraphics[width=\textwidth, scale=0.9]{DICOM image(axial view)}
 				\caption{轴向面视图}
 			\end{subfigure}
-			
-			\vspace{2mm}
-			
-			\begin{subfigure}{\textwidth}
+			\hfill
+			\begin{subfigure}{0.45\textwidth}
 				\centering
-				\includegraphics[scale=0.5]{DICOM image(coronal view)}
+				\includegraphics[width=\textwidth, scale=0.9]{DICOM image(coronal view)}
 				\caption{冠状面视图}
 			\end{subfigure}
 			\bicaption[医疗图像(DICOM格式的灰度图)]
@@ -254,17 +252,15 @@
 	上对平均Tree Length Detected取得了SOTA性能。
 	\begin{figure}[!htp]
 		\centering
-		\begin{subfigure}{\textwidth}
+		\begin{subfigure}{0.39\textwidth}
 			\centering
-			\includegraphics[width=0.5\textwidth]{TACNet_Flowchart}
+			\includegraphics[width=\textwidth]{TACNet_Flowchart}
 			\caption{TACNet气道树分割流程}
 		\end{subfigure}
-		
-		\vspace{5mm}
-		
-		\begin{subfigure}{\textwidth}
+		\hfill
+		\begin{subfigure}{0.6\textwidth}
 			\centering
-			\includegraphics[width=0.7\textwidth]{TACNet_architecture}
+			\includegraphics[width=\textwidth]{TACNet_architecture}
 			\caption{TACNet网络结构}
 		\end{subfigure}
 		\bicaption[TACNet气道树分割网络]
@@ -281,19 +277,17 @@
 	 \begin{figure}[t]
 	 	\centering
 	 	
-	 	\begin{subfigure}{\textwidth}
+	 	\begin{subfigure}{0.70\textwidth}
 	 		\centering
-	 		\includegraphics[width=0.7\textwidth]{Mif_CNN}
+	 		\includegraphics[width=\textwidth]{Mif_CNN}
 	 		\caption{多信息融合Mif-CNN网络}
 	 		\label{fig:MifCNN}
 	 	\end{subfigure}
-	 	
-	 	\vspace{5mm}
-	 	
-	 	\begin{subfigure}{\textwidth}
+	 	\hfill	 	
+	 	\begin{subfigure}{0.29\textwidth}
 	 		\centering
-	 		\includegraphics[scale=0.2]{VCN}
-	 		\caption{基于CNN的区域生长网络}
+	 		\includegraphics[width=\textwidth]{VCN}
+	 		\caption{基于CNN区域生长网络}
 	 		\label{fig:VCN}
 	 	\end{subfigure}
 	 	
