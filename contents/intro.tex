@@ -161,7 +161,7 @@
 	\end{figure}
 	\begin{figure}[!htp]
 		\centering
-		\includegraphics[width=0.6 \textwidth]{Deconvolution_and_unpooling_operations}
+		\includegraphics[width=0.5 \textwidth]{Deconvolution_and_unpooling_operations}
 		\bicaption[卷积与反卷积，池化与反池化的操作]
 			{卷积与反卷积，池化与反池化的操作\cite{Noh2015LearningDN}}
 			{The operations of convolution/deconvolution, and pooling/unpooling}
@@ -192,7 +192,7 @@
 	One Network to segment them all一种通用	的轻量级的网络结构，如图\ref{fig:Genral_UNet}所示，来精确分割3D图像。它是在2D UNet网络之后再加上一个Fusion model实现的。
 	\begin{figure}[!htp]
 		\centering
-		\includegraphics[width=0.8\textwidth]{Genral_UNet}
+		\includegraphics[width=0.7\textwidth]{Genral_UNet}
 		\bicaption[一种通用的轻量化的UNet网络]
 			{一种通用的轻量化的UNet网络\cite{PerslevGeneralUNetFusion}}
 			{A general, lightweight UNet to segment them all}
@@ -204,7 +204,7 @@
 	\ref{fig:COVID19}）在卷积层后插入通道注意力层和稠密区块层，使其聚焦于感兴趣的感染区域，从而高效地检测出感染情况。
 	\begin{figure}[htp]
 		\centering
-		\includegraphics[width=0.8\textwidth]{Densely_attention_mechanism_based_network}
+		\includegraphics[width=0.7\textwidth]{Densely_attention_mechanism_based_network}
 		\bicaption[稠密型注意力机制网络用来检测 COVID-19的感染情况]
 			{稠密型注意力机制网络用来检测 COVID-19的感染情况\cite{Ullah2023DenselyAM}}
 			{Densely attention mechanism network to detect the COVID-19 infection}
@@ -335,7 +335,9 @@
 	\item {\heiti 全局尺度和局部尺度的上下文信息难以同时兼顾}
 	
 	肺部支气管是在三维空间上分布的，其众多的分支分散在肺部各处。我们的分割当然不仅仅要学习到气道(Trachea)、左右主支气管(Left/Right main bronchus)、上/中/下肺
-	叶支气管(Superior/Middle/Inferior Lobar bronchus)的特征信息，还要学习从上/中/下肺叶支气管扩展出来的段支气管(Segmental bronchi)，从段支气管扩展出来的小叶支气管(Lobular bronchi)，甚至连接到肺泡的细支气管(Bronchiole)的特征信息。细小的支气管这种局部尺度的上下文其实不需要多大的感受野，但对于粗大一些的气道、左右主支气管，我们又需要更大一些的感受野
+	叶支气管(Superior/Middle/Inferior Lobar bronchus)的特征信息，还要学习从上/中/下肺叶支气管扩展出来的段支气管(Segmental bronchi)，从段支气管扩展出来的
+	小叶支气管(Lobular bronchi)，甚至连接到肺泡的细支气管(Bronchiole)的特征信息。细小的支气管这种局部尺度的上下文其实不需要多大的感受野，但对于粗大一些的气道、
+	左右主支气管，我们又需要更大一些的感受野
 	来推测整体的气道树形状，也即全局尺度的上下文。面对这种矛盾，应该使用多少个池化层？如果简单地堆积更多的池化层，那么增加的参数可能会因为训练数据不足而导致过拟合。
 	如果为了避免这种参数爆炸而牺牲卷积网络的宽度（即特征通道的数量）来换取深度（卷积层的层数），那么模型的学习和拟合能力可能不够\cite{Qin2021TubuleSen}。
 	所以，全局尺度的上下文信息与局部尺度的上下文信息是否能够兼顾到呢？ 这是另一个困难与挑战之处。
