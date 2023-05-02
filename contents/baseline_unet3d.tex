@@ -109,7 +109,7 @@ CT扫描图像在$H3 \times W3$窗口内的Hounsfield unit\cite{HU2016CT}灰度\
         {Four Normalization Methods}
     \label{fig:4norm}
 \end{figure}
-深度网络的数据维度一般是$[Batch, Channel, Height, Width]$，简写为$[N, C, H, W]$（$N$即为$Batch$）。
+深度网络的数据维度一般是\\$[Batch, Channel, Height, Width]$，简写为$[N, C, H, W]$（$N$即为$Batch$）。
 因为这是四个维度，我们无法画出一个四维空间的图形，所以压缩特征的$H, W$至一个维度。
 
 批次归一化Batch Normalization沿Batch维度计算特征的均值和方差，归一化为$[N, H, W]$的维度，如图\ref{fig:4norm}
@@ -211,7 +211,8 @@ CT图像是一种体数据形式，它由一层一层的切片堆叠而成，每
 体素的分辨率增大或减小。需要指出的是，在U型结构的右侧，每一个层靠近跳跃连接的箭头处都有一个并排的长方体柱，那表示跳跃连接将
 下采样路径上每一个卷积层块的特征输出拼接到上采样路径上每一个对应的反卷积层块的输入特征来。
 
-上述的3D-UNet网络结构是本文所设计与使用，并编程实现的CT图像支气管气道树分割网络。我们将以此3D-UNet网络作为基准，通过实验
+上述的3D-UNet网络结构是本文所设计与使用，并编程实现的CT图像支气管气道树分割网络。我们将以此3D-UNet网络作为基准\footnote{\textcolor{red}{需要指出一点，
+本文后面所提到的3D-UNet网络基准模型，3D-UNet基准网络或基准模型都指的是该3D-UNet网络，它们是在不同语境下的叫法。}}，通过实验
 分析3D-UNet的分割结果和性能指标（包括但不限于假阳性率False Positive Rate、 真阳性率True Positive Rate、骰子相似度
 系数Dice Similarity Coefficient、分支检出率Branch Detected、检测到的树长Tree Length Detected和精度等指标），提出
 我们的改进方法。我们将在后面的章节展开讲述我们的改进方法，并通过实验来对比验证我们的改进方法是否有效，是否提高了分割效果和性能。
