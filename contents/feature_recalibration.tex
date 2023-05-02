@@ -352,23 +352,23 @@ Attention-Gated U-Net\cite{Oktay2018AttentionUL}来比较FPR、DSC、BD和TLD四
         \multicolumn{2}{c|}{\makecell{我们的方法\\3D-UNet + AD + FRL}} & 0.0328 & 93.171 & 83.454 & \uuline{\bf 90.883} \\
         \hline
         \hline
-        \multirowcell{3}{经典的\\网络} & V-Net\cite{Milletar2016VNetFC} & 0.024 & 92.1 & 91.0 & 81.6 \\
+        \multirow{3}*{\makecell{经典的\\网络}} & V-Net\cite{Milletar2016VNetFC} & 0.024 & 92.1 & 91.0 & 81.6 \\
         
-        \cline{2-6} & VoxResNet\cite{CHEN2018446} & 0.012 & 92.7 & 88.2 & 76.4 \\
+                                             & VoxResNet\cite{CHEN2018446} & 0.012 & 92.7 & 88.2 & 76.4 \\
         
-        \cline{2-6} & Attention-Gated U-Net\cite{Oktay2018AttentionUL} & 0.031 & 92.5 & \uuline{\bf 93.8} & 88.2 \\
+                                             & Attention-Gated U-Net\cite{Oktay2018AttentionUL} & 0.031 & 92.5 & \uuline{\bf 93.8} & 88.2 \\
         
         \hline
         \hline
-        \multirowcell{5}{SOTA\\的方法} & \makecell{Wang Chenglong等人\cite{Wang2019TubularSegment}\\提出的空间全连接网络} & 0.018 & 93.5 & 93.4 & 85.6 \\
+        \multirow{5}*{\makecell{SOTA\\的\\方\\法}} & \makecell{Wang Chenglong等人\cite{Wang2019TubularSegment}\\提出的空间全连接网络} & 0.018 & 93.5 & 93.4 & 85.6 \\
         
-        \cline{2-6} & \makecell{Antonio Juarez等人\cite{Juarez2019Joint3DUNetGraph}\\提出的3D-UNet + GNN\\联合型网络} & \uuline{\bf 0.009} & 87.5 & 77.5 & 66.0 \\
+        \cline{2-2}  & \makecell{Antonio Juarez等人\cite{Juarez2019Joint3DUNetGraph}\\提出的3D-UNet + GNN\\联合型网络} & \uuline{\bf 0.009} & 87.5 & 77.5 & 66.0 \\
 
-        \cline{2-6} & \makecell{Qin Yulei等人\cite{Qin2019AirwayNet}\\提出的体素连接\\的AirwayNet网络} & 0.014 & \uuline{\bf 93.7} & 91.6  & 82.1 \\
+						\cline{2-2}  & \makecell{Qin Yulei等人\cite{Qin2019AirwayNet}\\提出的体素连接\\的AirwayNet网络} & 0.014 & \uuline{\bf 93.7} & 91.6  & 82.1 \\
         
-        \cline{2-6} & \makecell{Antonio Juarez等人\cite{Juarez2018AutoAirwaySegment}\\较早提出的应用3D-UNet\\用于气道树分割的方法} & 0.014 & 93.6 & 91.9 & 80.7 \\
+        \cline{2-2} & \makecell{Antonio Juarez等人\cite{Juarez2018AutoAirwaySegment}\\较早提出的应用3D-UNet\\用于气道树分割的方法} & 0.014 & 93.6 & 91.9 & 80.7 \\
         
-        \cline{2-6} & \makecell{Dakai Jin等人\cite{Dakai2017GraphRefinement}提出的\\结合3D CNN与Graph \\Refinement的方法} & 0.017 & 93.6 & 93.1 & 84.8 \\
+        \cline{2-2} & \makecell{Dakai Jin等人\cite{Dakai2017GraphRefinement}提出的\\结合3D CNN与Graph \\Refinement的方法} & 0.017 & 93.6 & 93.1 & 84.8 \\
         \hline
         \hline
         \multicolumn{2}{c|}{\makecell{我们的方法在一些病例\\上取得的优秀表现\\以ATM\_260\_0000为例}} & 0.017 & \uuline\bf 96.57 & 97.24 & 96.57 \\
