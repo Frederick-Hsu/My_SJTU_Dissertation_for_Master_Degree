@@ -247,32 +247,84 @@ UpChannel = nn.Conv3d(in_channels=Cm//r,
 \end{table}
 在每一项指标上用双下划线加粗黑体标示出表现最优秀的，用波浪线标示出最差的。并在最后一行计算出每个指标的平均值，以作为参考。
 
-我们从表\ref{tbl:comprehensive_metrics_overview}挑选出9个有代表性的病例来显示支气管气道树三维模型，见表\ref{fig:airway_segmentation_overview}。
-\begin{table}[!ht]
-    \centering
-    \bicaption[综合实验验证集和测试集的气道树分割效果一览]
+我们从表\ref{tbl:comprehensive_metrics_overview}挑选出9个有代表性的病例来显示支气管气道树三维模型，见图\ref{fig:airway_segmentation_overview}。
+%\begin{table}[!ht]
+%    \centering
+%    \bicaption[综合实验验证集和测试集的气道树分割效果一览]
+%        {综合实验验证集和测试集的气道树分割效果一览}
+%        {The airway tree segmentation overview of comprehensive experiment for valset and testset}
+%    \label{fig:airway_segmentation_overview}
+%    \begin{tabular}{|c|c|c|}
+%        \hline
+%        ATM\_260\_0000 & ATM\_266\_0000 & ATM\_638\_0000 \\
+%        \includegraphics[width=0.3\textwidth]{results/baseline_fr_ds_ad/val_test/ATM_260_0000_airway_tree_with_3colors_at_test_epoch1} &
+%        \includegraphics[width=0.3\textwidth]{results/baseline_fr_ds_ad/val_test/ATM_266_0000_airway_tree_with_3colors_at_test_epoch1} &
+%        \includegraphics[width=0.3\textwidth]{results/baseline_fr_ds_ad/val_test/ATM_638_0000_airway_tree_with_3colors_at_test_epoch1} \\
+%        \hline
+%        ATM\_055\_0000 & ATM\_060\_0000 & ATM\_075\_0000 \\
+%        \includegraphics[width=0.3\textwidth]{results/baseline_fr_ds_ad/val_test/ATM_055_0000_airway_tree_with_3colors_at_val_epoch1} &
+%        \includegraphics[width=0.3\textwidth]{results/baseline_fr_ds_ad/val_test/ATM_060_0000_airway_tree_with_3colors_at_test_epoch1} &
+%        \includegraphics[width=0.3\textwidth]{results/baseline_fr_ds_ad/val_test/ATM_075_0000_airway_tree_with_3colors_at_test_epoch1} \\
+%        \hline
+%        ATM\_271\_0000 & ATM\_061\_0000 & ATM\_074\_0000 \\
+%        \includegraphics[width=0.3\textwidth]{results/baseline_fr_ds_ad/val_test/ATM_271_0000_airway_tree_with_3colors_at_test_epoch1} &
+%        \includegraphics[width=0.3\textwidth]{results/baseline_fr_ds_ad/val_test/ATM_061_0000_airway_tree_with_3colors_at_test_epoch1} &
+%        \includegraphics[width=0.3\textwidth]{results/baseline_fr_ds_ad/val_test/ATM_074_0000_airway_tree_with_3colors_at_test_epoch1} \\
+%        \hline
+%    \end{tabular}
+%\end{table}
+
+\begin{figure}[!ht]
+	\centering
+	\begin{subfigure}{0.325\textwidth}
+		\includegraphics[width=\textwidth]{results/baseline_fr_ds_ad/val_test/ATM_260_0000_airway_tree_with_3colors_at_test_epoch1}
+		\caption{ATM\_260\_0000}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.325\textwidth}
+		\includegraphics[width=\textwidth]{results/baseline_fr_ds_ad/val_test/ATM_266_0000_airway_tree_with_3colors_at_test_epoch1}
+		\caption{ATM\_266\_0000}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.325\textwidth}
+		\includegraphics[width=\textwidth]{results/baseline_fr_ds_ad/val_test/ATM_638_0000_airway_tree_with_3colors_at_test_epoch1}
+		\caption{ATM\_638\_0000}
+	\end{subfigure}
+	\\
+	\begin{subfigure}{0.325\textwidth}
+		\includegraphics[width=\textwidth]{results/baseline_fr_ds_ad/val_test/ATM_055_0000_airway_tree_with_3colors_at_val_epoch1}
+		\caption{ATM\_055\_0000}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.325\textwidth}
+		\includegraphics[width=\textwidth]{results/baseline_fr_ds_ad/val_test/ATM_060_0000_airway_tree_with_3colors_at_test_epoch1}
+		\caption{ATM\_060\_0000}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.325\textwidth}
+		\includegraphics[width=\textwidth]{results/baseline_fr_ds_ad/val_test/ATM_075_0000_airway_tree_with_3colors_at_test_epoch1}
+		\caption{ATM\_075\_0000}
+	\end{subfigure}
+	\\
+	\begin{subfigure}{0.325\textwidth}
+		\includegraphics[width=\textwidth]{results/baseline_fr_ds_ad/val_test/ATM_271_0000_airway_tree_with_3colors_at_test_epoch1}
+		\caption{ATM\_271\_0000}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.325\textwidth}
+		\includegraphics[width=\textwidth]{results/baseline_fr_ds_ad/val_test/ATM_061_0000_airway_tree_with_3colors_at_test_epoch1}
+		\caption{ATM\_061\_0000}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.325\textwidth}
+		\includegraphics[width=\textwidth]{results/baseline_fr_ds_ad/val_test/ATM_074_0000_airway_tree_with_3colors_at_test_epoch1}
+		\caption{ATM\_074\_0000}
+	\end{subfigure}
+	\bicaption[综合实验验证集和测试集的气道树分割效果一览]
         {综合实验验证集和测试集的气道树分割效果一览}
         {The airway tree segmentation overview of comprehensive experiment for valset and testset}
     \label{fig:airway_segmentation_overview}
-    \begin{tabular}{|c|c|c|}
-        \hline
-        ATM\_260\_0000 & ATM\_266\_0000 & ATM\_638\_0000 \\
-        \includegraphics[width=0.3\textwidth]{results/baseline_fr_ds_ad/val_test/ATM_260_0000_airway_tree_with_3colors_at_test_epoch1} &
-        \includegraphics[width=0.3\textwidth]{results/baseline_fr_ds_ad/val_test/ATM_266_0000_airway_tree_with_3colors_at_test_epoch1} &
-        \includegraphics[width=0.3\textwidth]{results/baseline_fr_ds_ad/val_test/ATM_638_0000_airway_tree_with_3colors_at_test_epoch1} \\
-        \hline
-        ATM\_055\_0000 & ATM\_060\_0000 & ATM\_075\_0000 \\
-        \includegraphics[width=0.3\textwidth]{results/baseline_fr_ds_ad/val_test/ATM_055_0000_airway_tree_with_3colors_at_val_epoch1} &
-        \includegraphics[width=0.3\textwidth]{results/baseline_fr_ds_ad/val_test/ATM_060_0000_airway_tree_with_3colors_at_test_epoch1} &
-        \includegraphics[width=0.3\textwidth]{results/baseline_fr_ds_ad/val_test/ATM_075_0000_airway_tree_with_3colors_at_test_epoch1} \\
-        \hline
-        ATM\_271\_0000 & ATM\_061\_0000 & ATM\_074\_0000 \\
-        \includegraphics[width=0.3\textwidth]{results/baseline_fr_ds_ad/val_test/ATM_271_0000_airway_tree_with_3colors_at_test_epoch1} &
-        \includegraphics[width=0.3\textwidth]{results/baseline_fr_ds_ad/val_test/ATM_061_0000_airway_tree_with_3colors_at_test_epoch1} &
-        \includegraphics[width=0.3\textwidth]{results/baseline_fr_ds_ad/val_test/ATM_074_0000_airway_tree_with_3colors_at_test_epoch1} \\
-        \hline
-    \end{tabular}
-\end{table}
+\end{figure}
 可以看到，末梢支气管的分割比之前的两个实验的效果要好得多，虽然不能完全排除红色假阴性（漏检）体素和绿色假阳性（误检）体素，总体上将末梢支气管这些精细特征都给分割
 出来了，说明通道级特征再学习的改进方法提高了3D-UNet + AD + FRL网络模型的性能。当然这些改善是注意力蒸馏Attention Distillation和通道级特征再学习
 Channel-wise Feature Re-Learning两个改进功能共同作用的，单一的改进还达不到这样的效果。
