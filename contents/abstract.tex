@@ -24,25 +24,31 @@
 
 \begin{abstract*}
 
-  Diagnosing and screening the pulmonary diseases usually utilizes the computed tomography scanning on lung region, captures the image slices of 
-  lesion part, then clinicians make the diagnosis according to these CT-scanning images.
-  In this thesis we investigate the pulmonary CT-scanning images, for the goal of extracting the accurate airway tree 3D model. Bronchial airway
-  tree is an important reference for the treatment of many pulmonary diseases. Currently CNN-based airway tree segmentation is facing 
-  some challenges like severe class imbalance. We have proposed 2 new methods: attention distillation (AD) method 
-  and channel-wise feature re-learning (FRL) method, in this thesis to tackle the problem. Based on the 3D-UNet baseline network, we adopt the 
-  ATM22 dataset to train a segmentation model on the AI supercomputer platform.
+  Diagnosing and screening the pulmonary diseases usually utilizes the computed tomography scanning on lung region, 
+  captures the image slices of lesion part, then clinicians make the diagnosis according to these CT-scanning images.
+  In this thesis we investigate the pulmonary CT-scanning images, for the goal of extracting the accurate airway tree 
+  3D model. Bronchial airway tree is an important reference for the treatment of many pulmonary diseases. Currently 
+  CNN-based airway tree segmentation is facing some challenges like severe class imbalance. We have proposed 2 new 
+  methods: attention distillation (AD) method and channel-wise feature re-learning (FRL) method, in this thesis to 
+  tackle the problem. Based on the 3D-UNet baseline network, we adopt the ATM22 dataset to train a segmentation model 
+  on the AI supercomputer platform.
 
-  An experiment based on 3D-UNet baseline network, which we have done to segment the bronchial airway, had shown the deficiencies of false positive and false negative detecting.
-  It is because of the extremely sparse bronchial voxels annotated on CT volumetric data. 
-  Motivated by the attention transfer and knowledge distillation, the attention distillation method is proposed to focus on the tree structure of bronchial
-  airway. It can discard the interference of massive useless background, extract the main airway branches and some small ones. We add AD modules onto the decoder
-  path of 3D-UNet baseline network, in order to improve the focusing issue on important airway features. 
-  Some experiments had shown that attention distillation method can effectively reduce the FNR and FPR.
+  An experiment based on 3D-UNet baseline network, which we have done to segment the bronchial airway, had shown the 
+  deficiencies of false positive and false negative detecting.
+  It is because of the extremely sparse bronchial voxels annotated on CT volumetric data. Motivated by the attention 
+  transfer and knowledge distillation, the attention distillation method is proposed to focus on the tree structure 
+  of bronchial airway. It can discard the interference of massive useless background, extract the main airway branches 
+  and some small ones. We add AD modules onto the decoder path of 3D-UNet baseline network, in order to improve the 
+  focusing issue on important airway features. Some experiments had shown that attention distillation method can 
+  effectively reduce the FNR and FPR.
 
-  The airway tree has both the coarse features of voxels on trunk bronchus and the fine features of voxels on distal bronchus, the fine features could be gradually erased due to resolution reduction in the pooling layers. Different spatial positions have different degrees of importance. FRL method is proposed to recombine the feature channels which 
-  were produced from convolutional layer, it has the crucial airway regions preferred gradually with higher weights, meanwhile has the uninformative regions negleted with lower weights.
-  The FRL module is inserted between each convolutional layer and pooling layer of 3D-UNet baseline network, just to improve the ability of recognizing more refined features, 
-  after that a comprehensive experiment showed that the distal bronchus had 
-  been well segmented, and the performance metrics were improved obviously.
+  The airway tree has both the coarse features of voxels on trunk bronchus and the fine features of voxels on distal 
+  bronchus, the fine features could be gradually erased due to resolution reduction in the pooling layers. Different 
+  spatial positions have different degrees of importance. FRL method is proposed to recombine the feature channels which 
+  were produced from convolutional layer, it has the crucial airway regions preferred gradually with higher weights, 
+  meanwhile has the uninformative regions negleted with lower weights.
+  The FRL module is inserted between each convolutional layer and pooling layer of 3D-UNet baseline network, just to 
+  improve the ability of recognizing more refined features, after that a comprehensive experiment showed that the 
+  distal bronchus had been well segmented, and the performance metrics were improved obviously.
 
 \end{abstract*}
