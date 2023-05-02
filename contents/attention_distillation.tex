@@ -115,30 +115,57 @@ Improving the performance of convolutional neural networks via Attention Transfe
     \label{fig:ad_effect}
 \end{figure}
 从图\ref{fig:ad_effect}可以看出，高亮之处也就是聚焦点沿着conv6->conv7->conv8->conv9的方向从粗壮的气管逐渐转移至更
-细小的末梢支气管，这也是注意力机制在引导我们聚焦看哪里。为了更清晰，我们将注意力蒸馏后的图片转成灰度图并放大，请见表\ref{tbl:ad_effect}，
-对比4个卷积层蒸馏后焦点转移情况。说明一点，为了便于读者复现此注意力蒸馏后的效果，显示表\ref{tbl:ad_effect}的图片，请参考
+细小的末梢支气管，这也是注意力机制在引导我们聚焦看哪里。为了更清晰，我们将注意力蒸馏后的图片转成灰度图并放大，请见图\ref{tbl:ad_effect}，
+对比4个卷积层蒸馏后焦点转移情况。说明一点，为了便于读者复现此注意力蒸馏后的效果，显示如图\ref{tbl:ad_effect}的图片，请参考
 附录\ref{code:ad_effect}的代码片段。
-\begin{table}[!htp]
-    \centering
-    \bicaption[注意力蒸馏后图像特征对比]
+%\begin{table}[!htp]
+%    \centering
+%    \bicaption[注意力蒸馏后图像特征对比]
+%        {注意力蒸馏后图像特征对比}
+%        {The comparison of image feature after attention distillation}
+%    \label{tbl:ad_effect}
+%    \scalebox{0.8}{
+%    \begin{tabular}{|c|c|}
+%        \hline
+%        第6个卷积层蒸馏后 & 第7个卷积层蒸馏后 \\
+%        \hline
+%        \includegraphics[width=0.5\textwidth, height=0.55\textheight]{Illustration/ad_feat6} & 
+%        \includegraphics[width=0.5\textwidth, height=0.55\textheight]{Illustration/ad_feat7} \\
+%        \hline
+%        第8个卷积层蒸馏后 & 第9个卷积层蒸馏后 \\
+%        \hline
+%        \includegraphics[width=0.5\textwidth, height=0.55\textheight]{Illustration/ad_feat8} & 
+%        \includegraphics[width=0.5\textwidth, height=0.55\textheight]{Illustration/ad_feat9} \\
+%        \hline
+%    \end{tabular}}
+%\end{table}
+
+\begin{figure}[!htp]
+	\centering
+	\begin{subfigure}{0.45\textwidth}
+		\includegraphics[width=\textwidth, height=0.42\textheight]{Illustration/ad_feat6}
+		\caption{第6个卷积层蒸馏后}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.45\textwidth}
+		\includegraphics[width=\textwidth, height=0.42\textheight]{Illustration/ad_feat7}
+		\caption{第7个卷积层蒸馏后}
+	\end{subfigure}
+	\\
+	\begin{subfigure}{0.45\textwidth}
+		\includegraphics[width=\textwidth, height=0.42\textheight]{Illustration/ad_feat8}
+		\caption{第8个卷积层蒸馏后}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.45\textwidth}
+		\includegraphics[width=\textwidth, height=0.42\textheight]{Illustration/ad_feat9}
+		\caption{第9个卷积层蒸馏后}
+	\end{subfigure}
+	\bicaption[注意力蒸馏后图像特征对比]
         {注意力蒸馏后图像特征对比}
         {The comparison of image feature after attention distillation}
-    \label{tbl:ad_effect}
-    \scalebox{0.8}{
-    \begin{tabular}{|c|c|}
-        \hline
-        第6个卷积层蒸馏后 & 第7个卷积层蒸馏后 \\
-        \hline
-        \includegraphics[width=0.5\textwidth, height=0.55\textheight]{Illustration/ad_feat6} & 
-        \includegraphics[width=0.5\textwidth, height=0.55\textheight]{Illustration/ad_feat7} \\
-        \hline
-        第8个卷积层蒸馏后 & 第9个卷积层蒸馏后 \\
-        \hline
-        \includegraphics[width=0.5\textwidth, height=0.55\textheight]{Illustration/ad_feat8} & 
-        \includegraphics[width=0.5\textwidth, height=0.55\textheight]{Illustration/ad_feat9} \\
-        \hline
-    \end{tabular}}
-\end{table}
+	\label{tbl:ad_effect}
+\end{figure}
 
 注意力蒸馏方法可使焦点转移，聚焦于看更细节的对象，帮助模型提高精细度的性能。为此，我们对前文的3D-UNet基准网络进行改进，引入
 注意力蒸馏方法。
