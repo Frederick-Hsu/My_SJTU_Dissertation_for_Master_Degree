@@ -3,11 +3,13 @@
 % 载入 SJTUThesis 模版
 \documentclass[type=master]{sjtuthesis}
 % 选项
-%   type=[doctor|master|bachelor|course],     % 可选（默认：doctor），论文类型
-%   zihao=[-4|5],                             % 可选（研究生默认：-4，本科默认：5），正文字号大小
-%   lang=[zh|en],                             % 可选（默认：zh），论文的主要语言
-%   review,                                   % 可选（默认：关闭），盲审模式
-%   [twoside|oneside]                         % 可选（默认：twoside），单双页模式
+%   type=[doctor|master|bachelor],     % 可选（默认：master），论文类型
+%   zihao=[-4|5],                      % 可选（默认：-4），正文字号大小
+%   lang=[zh|en|de|ja],                % 可选（默认：zh），论文的主要语言
+%   review,                            % 可选（默认：关闭），盲审模式
+%   [twoside|oneside],                 % 可选（默认：twoside），双页或单页边距模式
+%   [openright|openany],               % 可选（默认：openright），奇数页或任意页开始新章
+%   math-style=[ISO|TeX],              % 可选 (默认：ISO)，数学符号样式
 
 % 论文基本配置，加载宏包等全局配置
 \input{setup}
@@ -22,7 +24,8 @@
 % 原创性声明及使用授权书
 \copyrightpage
 % 插入外置原创性声明及使用授权书
-% \copyrightpage[scans/sample-copyright-old.pdf]
+% 此时必须在导言区使用 \usepackage{pdfpages}
+% \copyrightpage[scans/sample-copyright.pdf]
 
 % 前置部分
 \frontmatter
@@ -53,9 +56,6 @@
 \input{contents/attention_distillation}
 \input{contents/feature_recalibration}
 \input{contents/summary_and_outlook}
-% \input{contents/math_and_citations}
-% \input{contents/floats}
-% \input{contents/summary}
 
 %TC:ignore
 
@@ -70,7 +70,6 @@
 
 % 附录内容
 \input{contents/experiment_source_code}
-% \input{contents/app_maxwell_equations}
 % \input{contents/app_flow_chart}
 
 % 结尾部分
@@ -89,7 +88,7 @@
 % \input{contents/resume}
 
 % 学士学位论文要求在最后有一个大摘要，单独编页码
-\input{contents/digest}
+% \input{contents/digest}
 
 %TC:endignore
 

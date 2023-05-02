@@ -14,39 +14,34 @@
     %
     % 标题
     %
-    title           = {肺部CT平扫图像中的支气管分割技术研究},
-    title*          = {Research on the pulmonary bronchus segmentation technique in the lung CT-scanning images},
+    zh / title           = {肺部CT平扫图像中的支气管分割技术研究},
+    en / title           = {Research on the technique of pulmonary bronchus segmentation in the CT-scanning images},
     %
     % 标题页标题
     %   可使用“\\”命令手动控制换行
     %
-    % display-title   = {上海交通大学学位论文\\ \LaTeX{} 模板示例文档},
-    % display-title*  = {A Sample Document \\ for \LaTeX-based SJTU Thesis Template},
-    %
-    % 页眉标题
-    %
-    % running-title   = {示例文档},
-    % running-title*  = {Sample Document},
+    % zh / display-title   = {上海交通大学学位论文\\ \LaTeX{} 模板示例文档},
+    % en / display-title   = {A Sample Document \\ for \LaTeX-based SJTU Thesis Template},
     %
     % 关键词
     %
-    keywords        = {支气管气道树分割, 3D-UNet基准网络, 注意力蒸馏, 通道级特征再学习, 三维卷积层},
-    keywords*       = {Bronchial airway segmentation, 3D-UNet baseline network, Attention distillation, Channel-wise feature re-learning, 3D convolutional layer},
+    zh / keywords        = {支气管气道树分割， 3D-UNet基准网络， 注意力蒸馏， 通道级特征再学习， 三维卷积层},
+    en / keywords        = {Bronchial airway segmentation, 3D-Unet baseline network, Attention distillation, Channel-wise feature re-learning, 3D convolutional layer},
     %
     % 姓名
     %
-    author          = {徐\quad{}赞},
-    author*         = {Xu \quad{} Zan},
+    zh / author          = {徐 \quad{} 赞},
+    en / author          = {Xu \quad{} Zan},
     %
     % 指导教师
     %
-    supervisor      = {卢宏涛教授},
-    supervisor*     = {Prof. Lu Hong Tao},
+    zh / supervisor      = {卢宏涛},
+    en / supervisor      = {Lu Hong Tao},
     %
     % 副指导教师
     %
-    assisupervisor  = {刘维平高级工程师},
-    assisupervisor* = {Senior Engineer Liu Wei Ping},
+    assoc-supervisor  = {刘维平},
+    assoc-supervisor* = {Liu Wei Ping},
     %
     % 学号
     %
@@ -55,56 +50,51 @@
     % 学位
     %   本科生不需要填写
     %
-    degree          = {工程硕士},
-    degree*         = {Master of Engineering},
+    zh / degree          = {工程硕士},
+    en / degree          = {Master of Engineering},
     %
     % 专业
     %
-    major           = {计算机科学与工程},
-    major*          = {Computer Science and Engineering},
+    zh / major           = {计算机科学与工程},
+    en / major           = {Computer Science and Engineering},
     %
     % 所属院系
     %
-    department      = {电子信息与电气工程学院},
-    department*     = {School of Electronic Information and Electrical Engineering},
-    %
-    % 课程名称
-    %   仅课程论文适用
-    %
-    course          = {某某课程},
+    zh / department      = {电子信息与电气工程学院},
+    en / department      = {School of Electronic Information and Electric Engineering},
     %
     % 答辩日期
     %   使用 ISO 格式 (yyyy-mm-dd)；默认为当前时间
     %
-    date            = {2023-03-20},
+    % date            = {2014-12-17},
     %
     % 资助基金
     %
-    % fund  = {
-    %           {国家 973 项目 (No. 2025CB000000)},
-    %           {国家自然科学基金 (No. 81120250000)},
-    %         },
-    % fund* = {
-    %           {National Basic Research Program of China (Grant No. 2025CB000000)},
-    %           {National Natural Science Foundation of China (Grant No. 81120250000)},
-    %         },
+    % zh / fund  = {
+    %                {国家 973 项目 (No. 2025CB000000)},
+    %                {国家自然科学基金 (No. 81120250000)},
+    %              },
+    % en / fund  = {
+    %                {National Basic Research Program of China (Grant No. 2025CB000000)},
+    %                {National Natural Science Foundation of China (Grant No. 81120250000)},
+    %              },
   },
   %
   % 风格设置
   %
   style = {%
     %
-    % 本科论文页眉 logo 颜色 (red/blue/black)
+    % 论文标题页 logo 颜色 (red/blue/black)
     %
-    % header-logo-color = black,
+    % title-logo-color = black,
   },
   %
   % 名称设置
   %
   name = {
-    % bib               = {References},
-    % acknowledgements  = {谢\hspace{\ccwd}辞},
-    % publications      = {攻读学位期间完成的论文},
+    % bib             = {References},
+    % ack             = {谢\hspace{\ccwd}辞},
+    % achv            = {攻读学位期间完成的论文},
   },
 }
 
@@ -113,13 +103,15 @@
 %     gbnamefmt=lowercase     姓名大小写由输入信息确定
 %     gbpub=false             禁用出版信息缺失处理
 \usepackage[backend=biber,style=gb7714-2015, gbnamefmt=lowercase]{biblatex}
-% \usepackage[backend=biber,style=ieee]{biblatex}
 % 文献表字体
 % \renewcommand{\bibfont}{\zihao{-5}}
 % 文献表条目间的间距
 \setlength{\bibitemsep}{0pt}
 % 导入参考文献数据库
 \addbibresource{bibdata/thesis.bib}
+
+% 脚注格式
+\usepackage[perpage,bottom,hang]{footmisc}
 
 % 定义图片文件目录与扩展名
 \graphicspath{{figures/}}
@@ -131,17 +123,13 @@
 % 固定宽度的表格
 % \usepackage{tabularx}
 
-% 使用横向页面，以横向放置图片
-\usepackage{rotfloat}
-
 % 使用三线表：toprule，midrule，bottomrule。
 \usepackage{booktabs}
 
 % 表格中支持跨行
 \usepackage{multirow}
-
-% 表格中的长文字允许换行
 \usepackage{makecell}
+\usepackage{ulem}
 
 % 表格中数字按小数点对齐
 \usepackage{dcolumn}
@@ -156,22 +144,12 @@
 % 附带脚注的长表格
 \usepackage{threeparttablex}
 
-% 使用字体颜色
-\usepackage{color}
-
-% 使用强调文字
-\usepackage{ulem}
-
-% 获得交叉引用名
-\usepackage{nameref}
-
 % 算法环境宏包
 \usepackage[ruled,vlined,linesnumbered]{algorithm2e}
 % \usepackage{algorithm, algorithmicx, algpseudocode}
 
 % 代码环境宏包
 \usepackage{listings}
-% \usepackage[dvipsnames]{xcolor}
 \lstnewenvironment{codeblock}[1][]%
   {\lstset{style=lstStyleCode,#1}}{}
 
@@ -184,13 +162,8 @@
 \providecommand{\ii}{\mathrm{i}}
 \providecommand{\jj}{\mathrm{j}}
 
-% 数学符号宏包
+% 数学符号与工具
 \usepackage{bbm}
-% \usepackage{bbm}
-% \usepackage{mathrsfs}
-% \usepackage{euscript}
-
-% 数学工具宏包
 \usepackage{mathtools}
 
 % 国际单位制宏包
@@ -219,7 +192,16 @@
 \newcommand{\email}[1]{\href{mailto:#1}{\texttt{#1}}}
 
 % hyperref 宏包在最后调用
-\usepackage{hyperref}
+\usepackage[
+  bookmarks=true, 
+  bookmarksopen=true, 
+  colorlinks=true, 
+  linkcolor=black, 
+  urlcolor=black,
+  citecolor=black,
+  bookmarksnumbered=true,
+  pdfauthor={徐赞}
+]{hyperref}
 
 % 自动引用题注更正为中文
 \def\equationautorefname{式}
