@@ -341,35 +341,88 @@ Improving the performance of convolutional neural networks via Attention Transfe
 \end{table}
 通过对比，我们看到在BD, TLD和FNR三项指标上有一些提升，在其他项指标上则基本持平。
 
-还有一个重要的实验结果就是支气管气道树分割效果可视化，我们分别从测试集和验证中挑选一些比较有代表性的病例来展示它们的分割效果，如表
-\ref{tbl:3dunetad_airway_tree}所示。
-\begin{table}[!htp]
+还有一个重要的实验结果就是支气管气道树分割效果可视化，我们分别从测试集和验证中挑选一些比较有代表性的病例来展示它们的分割效果，如图
+\ref{fig:3dunetad_airway_tree}所示。
+% \begin{table}[!htp]
+%     \bicaption[3D-UNet + AD网络结构支气管气道树分割可视化3D模型]
+%         {3D-UNet + AD网络结构支气管气道树分割可视化3D模型\\9个样本分别从测试集和验证集挑选的}
+%         {Visualize the airway tree 3D models under the 3D-UNet + AD network\\The 9 samples are selected from test set and validate set.}
+%     \label{tbl:3dunetad_airway_tree}
+%     \centering
+%     \begin{tabular}{|c|c|c|}
+%         \hline
+%         ATM\_060\_0000 & ATM\_074\_0000 & ATM\_245\_0000 \\
+%         \includegraphics[width=0.3\textwidth]{results/baseline_ds_ad/test040/ATM_060_0000_airway_tree_with_3colors_at_test_epoch40} &
+%         \includegraphics[width=0.3\textwidth]{results/baseline_ds_ad/test040/ATM_074_0000_airway_tree_with_3colors_at_test_epoch40} &
+%         \includegraphics[width=0.3\textwidth]{results/baseline_ds_ad/test040/ATM_245_0000_airway_tree_with_3colors_at_test_epoch40} \\
+%         \hline
+%         ATM\_246\_0000 & ATM\_260\_0000 & ATM\_266\_0000 \\
+%         \includegraphics[width=0.3\textwidth]{results/baseline_ds_ad/test040/ATM_246_0000_airway_tree_with_3colors_at_test_epoch40} &
+%         \includegraphics[width=0.3\textwidth]{results/baseline_ds_ad/test040/ATM_260_0000_airway_tree_with_3colors_at_test_epoch40} &
+%         \includegraphics[width=0.3\textwidth]{results/baseline_ds_ad/test040/ATM_266_0000_airway_tree_with_3colors_at_test_epoch40} \\
+%         \hline
+%         ATM\_271\_0000 & ATM\_638\_0000 & ATM\_688\_0000 \\
+%         \includegraphics[width=0.3\textwidth]{results/baseline_ds_ad/test040/ATM_271_0000_airway_tree_with_3colors_at_test_epoch40} &
+%         \includegraphics[width=0.3\textwidth]{results/baseline_ds_ad/test040/ATM_638_0000_airway_tree_with_3colors_at_test_epoch40} &
+%         \includegraphics[width=0.3\textwidth]{results/baseline_ds_ad/val040/ATM_688_0000_airway_tree_with_3colors_at_val_epoch40} \\
+%         \hline
+%     \end{tabular}
+% \end{table}
+\begin{figure}[!htp]
+    \centering
+    \begin{subfigure}{0.325\textwidth}
+        \includegraphics[width=\textwidth]{results/baseline_ds_ad/test040/ATM_060_0000_airway_tree_with_3colors_at_test_epoch40}
+        \caption{ATM\_060\_0000}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.325\textwidth}
+        \includegraphics[width=\textwidth]{results/baseline_ds_ad/test040/ATM_074_0000_airway_tree_with_3colors_at_test_epoch40}
+        \caption{ATM\_074\_0000}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.325\textwidth}
+        \includegraphics[width=\textwidth]{results/baseline_ds_ad/test040/ATM_245_0000_airway_tree_with_3colors_at_test_epoch40}
+        \caption{ATM\_245\_0000}
+    \end{subfigure}
+    \\
+    \begin{subfigure}{0.325\textwidth}
+        \includegraphics[width=\textwidth]{results/baseline_ds_ad/test040/ATM_246_0000_airway_tree_with_3colors_at_test_epoch40}
+        \caption{ATM\_246\_0000}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.325\textwidth}
+        \includegraphics[width=\textwidth]{results/baseline_ds_ad/test040/ATM_260_0000_airway_tree_with_3colors_at_test_epoch40}
+        \caption{ATM\_260\_0000}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.325\textwidth}
+        \includegraphics[width=\textwidth]{results/baseline_ds_ad/test040/ATM_266_0000_airway_tree_with_3colors_at_test_epoch40}
+        \caption{ATM\_266\_0000}
+    \end{subfigure}
+    \\
+    \begin{subfigure}{0.325\textwidth}
+        \includegraphics[width=\textwidth]{results/baseline_ds_ad/test040/ATM_271_0000_airway_tree_with_3colors_at_test_epoch40}
+        \caption{ATM\_271\_0000}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.325\textwidth}
+        \includegraphics[width=\textwidth]{results/baseline_ds_ad/test040/ATM_638_0000_airway_tree_with_3colors_at_test_epoch40}
+        \caption{ATM\_638\_0000}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.325\textwidth}
+        \includegraphics[width=\textwidth]{results/baseline_ds_ad/val040/ATM_688_0000_airway_tree_with_3colors_at_val_epoch40}
+        \caption{ATM\_688\_0000}
+    \end{subfigure}
     \bicaption[3D-UNet + AD网络结构支气管气道树分割可视化3D模型]
         {3D-UNet + AD网络结构支气管气道树分割可视化3D模型\\9个样本分别从测试集和验证集挑选的}
-        {Visualize the airway tree 3D models under the 3D-UNet + AD network\\The 9 samples are selected from test set and validate set.}
-    \label{tbl:3dunetad_airway_tree}
-    \centering
-    \begin{tabular}{|c|c|c|}
-        \hline
-        ATM\_060\_0000 & ATM\_074\_0000 & ATM\_245\_0000 \\
-        \includegraphics[width=0.3\textwidth]{results/baseline_ds_ad/test040/ATM_060_0000_airway_tree_with_3colors_at_test_epoch40} &
-        \includegraphics[width=0.3\textwidth]{results/baseline_ds_ad/test040/ATM_074_0000_airway_tree_with_3colors_at_test_epoch40} &
-        \includegraphics[width=0.3\textwidth]{results/baseline_ds_ad/test040/ATM_245_0000_airway_tree_with_3colors_at_test_epoch40} \\
-        \hline
-        ATM\_246\_0000 & ATM\_260\_0000 & ATM\_266\_0000 \\
-        \includegraphics[width=0.3\textwidth]{results/baseline_ds_ad/test040/ATM_246_0000_airway_tree_with_3colors_at_test_epoch40} &
-        \includegraphics[width=0.3\textwidth]{results/baseline_ds_ad/test040/ATM_260_0000_airway_tree_with_3colors_at_test_epoch40} &
-        \includegraphics[width=0.3\textwidth]{results/baseline_ds_ad/test040/ATM_266_0000_airway_tree_with_3colors_at_test_epoch40} \\
-        \hline
-        ATM\_271\_0000 & ATM\_638\_0000 & ATM\_688\_0000 \\
-        \includegraphics[width=0.3\textwidth]{results/baseline_ds_ad/test040/ATM_271_0000_airway_tree_with_3colors_at_test_epoch40} &
-        \includegraphics[width=0.3\textwidth]{results/baseline_ds_ad/test040/ATM_638_0000_airway_tree_with_3colors_at_test_epoch40} &
-        \includegraphics[width=0.3\textwidth]{results/baseline_ds_ad/val040/ATM_688_0000_airway_tree_with_3colors_at_val_epoch40} \\
-        \hline
-    \end{tabular}
-\end{table}
-从表\ref{tbl:3dunetad_airway_tree}的支气管气道树三维模型来看，大部分的假阴性（红色体素）已经被正确分割出来，9个病例中的假阴性红色体素很少出现了。
-相比于表\ref{tbl:visualize_airway_3d_model}里大量出现的红色假阴性体素明显减少了很多（ATM\_174\_0000和ATM\_505\_0000两个严重肺部疾病的病例除外），证明
+        {Visualize the airway tree 3D models under the 3D-UNet + AD network\\
+        The 9 samples are selected from test set and validate set.}
+    \label{fig:3dunetad_airway_tree}
+\end{figure}
+
+从图\ref{fig:3dunetad_airway_tree}的支气管气道树三维模型来看，大部分的假阴性（红色体素）已经被正确分割出来，9个病例中的假阴性红色体素很少出现了。
+相比于图\ref{fig:visualize_airway_3d_model}里大量出现的红色假阴性体素明显减少了很多（ATM\_174\_0000和ATM\_505\_0000两个严重肺部疾病的病例除外），证明
 注意力蒸馏的方法抑制住了假阴性率，提高了分割模型的一些性能。
 
 ATM\_688\_0000这个病例稍微有点例外，但仔细研究是在上叶支气管处出现的红色假阴性体素，上叶支气管的管径是有点粗的，分割模型应该不会在此处发生漏检，
