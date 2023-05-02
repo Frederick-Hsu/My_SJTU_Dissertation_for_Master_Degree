@@ -212,8 +212,9 @@ Improving the performance of convolutional neural networks via Attention Transfe
     \label{algo:ad_loss}
     \small
     \SetAlgoLined
-    \KwData{$AttMap[4]$, $\gamma[3]$}
+    \KwIn{$AttMap[4]$, $\gamma[3]$}
     \KwResult{$Total\_Loss$}
+    % \KwRet{$Total\_Loss$}
     
     $Total\_Loss \leftarrow 0$
     \BlankLine
@@ -221,28 +222,35 @@ Improving the performance of convolutional neural networks via Attention Transfe
     \BlankLine
     
     \For{$i \leftarrow 0$ \KwTo \len{$AttMap$}-1 }{
-        \pred $\leftarrow$ $AttMap[i]$
+    			\tcp{将第i个$AttMap$值赋给预测值}
+        \pred $\leftarrow$ $AttMap[i]$		
         \BlankLine
-        \gt $\leftarrow$ $AttMap[i+1]$
+        \tcp{将第i+1个$AttMap$值赋给再groundtruth}
+        \gt $\leftarrow$ $AttMap[i+1]$		
         \BlankLine
-        \pred $\leftarrow$ \interpolate{\pred, \mode, \scalefactor}
+        \tcp{对预测值进行三线性插值}
+        \pred $\leftarrow$ \interpolate{\pred, \mode, \scalefactor}		
         \BlankLine
         
         $N$ = \pred.\size{0}
         \BlankLine
+        \tcp{对预测值和真实值分别进行展平}
         \flattenpred $\leftarrow$ \pred.\view{$N$, -1}
         \BlankLine
-        \flattengt $\leftarrow$ \gt.\view{$N$, -1}
+        \flattengt $\leftarrow$ \gt.\view{$N$, -1}		
         \BlankLine
-        \predsoftmax $\leftarrow$ \softmax{\flattenpred, \dim}
+        \tcp{预测值和真实值分别进行Softmax归一化}
+        \predsoftmax $\leftarrow$ \softmax{\flattenpred, \dim}	
         \BlankLine
-        \gtsoftmax $\leftarrow$ \softmax{\flattengt, \dim}
-        \BlankLine
-        
-        \loss $\leftarrow$ \mseloss{\predsoftmax, \gtsoftmax}
+        \gtsoftmax $\leftarrow$ \softmax{\flattengt, \dim}		
         \BlankLine
         
-        $Total\_Loss \leftarrow$ $Total\_Loss$ + $\gamma[i]$ * \loss
+        \tcp{计算它们的均方差，并作为当前循环的损失}
+        \loss $\leftarrow$ \mseloss{\predsoftmax, \gtsoftmax}		
+        \BlankLine
+        
+        \tcp{累积每次循环的损失，合并到总的损失}
+        $Total\_Loss \leftarrow$ $Total\_Loss$ + $\gamma[i]$ * \loss		
     }
 \end{algorithm}
 蒸馏的梯度损失。骰子损失Dice Loss还是按照\ref{eq:dice_loss}式进行计算，Focal Loss损失按照公式\ref{eq:focal_loss}计算，
