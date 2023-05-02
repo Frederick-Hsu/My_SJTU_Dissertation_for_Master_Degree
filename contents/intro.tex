@@ -187,7 +187,7 @@
 	\cite{Li2017HDenseUNetHD}提出一种基于U-Net混合式的稠密连接的新型网络结构H-DenseUNet用于肝癌的CT图像的分割。它保留了UNet低卷积层的细节特征，UNet网络
 	越来越深的层次增加了训练的长耗时，而H-DenseUNet又可以解决这些深层网络的长耗时训练困难问题。
 	
-	医疗CT扫描图像基本上都是三维体数据，基于此又引申发展出3D CNN， Jose Dolz等人\cite{Dolze3DFCN}就提出了3D Fully convolutional networks, {\"O}zg{\"u}n {\c{C}}i{\c{c}}ek等人\cite{cciccek20163d}则提出3D UNet用于稠密的体数据分割。如此众多的分割网络，各个作者在UNet的基础上加上自己的创新，形成一个个独具特色的新型
+	医疗CT扫描图像基本上都是三维体数据，基于此又引申发展出3D CNN， Jose Dolz等人\cite{Dolze3DFCN}就提出了3D Fully convolutional networks, {\"O}zg{\"u}n {\c{C}}i{\c{c}}ek等人\cite{cciccek20163d}则提出3D-UNet用于稠密的体数据分割。如此众多的分割网络，各个作者在UNet的基础上加上自己的创新，形成一个个独具特色的新型
 	网络结构。那有没有一种广泛通用的网络来做图像分割呢？ Mathias Perslev等人\cite{PerslevGeneralUNetFusion}就提出了这样的一个想法和实施方案
 	One Network to segment them all一种通用	的轻量级的网络结构，如图\ref{fig:Genral_UNet}所示，来精确分割3D图像。它是在2D UNet网络之后再加上一个Fusion model实现的。
 	\begin{figure}[!htp]
