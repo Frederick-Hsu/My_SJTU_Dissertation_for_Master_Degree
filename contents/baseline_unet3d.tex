@@ -753,6 +753,7 @@ Label体数据子块绑定在一起。训练集、验证集和测试集的CT图�
             {Horizontal comparison of segmentation and metrics in the validateset}
         \label{tbl:hcomparison_metrics}
         \centering
+        \scalebox{0.93}{
         \begin{tabular}{|c|c|c|}
             \hline
             ATM\_029\_0000 & ATM\_054\_0000 & ATM\_055\_0000 \\
@@ -791,6 +792,7 @@ Label体数据子块绑定在一起。训练集、验证集和测试集的CT图�
             DSC = 85.81\%           & DSC = 63.18\%             & DSC = 96.15\% \\
             \hline
         \end{tabular}
+        }
     \end{table}
     
     需要说明的是，表\ref{tbl:hcomparison_metrics}中的指标数据是基于当前切片计算的，不是基于整个气道树来计算的，因此就不
@@ -805,6 +807,7 @@ Label体数据子块绑定在一起。训练集、验证集和测试集的CT图�
             {Vertical comparison of segmentation and metrics for ATM\_054\_0000 slice \#264}
         \label{tbl:vcomparison_metrics}
         \centering
+        \scalebox{0.93}{
         \begin{tabular}{|c|c|c|}
             \hline
             ATM\_054\_0000 & ATM\_054\_0000 & ATM\_054\_0000 \\
@@ -830,6 +833,7 @@ Label体数据子块绑定在一起。训练集、验证集和测试集的CT图�
             DSC = 92.99\%          & DSC = 92.86\%             & DSC = 93.01\% \\
             \hline
         \end{tabular}
+        }
     \end{table}
 
 \end{enumerate}
@@ -847,7 +851,7 @@ Precision和DSC都已经达到了92\%以上的优秀表现。不管是对于左�
 最后我们来看看3D-UNet网络对整个支气管气道树的分割表现。对于测试集的19例CT图像的分割，其性能指标如表
 \ref{tbl:testset_airway_tree_metrics}所示。其中黑色加粗打双下划线的表示在当前指标表现最出色的。
 \begin{table}[ht]
-    \zihao{8}
+    % \zihao{8}
     \bicaption[测试集上3D-UNet基准网络对支气管气道树分割的性能指标表现]
         {测试集上3D-UNet基准网络对支气管气道树分割的性能指标表现}
         {The metrics table of 3D-UNet baseline model segmenting airway tree in testset}
@@ -882,35 +886,88 @@ Precision和DSC都已经达到了92\%以上的优秀表现。不管是对于左�
 从表\ref{tbl:testset_airway_tree_metrics}可以看出，ATM\_245\_0000这一例CT图像分割表现最好，BD和TLD两个指标竟然
 达到例100\%, 这说明已经将支气管气道树中的分支全部检测出来，也获得了最长的分支中心线长度之和。
 
-对于验证集的9例CT图像，我们不仅要展示支气管气道树分割的可视化结果，如表\ref{tbl:visualize_airway_3d_model}所示。
-\begin{table}[!htp]
-    \bicaption[验证集9例CT图像的支气管气道树分割可视化3D模型]
+对于验证集的9例CT图像，我们不仅要展示支气管气道树分割的可视化结果，如图\ref{fig:visualize_airway_3d_model}所示。
+%\begin{table}[!htp]
+%    \bicaption[验证集9例CT图像的支气管气道树分割可视化3D模型]
+%        {验证集9例CT图像的支气管气道树分割可视化3D模型}
+%        {Visualize the airway 3D model of 9 CT cases in validateset}
+%    \label{tbl:visualize_airway_3d_model}
+%    \centering
+%    \begin{tabular}{|c|c|c|}
+%        \hline
+%        ATM\_029\_0000 & ATM\_054\_0000 & ATM\_055\_0000 \\
+%        \hline
+%        \includegraphics[width=0.3\textwidth]{results/baseline/validate/ATM_029_0000_airway_tree_with_3colors_at_val_epoch1} &
+%        \includegraphics[width=0.3\textwidth]{results/baseline/validate/ATM_054_0000_airway_tree_with_3colors_at_val_epoch1} &
+%        \includegraphics[width=0.3\textwidth]{results/baseline/validate/ATM_055_0000_airway_tree_with_3colors_at_val_epoch1} \\
+%        \hline
+%        ATM\_057\_0000 & ATM\_091\_0000 & ATM\_174\_0000 \\
+%        \hline
+%        \includegraphics[width=0.3\textwidth]{results/baseline/validate/ATM_057_0000_airway_tree_with_3colors_at_val_epoch1} &
+%        \includegraphics[width=0.3\textwidth]{results/baseline/validate/ATM_091_0000_airway_tree_with_3colors_at_val_epoch1} &
+%        \includegraphics[width=0.3\textwidth]{results/baseline/validate/ATM_174_0000_airway_tree_with_3colors_at_val_epoch1} \\
+%        \hline
+%        ATM\_215\_0000 & ATM\_505\_0000 & ATM\_688\_0000 \\
+%        \hline
+%        \includegraphics[width=0.3\textwidth]{results/baseline/validate/ATM_215_0000_airway_tree_with_3colors_at_val_epoch1} &
+%        \includegraphics[width=0.3\textwidth]{results/baseline/validate/ATM_505_0000_airway_tree_with_3colors_at_val_epoch1} &
+%        \includegraphics[width=0.3\textwidth]{results/baseline/validate/ATM_688_0000_airway_tree_with_3colors_at_val_epoch1} \\
+%        \hline
+%    \end{tabular}
+%\end{table}
+
+\begin{figure}[!htp]
+	\centering
+	\begin{subfigure}{0.325\textwidth}
+		\includegraphics[width=\textwidth]{results/baseline/validate/ATM_029_0000_airway_tree_with_3colors_at_val_epoch1}
+		\caption{ATM\_029\_0000}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.325\textwidth}
+		\includegraphics[width=\textwidth]{results/baseline/validate/ATM_054_0000_airway_tree_with_3colors_at_val_epoch1}
+		\caption{ATM\_054\_0000}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.325\textwidth}
+		\includegraphics[width=\textwidth]{results/baseline/validate/ATM_055_0000_airway_tree_with_3colors_at_val_epoch1}
+		\caption{ATM\_055\_0000}
+	\end{subfigure}
+	\\
+	\begin{subfigure}{0.325\textwidth}
+		\includegraphics[width=\textwidth]{results/baseline/validate/ATM_057_0000_airway_tree_with_3colors_at_val_epoch1}
+		\caption{ATM\_057\_0000}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.325\textwidth}
+		\includegraphics[width=\textwidth]{results/baseline/validate/ATM_091_0000_airway_tree_with_3colors_at_val_epoch1}
+		\caption{ATM\_091\_0000}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.325\textwidth}
+		\includegraphics[width=\textwidth]{results/baseline/validate/ATM_174_0000_airway_tree_with_3colors_at_val_epoch1}
+		\caption{ATM\_174\_0000}
+	\end{subfigure}
+	\\
+	\begin{subfigure}{0.325\textwidth}
+		\includegraphics[width=\textwidth]{results/baseline/validate/ATM_215_0000_airway_tree_with_3colors_at_val_epoch1}
+		\caption{ATM\_215\_0000}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.325\textwidth}
+		\includegraphics[width=\textwidth]{results/baseline/validate/ATM_505_0000_airway_tree_with_3colors_at_val_epoch1}
+		\caption{ATM\_505\_0000}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.325\textwidth}
+		\includegraphics[width=\textwidth]{results/baseline/validate/ATM_688_0000_airway_tree_with_3colors_at_val_epoch1}
+		\caption{ATM\_688\_0000}
+	\end{subfigure}
+	\bicaption[验证集9例CT图像的支气管气道树分割可视化3D模型]
         {验证集9例CT图像的支气管气道树分割可视化3D模型}
         {Visualize the airway 3D model of 9 CT cases in validateset}
-    \label{tbl:visualize_airway_3d_model}
-    \centering
-    \begin{tabular}{|c|c|c|}
-        \hline
-        ATM\_029\_0000 & ATM\_054\_0000 & ATM\_055\_0000 \\
-        \hline
-        \includegraphics[width=0.3\textwidth]{results/baseline/validate/ATM_029_0000_airway_tree_with_3colors_at_val_epoch1} &
-        \includegraphics[width=0.3\textwidth]{results/baseline/validate/ATM_054_0000_airway_tree_with_3colors_at_val_epoch1} &
-        \includegraphics[width=0.3\textwidth]{results/baseline/validate/ATM_055_0000_airway_tree_with_3colors_at_val_epoch1} \\
-        \hline
-        ATM\_057\_0000 & ATM\_091\_0000 & ATM\_174\_0000 \\
-        \hline
-        \includegraphics[width=0.3\textwidth]{results/baseline/validate/ATM_057_0000_airway_tree_with_3colors_at_val_epoch1} &
-        \includegraphics[width=0.3\textwidth]{results/baseline/validate/ATM_091_0000_airway_tree_with_3colors_at_val_epoch1} &
-        \includegraphics[width=0.3\textwidth]{results/baseline/validate/ATM_174_0000_airway_tree_with_3colors_at_val_epoch1} \\
-        \hline
-        ATM\_215\_0000 & ATM\_505\_0000 & ATM\_688\_0000 \\
-        \hline
-        \includegraphics[width=0.3\textwidth]{results/baseline/validate/ATM_215_0000_airway_tree_with_3colors_at_val_epoch1} &
-        \includegraphics[width=0.3\textwidth]{results/baseline/validate/ATM_505_0000_airway_tree_with_3colors_at_val_epoch1} &
-        \includegraphics[width=0.3\textwidth]{results/baseline/validate/ATM_688_0000_airway_tree_with_3colors_at_val_epoch1} \\
-        \hline
-    \end{tabular}
-\end{table}
+	\label{fig:visualize_airway_3d_model}
+\end{figure}
+
 还有完整的指标数据，见表\ref{tbl:validateset_airway_tree_metrics}。
 \begin{table}[!htp]
     \bicaption[验证集9例CT图像的支气管气道树分割指标]
@@ -934,7 +991,7 @@ Precision和DSC都已经达到了92\%以上的优秀表现。不管是对于左�
         \bottomrule
     \end{tabular}
 \end{table}
-在表\ref{tbl:visualize_airway_3d_model}中我们看到ATM\_174\_0000和ATM\_505\_0000两个病例中出现大量的红色的假阴性
+在图\ref{fig:visualize_airway_3d_model}中我们看到ATM\_174\_0000和\\ATM\_505\_0000两个病例中出现大量的红色的假阴性
 体素。结合表\ref{tbl:validateset_airway_tree_metrics}中这两个病例的BD、TLD两项指标低至30\%的不正常现象\footnote{
 表\ref{tbl:validateset_airway_tree_metrics}中红色标记的数据}，而Precision
 能够达到90\%以上。纵览这9张气道树3D分割图，其他7张图都没有在气管、左右肺主气管发生漏检。 
