@@ -13,11 +13,11 @@
 支气管气道树的形态学三维模型通过从基于CT扫描的肺部图像中精确分割出来，是分析包括哮喘、支气管扩张和肺气肿在内的肺部疾病的关键步骤。测量精确分割出来的支气管的气道管腔
 尺寸和管壁厚度，可以用于辅助诊断肺栓塞\cite{estepar2013computed}， 揭示慢性阻塞性肺部疾病COPD患者的异常病症。除了上述这些疾病诊断治疗之外，本文研究肺部支气管气道
 树分割的一个直接动因是为了开发支气管镜和支气管导航与活体检测的手术机器人。手术机器人驱动细长柔性的支气管镜器械，伸入支气管，沿着气道导航至疑似（肺部）病灶部位，对
-病灶处细胞进行活体采样返回，进而化验诊断出疾病。\textcolor{red}{我们正在}开发国产的支气管镜导航/检测的手术机器人，而支气管气道树的精确分割就是非常重要的前置研发步骤。
+病灶处细胞进行活体采样返回，进而化验诊断出疾病。\textcolor{black}{我们正在}开发国产的支气管镜导航/检测的手术机器人，支气管气道树的精确分割就是非常重要的前置研发步骤。
 构建出支气管气道树的分割模型后，输入患者的肺部CT扫描图像数据，就可以输出包含精确的三维空间信息的支气管气道树结构。将这个支气管气道树的结构模型输入给支气管镜导航机器人
 (Bronchoscopy and endobronchical navigation robot)，在医生的监视与操纵下，机器人就可以被引导进入支气管管腔内，进行疾病的诊断与治疗了。
 
-{\heiti 支气管气道树的分支结构。} 本文研究支气管气道树的分割，有必要先了解一下支气管树状的气道解剖结构。从图\ref{fig:branches_of_bronchial_tree}中可以看出，支气管气道树的分支结构非常复杂，从气管(Trachea)往下分为左、右两支主支气管(Main bronchus)，左右两支主支气管各自分岔为上叶支气管(Superior lobar bronchus)、中叶支气管(Middle lobar bronchus)和下叶支气管(Inferior
+{\heiti 支气管气道树的分支结构。} 本文研究支气管气道树的分割，有必要先了解一下支气管树状的气道解剖结构。从\autoref{fig:branches_of_bronchial_tree}中可以看出，支气管气道树的分支结构非常复杂，从气管(Trachea)往下分为左、右两支主支气管(Main bronchus)，左右两支主支气管各自分岔为上叶支气管(Superior lobar bronchus)、中叶支气管(Middle lobar bronchus)和下叶支气管(Inferior
  lobar bronchus)。在每个肺叶内，起于肺叶的支气管继续分岔为多个肺段支气管(Segmental bronchi)。肺段支气管分为更细小的小叶支气管(Lobular bronchi)，最后再次分岔
  出细支气管(Bronchiole)到达肺泡。肺部支气管结构是一个具有6级的树状分支结构。
 
@@ -35,11 +35,11 @@
 
 \section{本研究的应用前景}\label{sec:application_prospect}
 
-肺部支气管气道树的自动化分割是呼吸系统肺部疾病诊断治疗的一个重要问题和研究领域，在实际应用中具有非常重要的作用，可提高医疗技术水平。当前，在
+肺部支气管气道树的自动化分割是呼吸系统肺部疾病诊断治疗的一个重要问题和热点研究领域，在实际应用中具有非常重要的作用，可提高医疗技术水平。当前，在
 作者所在的医疗机器人行业，本研究项目有如下的应用前景：
 \begin{itemize}
 	\item {\heiti 导管手术机器人 }
-	由于肺部支气管气道树三维模型具有精确的空间位置信息，CT扫描建立的坐标系赋予DICOM医疗图像每个像素都有相应的坐标位置信息，如图\ref{fig:coordinate}所示。
+	由于肺部支气管气道树三维模型具有精确的空间位置信息，CT扫描建立的坐标系赋予DICOM医疗图像每个像素都有相应的坐标位置信息，如\autoref{fig:coordinate}所示。
 	\begin{figure}[!htp]
 		\centering
 		\includegraphics{Coordinate_sytems.png}
@@ -62,7 +62,7 @@
 		\label{fig:ION_robot}
 	\end{figure}
 	
-	\textcolor{red}{我们}正在开发国产的肺部导管机器人，已经完成全国首例机器人辅助经支气管镜肺结节活检手术\textcolor{red}{的临床实验}。
+	\textcolor{black}{我们}正在开发国产的肺部导管机器人，已经完成全国首例机器人辅助经支气管镜肺结节活检手术\textcolor{black}{的临床实验}。
 	
 	当然导管手术机器人除了依赖支气管气道树三维模型导航，还需要术中实时定位、支气管镜视觉导航技术的辅助。
 	
@@ -88,12 +88,12 @@
 	\subsection{传统的图像分割方法}
 	
 	传统图像分割的方法是根据图像特征设计相应的算法，对每个像素点进行分类。这些图像的特征包括颜色、纹理、亮度和形状等，其本质是根据特定标准确定一个合理的阈值，将每一个
-	像素点与此阈值比较，以确定每一个像素点的分类。综合分析传统的图像分割方法，我们可以总结出如下的划分：
+	像素点与此阈值比较，以确定每一个像素点的分类。综合分析传统的图像分割方法，可以总结出如下的划分：
 	\begin{enumerate}
 		\item 阈值法
 		
 		阈值法是根据图像的灰度特征信息进行与阈值比较的计算。对欲分割的图像设定一个或多个（不同）的阈值，然后将图像上的每一个像素点与阈值进行比较，得到每个像素点所属的
-		类别。这方面主要的工作有Sauvola法\cite{sauvola2000adaptive}、最大类间方差Otsu法\cite{otsu1979threshold}等。医疗图像（DICOM格式\cite{mustra2008overview}）都是典型的灰度图（如图\ref{fig:medical_image}所示），阈值法很多都是根据灰度来确定阈值的。
+		类别。这方面主要的工作有Sauvola法\cite{sauvola2000adaptive}、最大类间方差Otsu法\cite{otsu1979threshold}等。医疗图像（DICOM格式\cite{mustra2008overview}）都是典型的灰度图（如\autoref{fig:medical_image}所示），阈值法很多都是根据灰度来确定阈值的。
 		\begin{figure}[!htp]
 			\centering
 			\begin{subfigure}{0.45\textwidth}
@@ -133,7 +133,7 @@
 	
 	\subsection{基于深度学习的图像分割方法}
 	
-	传统的图像分割方法围绕着图像的某一个具体特征进行精心挑选，设计与之匹配的算法，不具备广泛性和普遍性。 对于医疗CT扫描图像，如前文图\ref{fig:medical_image}
+	传统的图像分割方法围绕着图像的某一个具体特征进行精心挑选，设计与之匹配的算法，不具备广泛性和普遍性。 对于医疗CT扫描图像，如前文\autoref{fig:medical_image}
 	所述的都是对比度小的灰度图，传统的图像分割方法对于医疗图像不再适合。
 	
 	近年来随着深度学习技术在计算机视觉领域的应用，飞速发展并取得显著的进步。 基于深度卷积神经网络的语义分割方法对图像中的所有像素进行精确预测，预测像素属于哪一个类别
@@ -149,7 +149,7 @@
 		\label{fig:FCN}
 	\end{figure}
 	
-	但由于下采样路径图像分辨率显著被降低，使得最后的预测结果比较粗糙。正如图\ref{fig:FCN}中分割结果中只能看到2个物体的轮廓，无法看出是一只猫或是一只狗。在此基础上，
+	但由于下采样路径图像分辨率显著被降低，使得最后的预测结果比较粗糙。正如\autoref{fig:FCN}中分割结果中只能看到2个物体的轮廓，无法看出是一只猫或是一只狗。在此基础上，
 	Hyeonwoo Noh等人\cite{Noh2015LearningDN}添加进去了上采样路径，亦即反卷积Deconvolution，同步加入反池化Unpooling，将图像分辨率逐步恢复到原来的分辨率。
 	\begin{figure}[!htp]
 		\centering
@@ -168,11 +168,11 @@
 		\label{fig:conv_deconv_pooling_unpooling}
 	\end{figure}
 	
-	图\ref{fig:conv_deconv}中的Convolution network与Deconvolution network分别组成下采样路径和上采样路径，这两条对称路径构成了
+	\autoref{fig:conv_deconv}中的Convolution network与Deconvolution network分别组成下采样路径和上采样路径，这两条对称路径构成了
 	图像语义分割网络架构。
 	
 	后来，Olaf Ronneberger等人\cite{ronneberger2015u}则进一步改进，保留下采样路径用于提取深度特征信息，而在上采样路径则加入了跳跃连接,将下采样获取的深度特征信息
-	跳跃过来与上采样拼接起来，实现特征图融合。这就是经典的U-Net网络结构，如图\ref{fig:UNet}所示，U-Net网络实现了更精细的图像语义分割结果。
+	跳跃过来与上采样拼接起来，实现特征图融合。这就是经典的U-Net网络结构，如\autoref{fig:UNet}所示，U-Net网络实现了更精细的图像语义分割效果。
 	
 	\begin{figure}[!htp]
 		\centering
@@ -185,11 +185,12 @@
 	
 	U-Net网络目前已成为医疗图像分割任务的基础网络，有很多研究人员在U-Net基础上改进，应用在医疗图像的分割。比如肝脏肿瘤、肺癌结节、乳腺肿块等不同的疾病。Li Xiaomeng等人
 	\cite{Li2017HDenseUNetHD}提出一种基于U-Net混合式的稠密连接的新型网络结构H-DenseUNet用于肝癌的CT图像的分割。它保留了UNet低卷积层的细节特征，UNet网络
-	越来越深的层次增加了训练的长耗时，而H-DenseUNet又可以解决这些深层网络的长耗时训练困难问题。
+	越来越深的层次增加了训练的长耗时，而H-DenseUNet则可以解决这些深层网络的长耗时训练困难问题。
 	
-	医疗CT扫描图像基本上都是三维体数据，基于此又引申发展出3D CNN， Jose Dolz等人\cite{Dolze3DFCN}就提出了3D Fully convolutional networks, {\"O}zg{\"u}n {\c{C}}i{\c{c}}ek等人\cite{cciccek20163d}则提出3D-UNet用于稠密的体数据分割。如此众多的分割网络，各个作者在UNet的基础上加上自己的创新，形成一个个独具特色的新型
+	医疗CT扫描图像基本上都是三维体数据，基于此又引申发展出3D CNN， Jose Dolz等人\cite{Dolze3DFCN}就提出了3D Fully convolutional networks, 
+	{\"O}zg{\"u}n {\c{C}}i{\c{c}}ek等人\cite{cciccek20163d}则提出3D-UNet用于稠密的体数据分割。如此众多的分割网络，\textcolor{black}{众多研究人员}在UNet的基础上加上自己的创新，形成一个个独具特色的新型
 	网络结构。那有没有一种广泛通用的网络来做图像分割呢？ Mathias Perslev等人\cite{PerslevGeneralUNetFusion}就提出了这样的一个想法和实施方案
-	One Network to segment them all一种通用	的轻量级的网络结构，如图\ref{fig:Genral_UNet}所示，来精确分割3D图像。它是在2D UNet网络之后再加上一个Fusion model实现的。
+	One Network to segment them all一种通用	的轻量级的网络结构，如\autoref{fig:Genral_UNet}所示，来精确分割3D图像。它是在2D UNet网络之后再加上一个Fusion model实现的。
 	\begin{figure}[!htp]
 		\centering
 		\includegraphics[width=0.7\textwidth]{Genral_UNet}
@@ -210,7 +211,7 @@
 			{Densely attention mechanism network to detect the COVID-19 infection}
 		\label{fig:COVID19}
 	\end{figure}
-	通过跟正常肺部影像和普通肺炎所造成阴影区域对比，比较明确地指出COVID-19感染区域(图\ref{fig:COVID19_detection}中COVID-19一栏所高亮显示的)，展现给临床医生，辅助诊断是否感染新冠肺炎。
+	通过跟正常肺部影像和普通肺炎所造成阴影区域对比，比较明确地指出COVID-19感染区域(\autoref{fig:COVID19_detection}中COVID-19一栏所高亮显示的)，展现给临床医生，辅助诊断是否感染新冠肺炎。
 	\begin{figure}[ht]
 		\centering
 		\includegraphics[width=0.5\textwidth]{Detect_COVID19_infection}
@@ -222,7 +223,7 @@
 	
 	最新的进展是，随着NLP的Transformer模型\cite{Devlin2019BERTPO, NIPS2017Attention}取得成功后，受此启发，NVIDIA的Ali Hatamizadeh联合
 	Vanderbilt University的Yucheng Tang等人\cite{unetr}率先将Transformer引入3D medical image segmentation中来，提出了UNETR网络结构
-	（见图\ref{fig:UNETR}所示），实现了State-of-the-art (SOTA)医疗图像分割性能新记录。
+	（见\autoref{fig:UNETR}所示），实现了State-of-the-art (SOTA)医疗图像分割性能新记录。
 	\begin{figure}[hbp]
 		\centering
 		\includegraphics[scale=0.2]{Overview_of_UNETR}
@@ -238,7 +239,7 @@
 	
 	\subsection{针对肺部支气管气道树的医疗图像分割方法}
 	对于肺部CT图像的分割，卷积神经网络CNN早就应用在上面了。最知名的LUng Nodule Analysis 2016大挑战竞赛要求参赛选手分割出Lung CT图像的肺结节，判断肺结节是
-	良性的还是恶性的，从而筛选出肺癌疑似患者，进行早期预防和针对性治疗。从LUNA16大挑战竞赛里诞生了两个具有重要影响力的公开数据集LUNA和LIDC-IDRI
+	良性的还是恶性的，从而筛选出疑似肺癌患者，进行早期预防和针对性治疗。从LUNA16大挑战竞赛里诞生了两个具有重要影响力的公开数据集LUNA和LIDC-IDRI
 	\cite{Charles2011LIDC}。 类似于LUNA	大挑战竞赛，针对肺部支气管气道树的分割也有一个比较著名的EXtraction of Ariway from CT 2009 (EXACT'09)竞赛项目。
 	Pechin Lo等人\cite{Lo2012ExtractionOA}在2009年发起了EXACT'09这个竞赛项目，其研究目标就是提供一个公开通用的数据集，鼓励参赛选手开发出创新性算法，从胸部CT扫描
 	图像中提取出支气管气道树，评比参赛选手们提交的算法。
@@ -248,7 +249,7 @@
 	矢状(Sagittal)和冠状(Coronal)三个正交方向上取相邻的三个切片，送入2个卷积层的网络，然后将他们合并起来。 这个方法在分割粗支气管时效果还不错，减少了假阳性，检测到
 	的气道树的长度也增长了不少。Qier Meng等人\cite{Meng2017TrackingAS}直接采用了3D FCN网络，沿着气道的中心线跟踪气道，并根据每个气道的直径和运行方向设置VOI
 	(感兴趣	的立方体体积)，3D FCN提取VOI内的气道树，最后将所有的VOI区域内的气道合并为一个完整的气道树。浙江大学医学院第二附属医院的Wu Xiaoming等人
-	\cite{Wu2021TACNet}在UNet网络结构的基础上设计了一个Tiny Atrous卷积网络，称为TACNet\cite{Wu2021TACNet}结构（见图\ref{fig:TACNet}），并在EXACT'09数据集
+	\cite{Wu2021TACNet}在UNet网络结构的基础上设计了一个Tiny Atrous卷积网络，称为TACNet\cite{Wu2021TACNet}结构（见\autoref{fig:TACNet}），并在EXACT'09数据集
 	上对平均Tree Length Detected取得了SOTA性能。
 	\begin{figure}[!htp]
 		\centering
@@ -273,7 +274,7 @@
 	(Lobar bronchus)，但对于更纤细的段支气管(Segmental bronchi)、末端小叶支气管(Lobular bronchi)和延伸到肺泡的细支气管(Bronchiole)，他们已经显得能力不够，难以分割更细小的支气管了。
 	
 	 随着深度学习图像分割技术的发展，更新的技术、更强大的网络结构被开发出来。Guo Jinquan等人\cite{Guo2021CoarsetofineAS}利用多信息融合网络
-	 (图\ref{fig:MifCNN}所示)和基于CNN的区域生长网络（图\ref{fig:VCN}）相互结合的方式，由粗到细迭代式逐渐分割出更细小的支气管气道树。
+	 (\autoref{fig:MifCNN}所示)和基于CNN的区域生长网络（\autoref{fig:VCN}）相互结合的方式，由粗到细迭代式逐渐分割出更细小的支气管气道树。
 	 \begin{figure}[t]
 	 	\centering
 	 	
@@ -298,7 +299,7 @@
 	 
 	 肺部支气管气道是一棵树的形状，从CT图像中提取支气管树可视为支气管镜手术导航的细粒度图。上海交通大学医疗机器人研究院的Yu Weihao等人\cite{Yu2022TNN}将图神
 	 经网络的概念迁移过来，创新性地提出了一种基于图神经网络的结构，并命名为树网络(Tree Neural Network, TNN\cite{Yu2022TNN})。这种树网络结构巧妙地将支气管分支看成是映射
-	 到图空间的节点，提取气道树视为构建节点之间连接的边，也就是支气管分支连接的超边(Hyperedges)，见图\ref{fig:TNN}所示。
+	 到图空间的节点，提取气道树视为构建节点之间连接的边，也就是支气管分支连接的超边(Hyperedges)，见\autoref{fig:TNN}所示。
 	 \begin{figure}[htpb]
 	 	\centering
 	 	\includegraphics[width=\textwidth]{TNN}
@@ -334,22 +335,22 @@
 	
 	\item {\heiti 全局尺度和局部尺度的上下文信息难以同时兼顾}
 	
-	肺部支气管是在三维空间上分布的，其众多的分支分散在肺部各处。我们的分割当然不仅仅要学习到气道(Trachea)、左右主支气管(Left/Right main bronchus)、上/中/下肺
+	肺部支气管是在三维空间上分布的，其众多的分支分散在肺部各处。分割模型当然不仅仅要学习到气道(Trachea)、左右主支气管(Left/Right main bronchus)、上/中/下肺
 	叶支气管(Superior/Middle/Inferior Lobar bronchus)的特征信息，还要学习从上/中/下肺叶支气管扩展出来的段支气管(Segmental bronchi)，从段支气管扩展出来的
 	小叶支气管(Lobular bronchi)，甚至连接到肺泡的细支气管(Bronchiole)的特征信息。细小的支气管这种局部尺度的上下文其实不需要多大的感受野，但对于粗大一些的气道、
-	左右主支气管，我们又需要更大一些的感受野
+	左右主支气管，又需要更大一些的感受野
 	来推测整体的气道树形状，也即全局尺度的上下文。面对这种矛盾，应该使用多少个池化层？如果简单地堆积更多的池化层，那么增加的参数可能会因为训练数据不足而导致过拟合。
 	如果为了避免这种参数爆炸而牺牲卷积网络的宽度（即特征通道的数量）来换取深度（卷积层的层数），那么模型的学习和拟合能力可能不够\cite{Qin2021TubuleSen}。
 	所以，全局尺度的上下文信息与局部尺度的上下文信息是否能够兼顾到呢？ 这是另一个困难与挑战之处。
 \end{itemize}
 
 
-\section{本文的研究内容和创新点}
+\section{本文的研究内容和方法改进}
 
 本文针对肺部CT扫描三维图像，利用基于深度学习的三维卷积网络3D-UNet模型\cite{ronneberger2015u}来分割提取人体肺部支气管树状的气道结构。我们使用来自MICCAI2022的
 Airway Tree Modeling(ATM) Challenge 2022(以下简写为ATM22\cite{Zhang2022CFDA, Qin2019AirwayNet, Yu2022Bronchi, Zhang2021Airway})的数据集，先将
-NiFTI格式的CT扫描三维图像裁切成长方体，只保留肺部区域。我们以3D-UNet作为基准模型，进行基准实验，观察3D-UNet基准模型对支气管气道树的分割效果。研究3D-UNet分割
-模型的不足之处，我们提出了改进方案。本文的创新之处如下：
+NiFTI格式的CT扫描三维图像裁切成长方体，只保留肺部区域。以3D-UNet作为基准模型，进行基准实验，观察3D-UNet基准模型对支气管气道树的分割效果。研究3D-UNet分割
+模型的不足之处，\textcolor{black}{提出改进方案，具体如下3点}：
 
 \begin{enumerate}
 
@@ -362,10 +363,10 @@ Focal Loss损失函数则是重塑交叉熵损失函数，使权重分配向有�
 \item {\kaishu 引入注意力蒸馏方法, 增加额外的梯度, 聚焦于辨识更细小纤薄的支气管}
 
 自NLP研究中提出注意力机制\cite{NIPS2017Attention}后，我们认识到注意力图是在指导网络聚焦看图像的一些重要的地方，这些重要的地方是区分或辨识物体的显著特征。这种有价值
-的注意力图可以从教师网络逐层传递到学生网络，从知识蒸馏的角度说，就是知识是可传递的。教师网络学习到的知识可以传递到学生网络。我们就是在注意力机制的启发下，将注意力蒸馏机制方法
-引入到我们的3D-UNet网络，在上采样路径给相邻的两个反卷积层增加一个额外的梯度，使网络聚焦于辨识更细小纤薄的支气管，如段支气管和小叶支气管。
+的注意力图可以从教师网络逐层传递到学生网络，从知识蒸馏的角度说，就是知识是可传递的。教师网络学习到的知识可以传递到学生网络。在这种注意力机制的启发下，将注意力蒸馏方法
+引入到3D-UNet网络，在上采样路径给相邻的两个反卷积层增加一个额外的梯度，使网络聚焦于辨识更细小纤薄的支气管，如段支气管和小叶支气管。
 
-\item {\kaishu 为改善池化层对支气管空间位置信息的捕捉, 设计一个通道级特征再学习模块, 用于强化与任务相关的特征, 即关键的空间位置信息}
+\item {\kaishu 为改善池化层对支气管空间位置信息的捕捉, 设计一个通道级特征再学习模块, 用于强化与任务相关的特征, 也就是关键的空间位置信息}
 
 图像分辨率在下采样路径池化层收缩，在上采样路径池化层膨胀，支气管空间位置信息在不同的分辨率下没有被区别对待，池化层没有对支气管空间位置信息有效地捕捉。而这些关键的空间位置信息
 对于支气管气道树的精细分割至关重要，因此为了强化与任务相关的特征，为了很好地捕捉支气管的空间位置信息，特地设计一个通道级特征再学习模块。
@@ -379,7 +380,7 @@ Focal Loss损失函数则是重塑交叉熵损失函数，使权重分配向有�
 
 {\kaishu 第\ref{chap:introduction}章：\nameref{chap:introduction}}
 
-介绍本论文的研究背景和意义，追踪关于肺部支气管气道树分割这个课题的研究现状和发展趋势。提出本论文的研究内容和有哪些创新点。
+介绍本论文的研究背景和意义，追踪关于肺部支气管气道树分割这个课题的研究现状和发展趋势。提出本论文的研究内容和\textcolor{black}{方法改进}。
 
 {\kaishu 第\ref{chap:baseline_model}章：\nameref{chap:baseline_model}}
 
