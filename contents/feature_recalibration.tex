@@ -2,7 +2,7 @@
 
 \chapter{通道级特征再学习方法提取精细支气管特征}\label{chap:feature_relearning}
 
-在前文3D-UNet网络基准模型分割出的支气管气道树的基础上，仔细观察表\ref{tbl:visualize_airway_3d_model}和表\ref{tbl:3dunetad_airway_tree}
+在前文3D-UNet网络基准模型分割出的支气管气道树的基础上，仔细观察\autoref{fig:visualize_airway_3d_model}和\autoref{fig:3dunetad_airway_tree}
 里的支气管三维气道树，一个普遍的规律是：在气管Trachea（第0代）、左右主支气管Left/Right main bronchi（第1代）、
 上/中/下叶支气管Superior/Middle/Inferior lobar bronchus（第2代）这三代支气管上分割良好，但在段支气管Segmental bronchi（第3代）分割上
 出现很多绿色假阳性或红色假阴性体素，而到了小叶支气管Lobular bronchi（第4代）的分割上出现了大量的断裂，最后的细支气管Bronchiole（第5代，连接到最终的肺泡）
@@ -20,26 +20,26 @@
 在不同的空间位置，它们所容纳的支气管体素密度差异巨大。这个最小输入单元经过卷积层和池化层，空间分辨率会降低一半。若采用平均池化的方法，切割体2处的精细
 特征可能会被“擦除掉”，而切割体1处的粗糙特征还能保留下来。即使采用最大池化方法，经过多层卷积和池化后，精细特征也会逐渐消失。因此，我们认为在当前特征和
 分辨率尺度内，不同的空间位置有不同的重要性。尤其像支气管这样的树状结构，要想获得精细的高代支气管特征，显然需要提高它们的重要性，也就是它们的权重。
-为了解决这个问题，我们提出一种通道级特征再学习（Channel-wise feature re-learning）方法，拟在卷积层块之后、最大池化层（见图\ref{fig:convblock}）之前
+为了解决这个问题，本文提出一种通道级特征再学习（Channel-wise feature re-learning）方法，拟在卷积层块之后、最大池化层（见\autoref{tbl:down_sampling}）之前
 添加一个通道级特征再学习模块来进行再校准，捕获更精细的特征。
 
 \section{通道级特征再学习方法}
 下面来说明通道级特征再学习方法的基本原理。
 
-给定一个肺部支气管CT扫描图像体$\mathbbm{X}_{airway}$，则我们的支气管气道树分割任务可描述为式\ref{eq:seg_function}的函数关系，
+给定一个肺部支气管CT扫描图像体$\mathbbm{X}_{airway}$，则支气管气道树分割任务可描述为\autoref{eq:seg_function}的函数关系，
 \begin{align}\label{eq:seg_function}
     \mathbbm{Prob}_\mathit{airway} = \mathscr{F}\left( \mathbbm{X}_\mathit{airway} \right)
     \shortintertext{s.t.}
     \min \Bigm|\mathbbm{Prob}_\mathit{airway} - \mathbbm{GT}_\mathit{airway}\Bigm|
 \end{align}
-其中$\mathbbm{Prob}_\mathit{airway}$表示气道的预测概率。我们做支气管气道树分割的目标是通过3D-UNet网络学习到一个端到端的映射函数$\mathscr{F}$，使得
+其中$\mathbbm{Prob}_\mathit{airway}$表示气道的预测概率。支气管气道树分割的目标是通过3D-UNet网络学习到一个端到端的映射函数$\mathscr{F}$，使得
 预测值$\mathbbm{Prob}_\mathit{airway}$与真实值$\mathbbm{GT}_\mathit{airway}$之差最小化。
 
 3D-UNet网络的最小输入单元是一个三维（立方）体数据，在第$m$个卷积层块的特征输出$\mathbbm{Feat}_m$表示为一个$C_m \times D_m \times H_m \times W_m$大小的四维矩阵
 $\mathbbm{Matrix}_{C_m \times D_m \times H_m \times W_m}$，即表示有$C_m$个大小为$D_m \times H_m \times W_m$的立方体。当$m = 1$时，即
-第一个卷积层块输出的特征含有16个大小为$D80 \times H192 \times W304$的立方体，这个立方体就是图\ref{fig:voxel_density_diffs}的一个切割体。
-如图\ref{fig:feature_dimensions}所示。
-\begin{figure}[h]
+第一个卷积层块输出的特征含有16个大小为$D80 \times H192 \times W304$的立方体，这个立方体就是\autoref{fig:voxel_density_diffs}的一个切割体。
+如\autoref{fig:feature_dimensions}所示，
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.7\textwidth]{特征的维数}
     \bicaption[卷积层块的特征的维数]
@@ -54,14 +54,14 @@ $\mathbbm{Matrix}_{C_m \times D_m \times H_m \times W_m}$，即表示有$C_m$个
 \end{equation}
 其中$c, d, h, w$分别指的是通道维、深度维、高度维、宽度维的索引号。
 
-我们要构建的特征再学习就是要定义一个对当前卷积层特征$\mathbbm{Feat}_m$的通道算子$\varPsi$。那么对应的特征再学习(Feature Re-Learning, FRL)可定义为函数关系：
+为构建特征再学习，就是要定义一个对当前卷积层特征$\mathbbm{Feat}_m$的通道算子$\varPsi$。则对应的特征再学习(Feature Re-Learning, FRL)可定义为函数关系：
 \begin{equation}
     \mathbbm{FRL}_m = \varPsi\left(\mathbbm{Feat}_m\right)
 \end{equation}
-特征再学习的通道算子是为了校准卷积层特征输出，它是一个通道级的权重图，不仅仅可以识别特征$\mathbbm{Feat}_m$的关键空间位置的信息，譬如图\ref{fig:feature_dimensions}
-切割体1所在位置的粗大枝干的粗糙特征和切割体2所在位置的末梢枝节的精细特征，还可以加强影响输出决策的基本通道。我们采用沿着每个空间维度（深度维、高度维、宽度维）的特征加权
-（通道）组合的方式来集成空间位置的信息。 这是一种空间积分的方法，也称为体积分，如\ref{eq:spatial_integration}式对第$m$个卷积层输出特征$\mathbbm{Feat}_m$
-的体积分$\int_{V}\mathbbm{Feat}_m\dd V$。
+特征再学习的通道算子是为了校准卷积层特征输出，它是一个通道级的权重图，不仅仅可以识别特征$\mathbbm{Feat}_m$的关键空间位置的信息，譬如\autoref{fig:voxel_density_diffs}
+切割体1所在位置的粗大枝干的粗糙特征和切割体2所在位置的末梢枝节的精细特征，还可以加强影响输出决策的基本通道。采用沿着每个空间维度（深度维、高度维、宽度维）的特征加权
+（通道）组合的方式来集成空间位置的信息，这是一种空间积分的方法，也称为体积分。如\ref{eq:spatial_integration}式对第$m$个卷积层输出特征$\mathbbm{Feat}_m$
+的体积分$\int_{V}\mathbbm{Feat}_m\dd V$
 \begin{equation}\label{eq:spatial_integration}
 \begin{split}
     \varPsi\left(\mathbbm{Feat}_m\right) &= \int_{V}\mathbbm{Feat}_m\dd V \\
@@ -70,8 +70,7 @@ $\mathbbm{Matrix}_{C_m \times D_m \times H_m \times W_m}$，即表示有$C_m$个
                                          &+ \int_{V}\mathbbm{Feat}_m\dd (\mathit{Width})
 \end{split}
 \end{equation}
-我们把这种体积分拆成分别沿深度、高度和宽度3个轴方向的积分之和。为了阐述这种体积分是如何进行的，我们从图\ref{fig:feature_dimensions}取出一个立方体来
-对照着讲解。如图\ref{fig:spatial_integration}所示，
+把这种体积分拆为分别沿深度、高度和宽度3个轴方向的积分之和。这种体积分是如何进行的？ 从\autoref{fig:feature_dimensions}取出一个立方体，如\autoref{fig:spatial_integration}所示，
 \begin{figure}[!htp]
     \centering
     \includegraphics[width=\textwidth]{feature_cuboid_spatial_integration}
@@ -84,15 +83,15 @@ $\mathbbm{Matrix}_{C_m \times D_m \times H_m \times W_m}$，即表示有$C_m$个
 深度维Depth、高度维Height、宽度维Width。简写取首字母[B, C, D, H, W]，全文都采取这样的方式描述。}，每一个小立方体的大小是$1 \times 1 \times 1$，表示为一个体素。
 
 沿$Width$方向的积分$\int_{V} \mathbbm{Feat}_m \dd (\mathit{Width})$过程实际上是将$D \times H \times W$的特征立方体挤压成$1 \times 1 \times W$的形状（
-图\ref{fig:spatial_integration}中A所表示的形状）。由于在编程实现中特征立方体是一个离散的数据，因此积分转变为一个累积求和过程。沿$Width$方向的积分过程是一个两次累积
-求和过程，借用PyTorch的张量表示法，其可表示为式\ref{eq:integration_process}
+\autoref{fig:spatial_integration}中A所表示的形状）。由于在编程实现中特征立方体是一个离散的数据，因此积分转变为一个累积求和过程。沿$Width$方向的积分过程是一个两次累积
+求和过程，借用PyTorch的张量表示法，其可表示为\autoref{eq:integration_process}
 \begin{align}\label{eq:integration_process}
     S_1 &= \sum_{h=1}^{H_m}\mathbbm{Feat}_{m}[:, h, :] \notag \\
     S_2 &= \sum_{d=1}^{D_m}S_1[d, :] \notag \\
     \intertext{得到}
     \int_{V} \mathbbm{Feat}_{m} \dd (\mathit{Width}) = S_2 &= \sum_{d=1}^{D_m}\sum_{h=1}^{H_m} \mathbbm{Feat}_m[d, h, :]
 \end{align}
-同样的道理，沿$Height$方向的积分$\int_{V} \mathbbm{Feat}_m \dd (\mathit{Height})$，将特征立方体挤压成$1 \times H \times 1$的形状（图\ref{fig:spatial_integration}
+同样的道理，沿$Height$方向的积分$\int_{V} \mathbbm{Feat}_m \dd (\mathit{Height})$，将特征立方体挤压成$1 \times H \times 1$的形状（\autoref{fig:spatial_integration}
 中B所表示的形状）。
 \begin{align}
     S_1 &= \sum_{d=1}^{D_m}\mathbbm{Feat}_m[d, :, :] \notag \\
@@ -100,16 +99,16 @@ $\mathbbm{Matrix}_{C_m \times D_m \times H_m \times W_m}$，即表示有$C_m$个
     \intertext{得到}
     \int_{V} \mathbbm{Feat}_m \dd (\mathit{Height}) = S_2 &= \sum_{w=1}^{W_m}\sum_{d=1}^{D_m}\mathbbm{Feat}_m[d, :, w]
 \end{align}
-沿$Depth$沿方向的积分$\int_{V} \mathbbm{Feat}_m \dd (\mathit{Depth})$，将特征立方体挤压成$D \times 1 \times 1$的形状（图\ref{fig:spatial_integration}
+沿$Depth$沿方向的积分$\int_{V} \mathbbm{Feat}_m \dd (\mathit{Depth})$，将特征立方体挤压成$D \times 1 \times 1$的形状（\autoref{fig:spatial_integration}
 中C所表示的形状）。
 \begin{equation}
     \int_{V} \mathbbm{Feat}_m \dd (\mathit{Depth}) = \sum_{h=1}^{H_m} \sum_{w=1}^{W_m} \mathbbm{Feat}_m[:, h, w]
 \end{equation}
 
-这种挤压（两次累积求和）的方法借鉴了注意力蒸馏（图\ref{fig:attention_distillation}）的思想，注意力蒸馏只是沿着通道$Channel$方向进行累积求和，而我们在深度
+这种挤压（两次累积求和）的方法借鉴了注意力蒸馏（\autoref{fig:attention_distillation}）的思想，注意力蒸馏只是沿着通道$Channel$方向进行累积求和，而特征再学习在深度
 $Depth$、高度$Height$和宽度$Width$三个方向都进行累积求和。
 
-完成特征的3个方向的积分后，我们将它们加起来，
+完成特征的3个方向的积分后，将它们加起来，
 \begin{equation}\label{eq:sum_of_3integrations}
 \begin{split}
     \int_{V} \mathbbm{Feat}_m \dd V &= \sum_{d=1}^{D_m}\sum_{h=1}^{H_m} \mathbbm{Feat}_m[d, h, :] \\
@@ -118,7 +117,8 @@ $Depth$、高度$Height$和宽度$Width$三个方向都进行累积求和。
 \end{split}
 \end{equation}
 
-我们设计了2个卷积层，如代码片段\ref{code:recombine_channels}所示，分别是将原来的通道$C_m$降低到$\frac{C_m}{r}$，然后将通道又恢复到$C_m$，这样做的目的是为了重新组合所有的通道。
+为了重新组合所有的通道，设计2个卷积层，如代码片段\ref{code:recombine_channels}所示，分别是将原来的通道$C_m$降低到$\frac{C_m}{r}$，然后将通道又恢复到$C_m$
+\newpage
 \begin{lstlisting}[
 	language=Python,
 	basicstyle=\ttfamily\zihao{5},
@@ -174,9 +174,9 @@ UpChannel = nn.Conv3d(in_channels=Cm//r,
 
 \section{引入通道级特征再学习模块对3D-UNet基准网络进行改进}
 
-基于前文对通道级特征再学习方法的研究，我们决定对3D-UNet基准网络进行改进。引入特征再学习模块，将3D-UNet网络的每一个卷积层块后添加一个特征再学习模块。经过
-特征再学习模块然后传输给最大池化层。修改后整个网络结果如图\ref{fig:3dunet_ad_fr}所示，由于图片的横向宽度太长，明显比纵向高度要大，为了看清图片中的细小字体，
-将网络结构图横向放置。图\ref{fig:3dunet_ad_fr}中的绿色柱状体表示特征再学习模块产生的新特征。
+基于前文对通道级特征再学习方法的研究，对3D-UNet基准网络进行改进，编程实现特征再学习模块的功能，在3D-UNet网络的每一个卷积层块后添加一个特征再学习模块。经过
+特征再学习模块然后传输给最大池化层。修改后整个网络结果如\autoref{fig:3dunet_ad_fr}所示，由于图片的横向宽度太长，明显比纵向高度要大，为了看清图片中的细小字体，
+将网络结构图横向放置。\autoref{fig:3dunet_ad_fr}中的绿色柱状体表示特征再学习模块产生的新特征。
 \begin{figure}[!htp]
     \centering
     \includegraphics[width=0.95\textheight, height=\textwidth, angle=90]{Baseline_AD_FRL}
@@ -189,23 +189,23 @@ UpChannel = nn.Conv3d(in_channels=Cm//r,
 通道级的特征再学习模块将卷积层特征的通道先压缩再恢复，将多个通道进行重组。这样，有信息性的通道得到加强，而无信息性的通道就被抑制削弱，分割的
 性能得到提升。
 
-图\ref{fig:3dunet_ad_fr}的网络结构也是我们最终的网络结构模型，在3D-UNet网络基准模型的基础上加上我们所做的两个改进模块：通道级的特征再学习模块
-和注意力蒸馏模块。我们称这个新的网络结构为3D-UNet + Attention Distillation + Feature Re-Learning，简写为3D-UNet + AD + FRL网络结构。
+\autoref{fig:3dunet_ad_fr}的网络结构即为最终的网络结构模型，在3D-UNet网络基准模型的基础上加上两个改进模块：通道级的特征再学习模块
+和注意力蒸馏模块。这个新的网络结构称为3D-UNet + Attention Distillation + Feature Re-Learning，简写为3D-UNet + AD + FRL网络结构。
 
 \section{综合实验}
 
-有了前述两章对3D-UNet网络基准模型的改进，我们得到了最终的改进的网络模型3D-UNet + AD + FRL。现在我们来做一次对比实验，也是最终的综合性实验，看看
+有了前述两章对3D-UNet网络基准模型的改进，得到了最终的网络模型3D-UNet + AD + FRL。现在需要来做一次对比实验，也是最终的综合性实验，看看
 支气管气道树最终的分割效果如何，综合评估分割模型的性能表现。
 
-我们还是采用跟\ref{sec:baseline_experiment_training}节的3D-UNet网络基准模型的实验同样的训练集、验证集、测试集的数据，相同的实验条件。
+本次综合实验还是采用跟\ref{sec:baseline_experiment_training}小节的3D-UNet网络基准模型的实验同样的训练集、验证集、测试集的数据，相同的实验条件。
 我们在上海交通大学高性能计算中心的AI超算上使用了8块NVIDIA Tesla V100显卡来同时进行训练，开启了8个进程，设置Batch-Size=8，训练了60个迭代周期，
 验证和测试各1个迭代周期,整个实验耗时39小时22分钟。
 
-集中验证集和测试集，计算它们的评价指标数据，如表\ref{tbl:comprehensive_metrics_overview}所示。
+集中验证集和测试集，计算它们的评价指标数据，如\autoref{tbl:comprehensive_metrics_overview}所示。
 \begin{table}[ht]
     \centering
     \bicaption[综合实验验证集和测试集的评价指标一览]
-        {综合实验验证集和测试集的评价指标一览\\每一项指标栏用双下划线加粗黑体标示出表现最优秀的, 用波浪线标示出表现最差的.}
+        {综合实验验证集和测试集的评价指标一览}
         {The metrics overview of comprehensive experiment for valset and testset}
     \label{tbl:comprehensive_metrics_overview}
     \begin{tabular}{cccccccc}
@@ -247,7 +247,7 @@ UpChannel = nn.Conv3d(in_channels=Cm//r,
 \end{table}
 在每一项指标上用双下划线加粗黑体标示出表现最优秀的，用波浪线标示出最差的。并在最后一行计算出每个指标的平均值，以作为参考。
 
-我们从表\ref{tbl:comprehensive_metrics_overview}挑选出9个有代表性的病例来显示支气管气道树三维模型，见图\ref{fig:airway_segmentation_overview}。
+从\autoref{tbl:comprehensive_metrics_overview}挑选出9个有代表性的病例来显示支气管气道树三维模型，见\autoref{fig:airway_segmentation_overview}所示。
 %\begin{table}[!ht]
 %    \centering
 %    \bicaption[综合实验验证集和测试集的气道树分割效果一览]
@@ -273,7 +273,6 @@ UpChannel = nn.Conv3d(in_channels=Cm//r,
 %        \hline
 %    \end{tabular}
 %\end{table}
-
 \begin{figure}[!ht]
 	\centering
 	\begin{subfigure}{0.325\textwidth}
@@ -329,16 +328,41 @@ UpChannel = nn.Conv3d(in_channels=Cm//r,
 出来了，说明通道级特征再学习的改进方法提高了3D-UNet + AD + FRL网络模型的性能。当然这些改善是注意力蒸馏Attention Distillation和通道级特征再学习
 Channel-wise Feature Re-Learning两个改进功能共同作用的，单一的改进还达不到这样的效果。
 
+%\subsection{消融研究}
+%
+%本文对肺部支气管气道树的分割采用3D-UNet网络作为基准分割模型，增加2个改进模块：注意力蒸馏模块和通道级特征再学习模块。前面三个章节分别展示了
+%分割的效果和性能指标，作为比较，我们从性能指标角度研究它们的改进程度。如\autoref{tbl:perf_metrics_comparison}所示，
+%\begin{table}[!htp]
+%	\bicaption[3D-UNet基准模型，注意力蒸馏模块改进和特征再学习模块改进的性能指标对比]
+%		{3D-UNet基准模型，注意力蒸馏模块改进和特征再学习模块改进的性能指标对比}
+%		{The performance metrics comparison between 3D-UNet baseline, AD module improvement and FRL module improvement}
+%	\label{tbl:perf_metrics_comparison}
+%	\scalebox{0.9}{
+%	\begin{tabular}{llccccccc}
+%		\hline
+%		&  &  FPR & FNR & Sensitivity & Precision & DSC & BD & TLD \\
+%		\hline
+%		3D-UNet baseline network & 平均值 & 0.031 &	6.815 & 	93.184 & 90.801 & 91.577 &	79.905 & 	87.677 \\
+%		3D-UNet + AD             & 平均值 & 0.035 &	4.069 &	 95.930 &	89.956 &	92.758 &	85.997 &	 92.009 \\
+%		3D-UNet + AD + FRL       & 平均值 & 0.032	& 3.736 &  	96.249 &	90.652 & 93.170 & 83.453 & 	90.883 \\
+%		\hline
+%		3D-UNet baseline network & 标准差 & 0.015	& 10.812 	& 10.812 	& 4.318 	& 7.228 	& 18.033	& 13.635 \\
+%		3D-UNet + AD             & 标准差 & 0.016	& 2.684 	 & 2.684 	 & 4.252 	& 2.256  &	9.906 	 & 5.291 \\
+%		3D-UNet + AD + FRL       & 标准差 & 0.016	& 1.883 	& 1.858 	& 4.542 & 2.270 	& 9.931 	& 4.926\\
+%		\hline
+%	\end{tabular}}
+%\end{table}
+%从性能指标的平均值来看，在FNR, Sensitivity, BD和TLD四个指标上，
 
 \section{性能指标对比}
 
-完成了综合实验之后，我们就性能指标与一些经典的网络结构进行对比。我们选择了V-Net\cite{Milletar2016VNetFC}, VoxResNet\cite{CHEN2018446}和
-Attention-Gated U-Net\cite{Oktay2018AttentionUL}来比较FPR、DSC、BD和TLD四个指标。我们也跟State-of-the-art(SOTA)的几个方法，诸如Wang Chenglong
+完成了综合实验之后，就性能指标与一些经典的网络结构进行对比。我们选择了V-Net\cite{Milletar2016VNetFC}, VoxResNet\cite{CHEN2018446}和
+Attention-Gated U-Net\cite{Oktay2018AttentionUL}来比较FPR、DSC、BD和TLD四个指标，同时也跟State-of-the-art(SOTA)的几个方法，诸如Wang Chenglong
 等人\cite{Wang2019TubularSegment}提出的使用空间全连接网络解决管状结构的分割问题, Antonio Juarez等人提出一个3D-UNet + GNN联合型
 网络\cite{Juarez2019Joint3DUNetGraph}用于支气管气道树的分割，Qin Yulei等人\cite{Qin2019AirwayNet}提出一个体素连接的AirwayNet方法解决精确的
 气道树分割，Antonio Juarez等人\cite{Juarez2018AutoAirwaySegment}较早提出的应用3D-UNet网络用于支气管气道树分割，还有Dakai Jin等
 人\cite{Dakai2017GraphRefinement}则是结合3D CNN与Graph Refinement在一个不完整标注的数据集上做的气道树分割，进行比较。我们选取FPR、DSC、BD和TLD指标
-的平均值来跟它们比较，见表\ref{tbl:metrics_comparison_table}。
+的平均值来跟它们比较，见\autoref{tbl:metrics_comparison_table}。
 \begin{table}[ht]
     \centering
     \bicaption[性能指标比较表]
@@ -349,7 +373,7 @@ Attention-Gated U-Net\cite{Oktay2018AttentionUL}来比较FPR、DSC、BD和TLD四
         \hline
         \multicolumn{2}{c|}{方法}     & FPR (\%) & DSC (\%) & BD (\%) & TLD (\%) \\
         \hline
-        \multicolumn{2}{c|}{\makecell{我们的方法\\3D-UNet + AD + FRL}} & 0.0328 & 93.171 & 83.454 & \uuline{\bf 90.883} \\
+        \multicolumn{2}{c|}{\makecell{本文的方法\\3D-UNet + AD + FRL}} & 0.0328 & 93.171 & 83.454 & \uuline{\bf 90.883} \\
         \hline
         \hline
         \multirow{3}*{\makecell{经典的\\网络}} & V-Net\cite{Milletar2016VNetFC} & 0.024 & 92.1 & 91.0 & 81.6 \\
@@ -371,37 +395,36 @@ Attention-Gated U-Net\cite{Oktay2018AttentionUL}来比较FPR、DSC、BD和TLD四
         \cline{2-2} & \makecell{Dakai Jin等人\cite{Dakai2017GraphRefinement}提出的\\结合3D CNN与Graph \\Refinement的方法} & 0.017 & 93.6 & 93.1 & 84.8 \\
         \hline
         \hline
-        \multicolumn{2}{c|}{\makecell{我们的方法在一些病例\\上取得的优秀表现\\以ATM\_260\_0000为例}} & 0.017 & \uuline\bf 96.57 & 97.24 & 96.57 \\
+        \multicolumn{2}{c|}{\makecell{本文的方法在一些病例\\上取得的优秀表现\\以ATM\_260\_0000为例}} & 0.017 & \uuline\bf 96.57 & 97.24 & 96.57 \\
         \hline
     \end{tabular}
 \end{table}
-可以看出，在DSC和TLD两项指标上，我们的方法要比经典的网络的方法要优秀一些，但跟SOTA的方法比，FPR、DSC和BD三项指标都比较落后，只有TLD一项指标还保持着领先。
-当然，我们也在一些病例上取得了很优秀的结果。
+可以看出，在DSC和TLD两项指标上，本文的方法要比经典的网络的方法要优秀一些，但跟SOTA的方法比，FPR、DSC和BD三项指标都比较落后，只有TLD一项指标还保持着领先。 
+SOTA的方法代表了一些在支气管气道树分割领域顶尖的研究成果，跟它们相比，本文目前的研究成果还达不到，整体上处于落后的状态。
+当然，本文也在一些病例上，比如ATM\_260\_0000这个病例上取得了很优秀的结果。
 
 
 \section{本章小结}
 
 本章针对末梢支气管这样的精细特征引入了特征再学习功能。我们认为在不同的空间位置，特征应该具有不同的重要性。在枝干支气管这样的粗糙特征处赋予一般的权重，在末梢支气管
-这样的精细特征处应该赋予比较高的权重，而对于没有没有特征的背景或角落处则应该逐渐降低其权重。正是基于这样的一个想法，我们就想在卷积层块之后，最大池化层之前引入一种
-新的方法来调整特征的权重，从而想捕获更精细的特征。这种新方法就是通道级特征再学习(Channel-wise Feature Re-Learning, FRL)方法。
+这样的精细特征处应该赋予比较高的权重，而对于没有没有特征的背景或角落处则应该逐渐降低其权重。正是基于这样的一个想法，在卷积层块之后，最大池化层之前引入通道级特征再学习方法
+来调整特征的权重，从而想捕获更精细的特征。
 
-我们详细介绍了通道级特征再学习方法的基本原理，提出了汇聚特征的计算公式。其中最重要的是特征立方体(见图\ref{fig:spatial_integration})的体积分过程，将体积分拆分
+本章详细介绍了通道级特征再学习方法的基本原理，提出了汇聚特征的计算公式。其中最重要的是特征立方体(见\autoref{fig:spatial_integration})的体积分过程，将体积分拆分
 为沿着$Depth$方向、$Height$方向、$Width$方向分别进行积分。这种积分是将特征立方体$\mathbbm{Feat}_m$从$D \times H \times W$大小挤压成$1 \times 1 \times W$，
-$1 \times H \times 1$和$D \times 1 \times 1$的形状。这种挤压过程实际上是两次累积求和过程,它是借鉴了注意力蒸馏(见图\ref{fig:attention_distillation})
-的思想，就是想在空间的三个维度上都各自产生聚焦。将这三个方向的积分加起来（见式\ref{eq:sum_of_3integrations}）后，为了将多个通道重新组合，加强有信息的通道，抑制
-无信息的通道，我们又设计了一个降通道的卷积层和恢复原通道数的卷积层。两个卷积层用来处理三个方向的积分之和的数据得到$\varPsi\left(\mathbbm{Feat}_m\right)$
+$1 \times H \times 1$和$D \times 1 \times 1$的形状。这种挤压过程实际上是两次累积求和过程,它是借鉴了注意力蒸馏(见\autoref{fig:attention_distillation})
+的思想，就是想在空间的三个维度上都各自产生聚焦。将这三个方向的积分加起来（见\autoref{eq:sum_of_3integrations}）后，为了将多个通道重新组合，加强有信息的通道，抑制
+无信息的通道，又设计了一个降通道的卷积层和恢复原通道数的卷积层。两个卷积层用来处理三个方向的积分之和的数据得到$\varPsi\left(\mathbbm{Feat}_m\right)$
 （见\ref{eq:features_element_wise_multiply}式），其跟卷积层输出的特征$\mathbbm{Feat}_m$在维数上是一样的，都是$B \times C \times D \times H \times W$的大小，
-这样我们就可以进行逐元素相乘。从图\ref{fig:feature_dimensions}、图\ref{fig:spatial_integration}, 公式\ref{eq:feature_dimensions}到公式
+这样就可以进行逐元素相乘。从\autoref{fig:feature_dimensions}、\autoref{fig:spatial_integration}, \autoref{eq:feature_dimensions}到公式
 \ref{eq:features_element_wise_multiply}是特征再学习的完整计算过程。特征再学习方法起的作用是在训练过程中、重要的气道特征随着特征再学习模块所赋予的新权重而
 逐渐被重视，而无关的区域则随着权重的降低而慢慢被忽略。
 
-了解了通道级特征再学习的原理、计算过程和作用后，我们对3D-UNet网络基准基准模型进行改进，引入特征再学习模块，将其插入在每一层的卷积层块之后和最大池化层之间，
-见图\ref{fig:3dunet_ad_fr}中的绿色柱体。使用Python实现了这个改进的3D-UNet + Attention Distillation + Feature Re-Learning网络之后，我们进行了一次综合
-实验。实验结果表明注意力蒸馏模块和特征再学习模块明显帮助提高了模型的性能，从表\ref{fig:airway_segmentation_overview}看到分割出来的三维气道树模型表现为很完整
+了解了通道级特征再学习的原理、计算过程和作用后，对3D-UNet网络基准基准模型进行改进，引入特征再学习模块，将其插入在每一层的卷积层块之后和最大池化层之间，
+见\autoref{fig:3dunet_ad_fr}中的绿色柱体。使用Python实现了这个改进的3D-UNet + Attention Distillation + Feature Re-Learning网络之后，进行了一次综合
+实验。实验结果表明注意力蒸馏模块和特征再学习模块明显帮助提高了模型的性能，从\autoref{fig:airway_segmentation_overview}看到分割出来的三维气道树模型表现为很完整
 的一棵树，枝干支气管和末梢支气管都已经完整分割出来。
 
-完成综合实验，我们还做了指标对比研究。将我们的方法与经典的网络V-Net, VoxResNet和Attention-Gated U-Net比较FPR、DSC、BD、TLD四个指标，
-在DSC与TLD两项指标上取得领先。我们也跟State-of-the-art (SOTA)的方法进行对比，虽然在TLD指标上取得明显领先，但在FPR、BD两项指标确实明显落后。当然，我们的
+完成综合实验，我们还做了指标对比研究。将本文的方法与经典的网络V-Net, VoxResNet和Attention-Gated U-Net比较FPR、DSC、BD、TLD四个指标，
+在DSC与TLD两项指标上取得领先。同时也跟State-of-the-art (SOTA)的方法进行对比，虽然在TLD指标上取得明显领先，但在FPR、BD两项指标确实明显落后。当然，本文的
 方法也在一些病例上取得了优秀的表现。
-
-至此，本论文完成所有的研究与实验。

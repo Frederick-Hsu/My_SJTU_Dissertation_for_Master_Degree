@@ -2,9 +2,9 @@
 
 \chapter{注意力蒸馏方法对基准模型的改进}\label{chap:attention_distillation}
 
-我们在第\ref{chap:baseline_model}章讨论了3D-UNet网络这一基准模型对支气管气道树的分割， 仔细观察表\ref{tbl:visualize_airway_3d_model}
-中各个支气管气道树末端（ATM\_174\_0000和ATM\_505\_0000两个病例除外）出现很多红色的假阴性支气管体素，见图\ref{fig:distal_bronchus}
-中放大的左右末梢支气管。假阴性表示这些体素原本是真实存在的支气管体素，只是因为我们的3D-UNet基准网络的分割能力不够，尚无足够的精细分割能力。
+本论文第\ref{chap:baseline_model}章讨论了3D-UNet网络这一基准模型对支气管气道树的分割， 仔细观察\autoref{fig:visualize_airway_3d_model}
+中各个支气管气道树末端（ATM\_174\_0000和ATM\_505\_0000两个病例除外）出现很多红色的假阴性支气管体素，见\autoref{fig:distal_bronchus}
+中放大的左右末梢支气管。假阴性表示这些体素原本是真实存在的支气管体素，只是因为3D-UNet基准网络的分割能力不够，尚无足够的精细分割能力。
 \begin{figure}[!htp]
     \centering
     \includegraphics[width=\textwidth]{zoom_in_distal_bronchus}
@@ -16,7 +16,7 @@
 末梢支气管的管径通常都比较小，做标注工作的临床医生在标注这些末梢支气管尽很大的努力，可能只能看到一到两个像素。ATM\_054\_0000切片上
 的像素间距是0.83mm，切片间距是0.5mm，由此可见末端支气管的管径在人体肺部实际不到1mm。 对于医生来说，精细标注确实是一个比较大
 的挑战，大量CT图片的精细标注是一项繁重耗时且枯燥乏味的工作。但对于支气管镜导航手术来说，越是进入末梢支气管越能接近肺癌结节
-部位，越好做到微创甚至无创取样活检。这就要求我们做支气管气道树分割越精细越好，较高要求是能分割到段支气管、小叶支气管。当然最高要求是做到
+部位，越好做到微创甚至无创取样活检。这就要求支气管气道树的分割越精细越好，较高要求是能分割到段支气管、小叶支气管。当然最高要求是做到
 能分割细支气管，细支气管是最末端的毛细支气管，直接连到肺泡。
 
 对于卷积网络提取精细特征的要求，Sergey Zagoruyko等人\cite{Zagoruyko2016PayingMA}提出卷积网络注意力转移Attention Transfer
@@ -28,7 +28,7 @@
 
 注意力是一组空间地图，本质是试图使网络在做出输出决策时最关注的输入空间区域\cite{Zagoruyko2016PayingMA}。有两种注意力图
 的形式，一种是基于激活的注意力图Activation-based attention map, 另一种是基于梯度的注意力图Gradient-based 
-attention map. 这种注意力图可在网络的各个层定义，以便它们能够捕获低级、中级和高级别的表示信息。注意力图可指导我们看哪里，
+attention map. 这种注意力图可在网络的各个层定义，以便它们能够捕获低级、中级和高级别的表示信息。注意力图可指导网络注意看哪里，
 把目光聚焦在感兴趣的地方。 
 
 在卷积网络的第$n$层，定义注意力图$\mathit{AttMap}_{n}$作用在该层特征$\mathit{Feat}_{n}$的函数关系：
@@ -62,7 +62,7 @@ Improving the performance of convolutional neural networks via Attention Transfe
 但不会忽略非最大的元素，也不会削弱判别性的元素。$p$次幂建议取$p = 2$， 它增强了大多数敏感任务区域。$\mathcal{F}_{sum}^{p}({Feat}_{n})$
 的计算相比于$\mathcal{F}_{sum}(\mathit{Feat}_{n})$，它把更多的权重放置于最具判别性的部位。$p$越大，越能聚焦于这些判别性部位。
 
-借助于PyTorch的张量表示方法，我们将注意力图函数改写成如下形式：
+借助于PyTorch的张量表示方法，可以将注意力图函数改写成如下形式：
 \begin{equation}
     \mathit{AttMap}_{n} = \mathcal{F}_{sum}^{p}(\mathit{Feat}_{n}) = \sum_{c=1}^{C}{\Bigm|{\mathit{Feat}}[c, :, :, :]\Bigm|}^{p}
 \end{equation}
@@ -70,7 +70,7 @@ Improving the performance of convolutional neural networks via Attention Transfe
 长方体子块。
 
 这种计算注意力图的方式其意义就是将$C$个$D \times H \times W$长方体子块的特征信息蒸馏浓缩在一个$D \times H \times W$长方体
-子块特征里。如图\ref{fig:attention_distillation}所示：
+子块特征里。如\autoref{fig:attention_distillation}所示：
 \begin{figure}[!htp]
     \centering
     \includegraphics[width=0.6\textwidth]{Attention_Distillation}
@@ -80,13 +80,13 @@ Improving the performance of convolutional neural networks via Attention Transfe
     \label{fig:attention_distillation}
 \end{figure}
 
-为了保证蒸馏得到的注意力图Cuboid与原来的特征Cuboid保持相同的$D \times H \times W$维数，我们需要对注意力图进行三线性
+为了保证蒸馏得到的注意力图Cuboid与原来的特征Cuboid保持相同的$D \times H \times W$维数，需要对注意力图进行三线性
 插值Trilinear Interpolation $\mathcal{L}(\bullet)$
 \begin{equation}
     \mathit{AttMap}_{n} = \mathcal{L}\left[\mathcal{F}_{sum}^{p}\left(\mathit{Feat}_{n}\right)\right]
 \end{equation}
 
-最后，我们使用$Softmax$对其归一化，使每个体素的值被限定在$[0, 1]$之间。
+最后，使用$Softmax$对其归一化，使每个体素的值被限定在$[0, 1]$之间。
 \begin{equation}
     \mathit{AttMap}_{n} = \mathit{Softmax}\{ \mathcal{L}\left[\mathcal{F}_{sum}^{p}\left(\mathit{Feat}_{n}\right)\right] \}
 \end{equation}
@@ -103,9 +103,9 @@ Improving the performance of convolutional neural networks via Attention Transfe
 
 \section{注意力蒸馏的效果可视化}
 
-引入注意力蒸馏方法后，我们可以来看看在卷积网络不同层之间，经过蒸馏后特征的表现如何？ 通过可视化的方式来查看支气管气道树的焦点
-变化情况。我们选取了测试集的ATM\_074\_0000这个病例，抽取3D-UNet结构图\ref{fig:3DUNetStructure}上采样路径的第6、第7、
-第8、第9个卷积层的特征信息，将它们显示出来，如图\ref{fig:ad_effect}所示。
+引入注意力蒸馏方法后，可以来看看在卷积网络不同层之间，经过蒸馏后特征的表现如何？ 通过可视化的方式来查看支气管气道树的焦点
+变化情况。选取测试集的ATM\_074\_0000这个病例，抽取3D-UNet结构\autoref{fig:3DUNetStructure}上采样路径的第6、第7、
+第8、第9个卷积层的特征信息，将它们显示出来，如\autoref{fig:ad_effect}所示。
 \begin{figure}[ht]
     \centering
     \includegraphics[width=\textwidth]{visualize_attention_distillation_effect}
@@ -114,9 +114,10 @@ Improving the performance of convolutional neural networks via Attention Transfe
         {The visual effect of feature after attention distillation}
     \label{fig:ad_effect}
 \end{figure}
-从图\ref{fig:ad_effect}可以看出，高亮之处也就是聚焦点沿着conv6->conv7->conv8->conv9的方向从粗壮的气管逐渐转移至更
-细小的末梢支气管，这也是注意力机制在引导我们聚焦看哪里。为了更清晰，我们将注意力蒸馏后的图片转成灰度图并放大，请见图\ref{tbl:ad_effect}，
-对比4个卷积层蒸馏后焦点转移情况。说明一点，为了便于读者复现此注意力蒸馏后的效果，显示如图\ref{tbl:ad_effect}的图片，请参考
+从\autoref{fig:ad_effect}可以看出，高亮之处也就是聚焦点沿着$\text{conv6} \rightarrow \text{conv7} \rightarrow \text{conv8} \rightarrow \text{conv9}$
+的方向从粗壮的气管逐渐转移至更
+细小的末梢支气管，这也是注意力机制在引导网络聚焦看哪里。为了更清晰，将注意力蒸馏后的图片转成灰度图并放大，请见\autoref{tbl:ad_effect}，
+对比4个卷积层蒸馏后焦点转移情况。说明一点，为了便于读者复现此注意力蒸馏后的效果，显示如\autoref{tbl:ad_effect}的图片，请参考
 附录\ref{code:ad_effect}的代码片段。
 %\begin{table}[!htp]
 %    \centering
@@ -167,15 +168,15 @@ Improving the performance of convolutional neural networks via Attention Transfe
 	\label{tbl:ad_effect}
 \end{figure}
 
-注意力蒸馏方法可使焦点转移，聚焦于看更细节的对象，帮助模型提高精细度的性能。为此，我们对前文的3D-UNet基准网络进行改进，引入
+注意力蒸馏方法可使焦点转移，聚焦于看更细节的对象，帮助模型提高精细度的性能。为此对前文的3D-UNet基准网络进行改进，引入
 注意力蒸馏方法。
 
 \section{引入注意力蒸馏模块对3D-UNet基准网络进行改进}
-基于前文对注意力蒸馏方法的研究，我们决定对3D-UNet基准网络进行改进，引入注意力蒸馏方法，在3D-UNet上采样路径上对第6个、第7个、
-第8个和第9个卷积层添加注意力蒸馏模块。经过注意力蒸馏模块后，相邻的蒸馏后图像特征之间就自然增加了一个新的梯度，我们通过
+基于前文对注意力蒸馏方法的研究，将对3D-UNet基准网络进行改进，引入注意力蒸馏方法，在3D-UNet网络的上采样路径对第6个、第7个、
+第8个和第9个卷积层添加注意力蒸馏模块。经过注意力蒸馏模块后，相邻的蒸馏后图像特征之间就自然增加了一个新的梯度，可通过
 \ref{eq:attention_distillation_loss}式来计算它们之间的损失。
 
-改进后的网络结构如图\ref{fig:3dunet_ad}所示。因插图横向宽度太长，将其横向放置，利于看清图中细小的字体。
+改进后的网络结构如\autoref{fig:3dunet_ad}所示。因插图横向宽度太长，将其横向放置，利于看清图中细小的字体。
 \begin{figure}[!ht]
     \centering
     \includegraphics[width=0.83\textheight, height=\textwidth, angle=90]{Baseline_AD}
@@ -184,12 +185,12 @@ Improving the performance of convolutional neural networks via Attention Transfe
         {The architecture of 3D-UNet + Attention Distillation}
     \label{fig:3dunet_ad}
 \end{figure}
-我们只是在上采样路径上加入了注意力蒸馏模块，而并没有在下采样路径上同样加入注意力蒸馏模块，为什么？ 这是考虑到下采样路径上第$n$
+我们只是在上采样路径加入了注意力蒸馏模块，而并没有在下采样路径同样加入注意力蒸馏模块，为什么？ 这是考虑到下采样路径的第$n$
 个卷积层本身就比第$n-1$个卷积层的输出图像的分辨率要低，这就必然导致末梢支气管的像素密度更低。在低分辨率下，注意力蒸馏就很难聚焦
 于末梢支气管，所以就难以起到正向促进作用。而在上采样路径则正好相反，第$n$个卷积层比第$n-1$个卷积层的图像分辨率提高一倍，末梢
 支气管的像素密度高，那么注意力蒸馏就可以比较容易地聚焦于这些末梢支气管。
 
-对于注意力蒸馏模块引入后额外增加的梯度，其带来的损失函数的计算，实现算法~\ref{algo:ad_loss}，需要累积各个卷积层的注意力
+对于注意力蒸馏模块引入后额外增加的梯度，其带来的损失函数的计算，实现算法~\ref{algo:ad_loss}，
 \begin{algorithm}[htb]
     \SetKwData{pred}{pred}
     \SetKwData{gt}{groundtruth}
@@ -253,22 +254,24 @@ Improving the performance of convolutional neural networks via Attention Transfe
         $Total\_Loss \leftarrow$ $Total\_Loss$ + $\gamma[i]$ * \loss		
     }
 \end{algorithm}
-蒸馏的梯度损失。骰子损失Dice Loss还是按照\ref{eq:dice_loss}式进行计算，Focal Loss损失按照公式\ref{eq:focal_loss}计算，
-最后需要将此计算出来的总的注意力蒸馏的梯度损失缀加到Total Loss（见公式\ref{eq:total_loss}）上。需要指出的是，注意力蒸馏的梯度损失函数是可微可导的，因此在误差反向
+需要累积各个卷积层的注意力蒸馏的梯度损失。骰子损失Dice Loss还是按照\autoref{eq:dice_loss}进行计算，Focal Loss损失按照\autoref{eq:focal_loss}计算，
+最后需要将此计算出来的总的注意力蒸馏的梯度损失缀加到Total Loss（见\autoref{eq:total_loss}）上。需要指出的是，注意力蒸馏的梯度损失函数是可微可导的，因此在误差反向
 传播时是可以更新3D-UNet网络的参数的。
 
 \section{对比实验与实验结果分析}
-我们对3D-UNet基准网络进行改进，加入了注意力蒸馏模块后，现在我们进行一次实验，与前文的3D-UNet基准网络实验进行对比。使用的
+对3D-UNet基准网络进行改进，加入了注意力蒸馏模块后，现在来进行一次实验，与前文的3D-UNet基准网络实验进行对比。使用的
 数据集与3D-UNet实验的数据集完全相同，实验条件也是一致的。本次实验的训练、验证和测试三个阶段合计总耗时约39个小时。
 
-验证集的指标数据如表\ref{tbl:3dunet_ad_metrics_valset}所示。
+验证集的指标数据如\autoref{tbl:3dunet_ad_metrics_valset}所示，表中每一项指标栏用双下划线加粗黑体标示出表现最优秀的, 
+用波浪线标示出表现最差的。
 \begin{table}[htb]
     \centering
     \bicaption[3D-UNet + AD网络结构的验证集指标数据一览表]
-        {3D-UNet + AD网络结构的验证集指标数据一览表\\表中每一项指标栏用双下划线加粗黑体标示出表现最优秀的, 
-        用波浪线标示出表现最差的.}
+        {3D-UNet + AD网络结构的验证集指标数据一览表}
         {The metrics overview of validate set under 3D-UNet + AD network structure}
     \label{tbl:3dunet_ad_metrics_valset}
+    \scalebox{0.85}{
+    \begin{threeparttable}
     \begin{tabular}{cccccccc}
         \toprule
         病例名称 & FPR & FNR & Sensitivity & Precison & DSC & BD & TLD \\
@@ -278,25 +281,32 @@ Improving the performance of convolutional neural networks via Attention Transfe
         ATM\_055\_0000 & 0.039 & 3.453  & 96.547 & 89.855 & 93.08 & 81.17  & 89.09  \\
         ATM\_057\_0000 & 0.039 & 4.683  & 95.317 & 90.426 & 92.81 & 78.35  & 87.98  \\
         ATM\_091\_0000 & \uwave{0.041} & 3.57   & 96.43  & \uwave{89.583} & 92.88 & 85.46  & 91.99  \\
-        % ATM\_174\_0000 & 0.031 & 21.972 & 78.028 & 91.218 & 84.11 & 38.1   & 49.49  \\
+        ATM\_174\_0000\tnote{1} & 0.031 & 21.972 & 78.028 & 91.218 & 84.11 & 38.1   & 49.49  \\
         ATM\_215\_0000 & \uuline{\bf 0.021} & \uwave{10.595} & \uwave{89.405} & \uuline{\bf 92.453} & 90.9  & \uwave{72.25}  & 84.32  \\
-        % ATM\_505\_0000 & 0.061 & 44.617 & 55.383 & 85.209 & 67.13 & 26.51  & 42.18  \\
+        ATM\_505\_0000\tnote{1} & 0.061 & 44.617 & 55.383 & 85.209 & 67.13 & 26.51  & 42.18  \\
         ATM\_688\_0000 & 0.028 & \uuline{\bf 2.109}  & \uuline{\bf 97.891} & 92.182 & \uuline{\bf 94.95} & \uuline{\bf 93.94}  & \uuline{\bf 96.31}  \\
         \midrule
         平均值 & 0.032 & 5.311 & 94.689 & 91.119 & 92.836 & 80.607 & 88.496 \\
         \bottomrule
     \end{tabular}
+    \begin{tablenotes}
+    	\footnotesize
+    	\item[1] \textcolor{black}{ATM\_174\_0000与ATM\_505\_0000两个病例已在\autoref{tbl:validateset_airway_tree_metrics}分析过，它们是
+    	存在严重肺部疾病的，支气管管壁破裂或缺失。基于此原因，将这两个病例排除在平均值的计算之外，但仍然在此表中展示出来。}
+    \end{tablenotes}
+    \end{threeparttable}
+    }
 \end{table}
 另外算出这些指标的平均值，以便与3D-UNet基准网络实验的验证集的指标的平均值进行比较。
 
-测试集的指标数据如表\ref{tbl:3dunet_ad_metrics_testset}所示。从平均值来看，FPR、Sensitivity、DSC和TLD四项指标表现得都比较优秀。
+测试集的指标数据如\autoref{tbl:3dunet_ad_metrics_testset}所示。从平均值来看，FPR、Sensitivity、DSC和TLD四项指标表现得都比较优秀。
 \begin{table}[!htb]
     \centering
     \bicaption[3D-UNet + AD网络结构的测试集指标数据一览表]
-        {3D-UNet + AD网络结构的测试集指标数据一览表\\表中每一项指标栏用双下划线加粗黑体标示出表现最优秀的, 
-        用波浪线标示出表现最差的.}
+        {3D-UNet + AD网络结构的测试集指标数据一览表}
         {The metrics overview of testset under 3D-UNet + AD network structure}
     \label{tbl:3dunet_ad_metrics_testset}
+    \scalebox{0.85}{
     \begin{tabular}{cccccccc}
         \toprule
         病例名称 & FPR & FNR & Sensitivity & Precison & DSC & BD & TLD \\
@@ -324,15 +334,16 @@ Improving the performance of convolutional neural networks via Attention Transfe
         平均值 & 0.036 & 3.612 & 96.388 & 89.529 & 92.73 & 87.983 & 93.304  \\
         \bottomrule
     \end{tabular}
+    }
 \end{table}
-
-我们还可从平均值来比较3D-UNet跟3D-UNet + AD的指标性能，见表\ref{tbl:metrics_comparison}。
+纵向地，从平均值来比较3D-UNet跟3D-UNet + AD的指标性能，见\autoref{tbl:metrics_comparison}。
 \begin{table}[!hbt]
     \centering
     \bicaption[3D-UNet与3D-UNet + AD的性能指标对比]
         {3D-UNet与3D-UNet + AD的性能指标对比}
         {The metrics comparison between 3D-UNet and 3D-UNet + AD}
     \label{tbl:metrics_comparison}
+    \scalebox{0.85}{
     \begin{tabular}{lccccccc}
         \toprule
                 & FPR & FNR & Sensitivity & Precison & DSC & BD & TLD \\
@@ -346,10 +357,11 @@ Improving the performance of convolutional neural networks via Attention Transfe
         3D-UNet + AD & 0.036 & 3.612 & {\bf 96.388} & 89.529 & 92.73 & {\bf 87.983} & {\bf 93.304}  \\
         \bottomrule
     \end{tabular}
+    }
 \end{table}
-通过对比，我们看到在BD, TLD和FNR三项指标上有一些提升，在其他项指标上则基本持平。
+通过对比，可以看到在BD, TLD和FNR三项指标上有一些提升，在其他项指标上则基本持平。
 
-还有一个重要的实验结果就是支气管气道树分割效果可视化，我们分别从测试集和验证中挑选一些比较有代表性的病例来展示它们的分割效果，如图
+还有一个重要的实验结果就是支气管气道树分割效果可视化，分别从测试集和验证中挑选一些比较有代表性的病例来展示它们的分割效果，如图
 \ref{fig:3dunetad_airway_tree}所示。
 % \begin{table}[!htp]
 %     \bicaption[3D-UNet + AD网络结构支气管气道树分割可视化3D模型]
@@ -429,14 +441,14 @@ Improving the performance of convolutional neural networks via Attention Transfe
     \label{fig:3dunetad_airway_tree}
 \end{figure}
 
-从图\ref{fig:3dunetad_airway_tree}的支气管气道树三维模型来看，大部分的假阴性（红色体素）已经被正确分割出来，9个病例中的假阴性红色体素很少出现了。
-相比于图\ref{fig:visualize_airway_3d_model}里大量出现的红色假阴性体素明显减少了很多（ATM\_174\_0000和ATM\_505\_0000两个严重肺部疾病的病例除外），证明
+从\autoref{fig:3dunetad_airway_tree}的支气管气道树三维模型来看，大部分的假阴性（红色体素）已经被正确分割出来，9个病例中的假阴性红色体素很少出现了。
+相比于\autoref{fig:visualize_airway_3d_model}里大量出现的红色假阴性体素明显减少了很多（ATM\_174\_0000和ATM\_505\_0000两个严重肺部疾病的病例除外），证明
 注意力蒸馏的方法抑制住了假阴性率，提高了分割模型的一些性能。
 
 ATM\_688\_0000这个病例稍微有点例外，但仔细研究是在上叶支气管处出现的红色假阴性体素，上叶支气管的管径是有点粗的，分割模型应该不会在此处发生漏检，
 最有可能的是医生只是标记了管内壁，没有标记管外壁。分割模型识别到管外壁，在三维支气管气道树上表现为管外壁的红色体素覆盖了馆内壁的蓝色体素。
-在ITK-SNAP里放大查看，如图\ref{fig:annotation_overlap},
-\begin{figure}[h]
+在ITK-SNAP里放大查看，如\autoref{fig:annotation_overlap},
+\begin{figure}[htp]
     \centering
     \includegraphics[width=0.5\textwidth]{results/baseline_ds_ad/管内外壁标注覆盖问题}
     \bicaption[支气管内外壁标注差异而导致覆盖问题]{支气管内外壁标注差异而导致覆盖问题}
@@ -462,18 +474,20 @@ ATM\_688\_0000这个病例稍微有点例外，但仔细研究是在上叶支气
 %        \hline
 %    \end{tabular}
 %\end{table}
-\begin{figure}[!htp]
+\begin{figure}[htp]
 	\centering
 	\begin{subfigure}{0.48\textwidth}
 		\includegraphics[width=\textwidth]{results/baseline_ds_ad/test040/ATM_074_0000}
+		\caption{ATM\_074\_0000}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}{0.48\textwidth}
 		\includegraphics[width=\textwidth]{results/baseline_ds_ad/test040/ATM_271_0000}
+		\caption{ATM\_271\_0000}
 	\end{subfigure}
-	\bicaption[ATM\_074\_0000和ATM\_271\_0000两个特殊病例的分割结果分析]
-        {ATM\_074\_0000和ATM\_271\_0000两个特殊病例的分割结果分析}
-        {The segmentation results analysis for 2 special cases: ATM\_074\_0000 and ATM\_271\_0000}
+	\bicaption[两个特殊病例的分割结果分析]
+        {两个特殊病例的分割结果分析}
+        {The segmentation results analysis for 2 special cases}
 	\label{fig:two_special_cases}
 \end{figure}
 它们是真实存在的气管，但为什么会发生分割模型误判了这些真实存在的气管，原因就是医生遗漏了标注咽喉部位的气管。从这一角度来说，3D-UNet + AD网络分割模型其实
@@ -481,17 +495,17 @@ ATM\_688\_0000这个病例稍微有点例外，但仔细研究是在上叶支气
 
 \section{本章小结}
 
-本章是在3D-UNet网络基准模型的基础上进行改进，提出了注意力蒸馏的新方法来提高基准模型对精细的末梢支气管的分割能力。注意力蒸馏方法是受注意力迁移
-\cite{Zagoruyko2016PayingMA}和知识蒸馏\cite{Hinton2015DistillingTK}的启发而创造出来的。我们详细阐述了注意力蒸馏方法的基本原理、计算
-过程，并给出了注意力蒸馏增加的梯度损失的算法表述。然后我们对注意力蒸馏方法的效果进行可视化展示，验证了注意力（聚焦）从粗大的识别对象逐渐转移到
-细小的末梢支气管对象。至此我们开始将注意力蒸馏模块引入到3D-UNet网路基准模型上，在上采样路径为第6、第7、第8和第9个卷积层添加注意力蒸馏模块，
+本章是在3D-UNet网络基准模型的基础上进行改进，提出了注意力蒸馏的方法来提高基准模型对精细的末梢支气管的分割能力。注意力蒸馏方法是受注意力迁移
+\cite{Zagoruyko2016PayingMA}和知识蒸馏\cite{Hinton2015DistillingTK}的启发而创造出来的。本章阐述了注意力蒸馏方法的基本原理、计算
+过程，给出注意力蒸馏增加的梯度损失的算法表述，并对注意力蒸馏方法的效果进行可视化展示，验证了注意力（聚焦）从粗大的识别对象逐渐转移到
+细小的末梢支气管对象。编写实现注意力蒸馏模块加到3D-UNet网路基准模型上，在上采样路径为第6、第7、第8和第9个卷积层添加注意力蒸馏模块，
 以此改进3D-UNet网络。
 
-实现了改进后的网络后，我们进行了对比实验。采用与3D-UNet网络基准模型同样的数据集和实验条件，完成训练、验证和测试全过程。从评价指标来看，3D-UNet + AD网络
-比3D-UNet基准网络取得了进步。最后我们展示了3D-UNet + AD网络对支气管气道树分割的可视化效果，可视化效果证实确实抑制了红色假阴性率，提高了对末梢支气管
-的识别能力。我们还分析了2个特殊病例ATM\_074\_0000和ATM\_271\_0000，指出它们的绿色假阳性体素确实是真实存在的气管，模型没有发生误判，还帮助提高了
+改进网络进行对比实验，采用与3D-UNet网络基准模型同样的数据集和实验条件，完成训练、验证和测试全过程。从评价指标来看，3D-UNet + AD网络
+比3D-UNet基准网络取得了进步。展示的3D-UNet + AD网络对支气管气道树分割的可视化效果证实注意力蒸馏确实抑制了红色假阴性率，提高了对末梢支气管
+的识别能力。通过对2个特殊病例ATM\_074\_0000和ATM\_271\_0000的分析，指出它们的绿色假阳性体素确实是真实存在的气管，模型没有发生误判，还帮助提高了
 真阳性率。
 
-我们深入观察支气管气道树的三维分割效果，发现在末梢支气管还是存在很多绿色的假阳性体素，这些绿色假阳性体素跟蓝色的真阳性体素其实是断裂开的。那么它们
-是否是真实的更纤细的支气管，比如说小叶支气管呢？结合评价指标数据表\ref{tbl:3dunet_ad_metrics_valset}和表\ref{tbl:3dunet_ad_metrics_testset}来看，
-FNR指标仍然是比较高的，如何进一步降低FNR指标？我们将在后文进一步改进现在的3D-UNet + AD模型。
+深入观察支气管气道树的三维分割效果，发现在末梢支气管还是存在很多绿色的假阳性体素，这些绿色假阳性体素跟蓝色的真阳性体素其实是断裂开的。那么它们
+是否是真实的更纤细的支气管，比如说小叶支气管呢？结合评价指标数据\autoref{tbl:3dunet_ad_metrics_valset}和\autoref{tbl:3dunet_ad_metrics_testset}来看，
+FNR指标仍然是比较高的，如何进一步降低FNR指标？将在后文进一步改进现在的3D-UNet + AD模型。
