@@ -5,18 +5,18 @@
 肺部疾病诊断与筛查通常使用计算机断层CT扫描患者的肺部区域，获得病灶部位的切片图像，临床医生根据CT扫描图像诊断疾病。
 本文的研究对象是患者肺部的CT扫描图像，目标是分割提取出精确的支气管气道树的三维模型。
 支气管气道树是很多肺病诊疗的重要参考，目前基于卷积神经网络的图像分割技术在气道树分割提取
-方面面临严重类别不平衡等挑战。本文提出两种新方法，注意力蒸馏方法和通道级特征再学习方法，来解决
-这些问题挑战。本文构建以3D-UNet网络为基础的基准模型，采用ATM22数据集在AI超算平台上训练分割模型。
+方面面临严重类别不平衡等问题。本文提出两种新方法：注意力蒸馏方法和通道级特征再学习方法，来解决
+这些问题挑。本文构建以3D-UNet网络为基础的基准模型，采用ATM22数据集在AI超算平台上训练分割模型。
 
-本文在以3D-UNet为基准网络对支气管气道树进行分割的实验中发现存在假阳性误检和假阴性漏检的不足，因支气管体素标注数据
-极度稀疏而致。本文受注意力
-迁移和知识蒸馏启发而提出的注意力蒸馏方法帮助模型聚焦于支气管树状结构特征，摒弃大量无用背景的干扰，
-提取出气道树枝干和细小分支。本文在3D-UNet上采样路径增加注意力蒸馏模块，改善3D-UNet网络对特征的聚焦问题，
+在以3D-UNet为基准网络对支气管气道树进行分割的实验中发现存在假阳性误检和假阴性漏检的不足，是因支气管体素标注数据
+极度稀疏而致。受注意力
+迁移和知识蒸馏的启发而提出注意力蒸馏方法帮助模型聚焦于支气管树状结构特征，摒弃大量无用背景的干扰，
+提取出气道树枝干和细小分支。通过在3D-UNet网络的上采样路径增加注意力蒸馏模块，改善3D-UNet网络对特征的聚焦问题，
 实验结果表明注意力蒸馏方法可有效降低假阳性率和假阴性率。
 
 支气管气道树中同时存在枝干支气管体素的粗糙特征和末梢支气管体素的精细特征，精细特征会因池化层降低分辨率而逐渐被“擦除掉”。
-不同空间位置有不同的重要性，本文提出通道级特征再学习方法通过把卷积层输出的特征通道重新组合，在训练过程中使重要的气道
-特征增加权重而被重视，使无关的区域降低权重而被忽略。本文在3D-UNet网络的每个卷积层和池化层之间插入特征再学习模块，改进对精细
+不同空间位置有不同的重要性，通道级特征再学习方法通过把卷积层输出的特征通道重新组合，在训练过程中使重要的气道
+特征增加权重而重视，使无关的区域降低权重而忽略。在3D-UNet网络的每个卷积层和池化层之间插入特征再学习模块，改进对精细
 特征的识别问题。
 综合实验结果表明末梢支气管分割良好，性能指标得到明显提升。
 
@@ -26,29 +26,30 @@
 
   Diagnosing and screening the pulmonary diseases usually utilizes the computed tomography scanning on lung region, 
   captures the image slices of lesion part, then clinicians make the diagnosis according to these CT-scanning images.
-  In this thesis we investigate the pulmonary CT-scanning images, for the goal of extracting the accurate airway tree 
+  In this thesis we investigate the pulmonary CT-scanning images, for the goal of extracting accurate airway tree 
   3D model. Bronchial airway tree is an important reference for the treatment of many pulmonary diseases. Currently 
-  CNN-based airway tree segmentation is facing some challenges like severe class imbalance. We have proposed 2 new 
-  methods: attention distillation (AD) method and channel-wise feature re-learning (FRL) method, in this thesis to 
-  tackle the problem. Based on the 3D-UNet baseline network, we adopt the ATM22 dataset to train a segmentation model 
+  CNN-based airway tree segmentation is facing some challenges like severe class imbalance. Two new methods in this thesis 
+  are proposed: attention distillation (AD) method and channel-wise feature re-learning (FRL) method to 
+  tackle these problem. Based on the 3D-UNet baseline network, we adopt the ATM22 dataset to train a segmentation model 
   on the AI supercomputer platform.
 
-  An experiment based on 3D-UNet baseline network, which we have done to segment the bronchial airway, had shown the 
+  An experiment based on 3D-UNet baseline network to segment the bronchial airway, had presented the 
   deficiencies of false positive and false negative detecting.
-  It is because of the extremely sparse bronchial voxels annotated on CT volumetric data. Motivated by the attention 
+  It was that the bronchial voxels annotation on CT volumetric data were extremely sparse. Inspirated by the attention 
   transfer and knowledge distillation, the attention distillation method is proposed to focus on the tree structure 
-  of bronchial airway. It can discard the interference of massive useless background, extract the main airway branches 
+  of bronchial airway. It can discard the interference of massive useless background, concentrate to extract the main airway branches 
   and some small ones. We add AD modules onto the decoder path of 3D-UNet baseline network, in order to improve the 
-  focusing issue on important airway features. Some experiments had shown that attention distillation method can 
+  focusing issue on important airway features. Extensive experiments had shown that attention distillation method can 
   effectively reduce the FNR and FPR.
 
   The airway tree has both the coarse features of voxels on trunk bronchus and the fine features of voxels on distal 
-  bronchus, the fine features could be gradually erased due to resolution reduction in the pooling layers. Different 
-  spatial positions have different degrees of importance. FRL method is proposed to recombine the feature channels which 
+  bronchus, because the fine features could be gradually erased due to resolution reduction in the pooling layers. Different 
+  spatial positions have different degrees of importance. FRL method in this thesis is proposed to recombine the feature channels which 
   were produced from convolutional layer, it has the crucial airway regions preferred gradually with higher weights, 
   meanwhile has the uninformative regions negleted with lower weights.
   The FRL module is inserted between each convolutional layer and pooling layer of 3D-UNet baseline network, just to 
-  improve the ability of recognizing more refined features, after that a comprehensive experiment showed that the 
+  improve the ability of recognizing more refined features. The 3D-UNet baseline network was improved by both AD and FRL methods, 
+  after that a comprehensive experiment showed that the 
   distal bronchus had been well segmented, and the performance metrics were improved obviously.
 
 \end{abstract*}
