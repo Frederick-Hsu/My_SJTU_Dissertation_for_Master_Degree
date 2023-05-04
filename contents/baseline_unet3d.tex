@@ -12,7 +12,7 @@
     \item 激活函数层 Activation function
     \item 池化层 Pooling layer
 \end{itemize}
-CNN的基本网络结构如图\ref{fig:CNN_basic_structure}所示：
+CNN的基本网络结构如\autoref{fig:CNN_basic_structure}所示：
 \begin{figure}[!htp]
     \centering
     \includegraphics[width=\textwidth]{CNN_Structure}
@@ -40,9 +40,9 @@ CNN的基本网络结构如图\ref{fig:CNN_basic_structure}所示：
     \end{bmatrix}
 \end{equation}
 
-CT扫描图像在$H3 \times W3$窗口内的Hounsfield unit\cite{HU2016CT}灰度\footnote{Hounsfield unit亨氏单位
+CT扫描图像在$H3 \times W3$窗口内的Hounsfield unit\cite{HU2016CT}灰度\footnote{Hounsfield unit(亨氏单位)
 是放射科医生在解释CT图像时使用的相对定量的无线电密度测量单位。CT重建时使用身体组织对辐射的吸收/衰减系数来生成灰度图像。
-身体组织的物理密度与X射线束的吸收/衰减成正比。Hounsfield单位，也称为CT单位，是根据X射线束的线性衰减系数进行线性
+身体组织的物理密度与X射线束的吸收/衰减成正比。Hounsfield unit称为CT值的单位，是根据X射线束的线性衰减系数进行线性
 变换计算而来的。}像素矩阵$X_{hu.gray}$
 \begin{equation}
     X_{hu.gray} = \begin{bmatrix}
@@ -69,8 +69,8 @@ CT扫描图像在$H3 \times W3$窗口内的Hounsfield unit\cite{HU2016CT}灰度\
 \end{equation}
 其中$b$为偏置参数Bias
 
-式\ref{eq:conv}是在二维图像平面上的卷积操作，若在CT三维体数据上进行卷积运算，则卷积核尺寸扩展为$D3 \times H3 \times W3$
-，相应地Hounsfield unit灰度像素矩阵也同步扩展到三维。三维卷积的操作如图\ref{fig:3D_Conv}所阐述。
+\autoref{eq:conv}是在二维图像平面上的卷积操作，若在CT三维体数据上进行卷积运算，则卷积核尺寸扩展为$D3 \times H3 \times W3$
+，相应地Hounsfield unit灰度像素矩阵也同步扩展到三维。三维卷积的操作如\autoref{fig:3D_Conv}所阐述。
 \begin{figure}[!htp]
     \centering
     \includegraphics[width=0.5\textwidth]{Convolution_pricinple}
@@ -100,7 +100,7 @@ CT扫描图像在$H3 \times W3$窗口内的Hounsfield unit\cite{HU2016CT}灰度\
     群组归一化是把Channel切分为组，在每个组内计算特征的均值和方差。群组归一化被Wu Yuxin等人\cite{Wu2018GroupN}提出来
     用于替换批次归一化，不同于层次归一化与实例归一化的方式，解决批次归一化对Batch size依赖的问题。
 \end{enumerate}
-我们可以用图\ref{fig:4norm}来讲解这4种归一化方式的差别。
+如\autoref{fig:4norm}表示这4种归一化方式的区别。
 \begin{figure}[!htp]
     \centering
     \includegraphics[width=\textwidth]{Four_Normalization_Methods}
@@ -109,29 +109,30 @@ CT扫描图像在$H3 \times W3$窗口内的Hounsfield unit\cite{HU2016CT}灰度\
         {Four Normalization Methods}
     \label{fig:4norm}
 \end{figure}
-深度网络的数据维度一般是\\$[Batch, Channel, Height, Width]$，简写为$[N, C, H, W]$（$N$即为$Batch$）。
-因为这是四个维度，我们无法画出一个四维空间的图形，所以压缩特征的$H, W$至一个维度。
-
-批次归一化Batch Normalization沿Batch维度计算特征的均值和方差，归一化为$[N, H, W]$的维度，如图\ref{fig:4norm}
+深度网络的数据维度一般是$[Batch, Channel, \\Height, Width]$，简写为$[N, C, H, W]$（$N$即为$Batch$）。
+因为这是四个维度，由于无法在纸面上画出一个四维空间的图形，所以压缩特征的$H, W$至一个维度。
+\begin{itemize}
+\item 批次归一化Batch Normalization沿Batch维度计算特征的均值和方差，归一化为$[N, H, W]$的维度，如\autoref{fig:4norm}
 的Batch Norm子图的蓝色方格所示。
 
-层次归一化Layer Normalization避开Batch维度，而是沿Channel维度计算特征的均值和方差，归一化为$[C, H, W]$的维度,
-如图\ref{fig:4norm}的Layer Norm子图的蓝色方格所示。
+\item 层次归一化Layer Normalization避开Batch维度，而是沿Channel维度计算特征的均值和方差，归一化为$[C, H, W]$的维度,
+如\autoref{fig:4norm}的Layer Norm子图的蓝色方格所示。
 
-实例归一化Instance Normalization选择单个样本计算特征的均值和方差，单个样本（也即一张图片）的维度只有$Height$
-与$Weight$，所以归一化$[H, W]$的维度，如图\ref{fig:4norm}的Instance Norm子图的蓝色方格所示。
+\item 实例归一化Instance Normalization选择单个样本计算特征的均值和方差，单个样本（也即一张图片）的维度只有$Height$
+与$Weight$，所以归一化$[H, W]$的维度，如\autoref{fig:4norm}的Instance Norm子图的蓝色方格所示。
 
-群组归一化Group Normalization则是介于层次归一化和实例归一化之间，其将$Channel$维度切分为很多组$Group$，
-在每一个组内计算特征的均值和方差，归一化为$[C//G, H, W]$的维度，如图\ref{fig:4norm}的Group Norm子图的蓝色方格所示。
+\item 群组归一化Group Normalization则是介于层次归一化和实例归一化之间，其将$Channel$维度切分为很多组$Group$，
+在每一个组内计算特征的均值和方差，归一化为$[\frac{C}{G}, H, W]$的维度，如\autoref{fig:4norm}的Group Norm子图的蓝色方格所示。
 
-此外还有权重标准化(Weight Standardization\cite{Qiao2019WeightS})、 
+\item 此外还有权重标准化(Weight Standardization\cite{Qiao2019WeightS})、 
 批次-通道归一化(Batch-Channel Normalization\cite{Qiao2019RethinkingNA})、
 深度归一化(DeepNorm\cite{Zare2017DeepNormADL})三种归一化方法，在此不做深入介绍。
+\end{itemize}
 
 \subsection{池化层}
 池化的作用是缩小图像在高度和宽度方向上的空间运算，是一种降维的操作，可以用来改变当前层的输出维度，增大感受野。 池化有两种方式：
-最大化池化Max Pooling和平均池化Average Pooling。最大化池化是从目标区域(图\ref{fig:pooling}的红色区域)中取出最大值，
-平均池化则是计算目标区域(图\ref{fig:pooling}的深蓝色区域)的平均值。
+最大化池化Max Pooling和平均池化Average Pooling。最大化池化是从目标区域(\autoref{fig:pooling}的红色区域)中取出最大值，
+平均池化则是计算目标区域(\autoref{fig:pooling}的深蓝色区域)的平均值。
 \begin{figure}[!htp]
     \centering
     \includegraphics[width=0.7\textwidth]{Pooling}
@@ -148,7 +149,7 @@ CT扫描图像在$H3 \times W3$窗口内的Hounsfield unit\cite{HU2016CT}灰度\
     池化层与卷积层不一样，它没有要学习的参数。池化只是计算目标区域内的最大值或者平均值，所以不存在参数需要学习而改变。
     \item {\heiti 卷积的通道数保持不变}
     
-    经过池化层，输入数据跟输出数据的通道数保持不变，是按照通道独立计算的，如图\ref{fig:keep_same_channel}所示。
+    经过池化层，输入数据跟输出数据的通道数保持不变，是按照通道独立计算的，如\autoref{fig:keep_same_channel}所示。
     \begin{figure}[h]
         \centering
         \includegraphics[scale=0.3]{Pooling_channels}
@@ -160,66 +161,156 @@ CT扫描图像在$H3 \times W3$窗口内的Hounsfield unit\cite{HU2016CT}灰度\
 
 
 \section{3D-UNet基准模型}
-本文我们采用3D-UNet\cite{cciccek20163d}网络结构模型来分割支气管气道树，3D-UNet网络是将经典的UNet\cite{ronneberger2015u}
-网络从平面图像分割扩展到三维体数据的。跟UNet网络的U型结构相似，我们将卷积层换成3D卷积，归一化层换成3D归一化，相应地池化层也更换为3D池化。
-CT图像是一种体数据形式，它由一层一层的切片堆叠而成，每一层切片是一张二维的灰度图像。相比于平面图像中的像素，在CT图像中我们
+本文采用3D-UNet\cite{cciccek20163d}网络结构模型来分割支气管气道树，3D-UNet网络是将经典的UNet\cite{ronneberger2015u}
+网络从平面图像分割扩展到三维体数据的。跟UNet网络的U型结构相似，将卷积层换成3D卷积，归一化层换成3D归一化，相应地池化层也更换为3D池化。
+CT图像是一种体数据形式，它由一层一层的切片堆叠而成，每一层切片是一张二维的灰度图像。相比于平面图像中的像素，在CT图像中
 定义体素Voxel为$D \times H \times W = 1 \times 1 \times 1$的立方体所含的像素，$D = 1$表明是一层切片。3D-UNet
-网络的输入是$D \times H \times W$的体数据，我们称之为Cuboid，输出是每个体素的二分类分割概率图。我们在下采样路径设计
-4个卷积层块，每个卷积层块包含2层卷积。而在上采样路径同样设计4个反卷积层块，每个反卷积层块包含2层反卷积。
+网络的输入是$D \times H \times W$的体数据，称之为Cuboid，输出是每个体素的二分类概率图。我们在3D-UNet网络的下采样路径设计
+4个卷积层块，每个卷积层块包含2层卷积。而在3D-UNet网络的上采样路径同样设计4个反卷积层块，每个反卷积层块包含2层反卷积。
 
 \subsection{网络结构设计}
 
-沿着下采样路径，每个卷积层块的结构如图\ref{fig:convblock}所示，将输入的体数据图像的通道数扩增一倍，从输入的$n$个特征通道
+沿着下采样路径，每个卷积层块的结构如\autoref{tbl:down_sampling}所示，将输入的体数据图像的通道数扩增一倍，从输入的$n$个特征通道
 扩增到$2n$个特征通道。经过3D最大池化后，分辨率降低一半。
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.7\textwidth]{Down_Conv_block}
-    \bicaption[3D-UNet下采样路径上卷积层块和池化层的结构]
-        {3D-UNet下采样路径上卷积层块和池化层的结构}
-        {The convolution block and pooling layer in the down-sampling path of 3D-UNet}
-    \label{fig:convblock}
-\end{figure}
+%\begin{figure}[h]
+%    \centering
+%    \includegraphics[width=0.7\textwidth]{Down_Conv_block}
+%    \bicaption[3D-UNet下采样路径上卷积层块和池化层的结构]
+%        {3D-UNet下采样路径上卷积层块和池化层的结构}
+%        {The convolution block and pooling layer in the down-sampling path of 3D-UNet}
+%    \label{fig:convblock}
+%\end{figure}
 
-沿着上采样路径，每个反卷积层块的结构如图\ref{fig:deconvblock}所示，将输入的体数据图像的通道数缩减一半。从输入的$n$个特征
+\begin{table}[!ht]
+    \centering
+    \begin{minipage}{0.42\textwidth}
+        \centering
+        \bicaption[3D-UNet下采样路径的卷积层块和池化层的结构]{3D-UNet下采样路径的卷积层块和池化层的结构}
+            {The convolution block and pooling layer in the down-samping path of 3D-UNet}
+        \label{tbl:down_sampling}
+        {\ttfamily
+            \begin{tabular}{c}
+                Input(feature\_channel=n) \\
+                $\Downarrow$ \\ \hline
+                \multicolumn{1}{|c|}{
+                \makecell{Conv3d(in\_channel=n, \\
+                                 out\_channel=n, \\
+                                 kernel\_size=3, \\
+                                 stride=1, \\
+                                 padding=1)} 
+                }\\ \hline
+                $\Downarrow$ \\ \hline
+                \multicolumn{1}{|c|}{InstanceNorm3d(num\_features=n)} \\ \hline
+                $\Downarrow$ \\ \hline
+                \multicolumn{1}{|c|}{ReLU(inplace=True)} \\ \hline
+                $\Downarrow$ \\ \hline
+                \multicolumn{1}{|c|}{
+                \makecell{Conv3d(in\_channels=n, \\
+                                 out\_channels=2n, \\
+                                 kernel\_size=3, \\
+                                 stide=1, \\
+                                 padding=1)}
+                } \\ \hline
+                $\Downarrow$ \\ \hline
+                \multicolumn{1}{|c|}{InstanceNorm3d(num\_features=2n)} \\ \hline
+                $\Downarrow$ \\ \hline
+                \multicolumn{1}{|c|}{ReLU(inplace=True)} \\ \hline
+                $\Downarrow$ \\
+                Output(feature\_channel=2n) \\
+                \\ \\ \hline
+                \multicolumn{1}{|c|}{
+                \makecell{MaxPool3d(kernel\_size=(2, 2, 2), \\
+                                    stride=(2, 2, 2), \\
+                                    padding=0, \\
+                                    dilation=1, \\
+                                    ceil\_mode=False)}
+                } \\ \hline
+            \end{tabular}
+        }
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.42\textwidth}
+        \centering
+        \bicaption[3D-UNet上采样路径的反卷积层块和池化层的结构]{3D-UNet上采样路径的反卷积层块和池化层的结构}
+            {The deconvolution block and pooling layer in the up-sampling path of 3D-UNet}
+        \label{tbl:up_sampling}
+        {\ttfamily
+            \begin{tabular}{c}
+                \hline
+                \multicolumn{1}{|c|}{
+                \makecell{Upsample(scale\_factor=2.0, \\
+                                   mode='nearest')}
+                } \\ \hline
+                \\ \\ 
+                Output(feature\_channel=$\frac{n}{2}$) \\
+                $\Uparrow$ \\ \hline
+                \multicolumn{1}{|c|}{ReLU(inplace=True)} \\ \hline
+                $\Uparrow$ \\ \hline
+                \multicolumn{1}{|c|}{InstanceNorm3d(num\_features=$\frac{n}{2}$)} \\ \hline
+                $\Uparrow$ \\ \hline
+                \multicolumn{1}{|c|}{\makecell{Conv3d(in\_channels=$\frac{n}{2}$, \\
+                                                      out\_channels=$\frac{n}{2}$, \\
+                                                      kernel\_size=$\frac{n}{2}$, \\
+                                                      stride=1, \\
+                                                      padding=1)}} \\ \hline
+                $\Uparrow$ \\ \hline
+                \multicolumn{1}{|c|}{ReLU(inplace=True)} \\ \hline
+                $\Uparrow$ \\ \hline
+                \multicolumn{1}{|c|}{InstanceNorm3d(num\_features=$\frac{n}{2}$)} \\ \hline
+                $\Uparrow$ \\ \hline
+                \multicolumn{1}{|c|}{\makecell{Conv3d(in\_channels=n, \\
+                                                      out\_channels=$\frac{n}{2}$, \\
+                                                      kernel\_size=3, \\
+                                                      stride=1, \\
+                                                      padding=1)}} \\ \hline
+                $\Uparrow$ \\
+                Input(feature\_channel=n) \\
+            \end{tabular}
+        }
+    \end{minipage}
+\end{table}
+
+
+沿着上采样路径，每个反卷积层块的结构如\autoref{tbl:up_sampling}所示，将输入的体数据图像的通道数缩减一半。从输入的$n$个特征
 通道缩减到$\frac{n}{2}$个特征通道。经过上采样池化后，分辨率升高一倍。将下采样路径降低的分辨率恢复起来，这样就实现端到端，
 体素到体素的分割。
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.7\textwidth]{Up_Conv_block}
-    \bicaption[3D-UNet上采样路径上反卷积层块和池化层的结构]
-        {3D-UNet上采样路径上翻卷积层块和池化层的结构}
-        {The deconvolution block and pooling layer in the up-sampling path of 3D-UNet}
-    \label{fig:deconvblock}
-\end{figure}
+%\begin{figure}[h]
+%    \centering
+%    \includegraphics[width=0.7\textwidth]{Up_Conv_block}
+%    \bicaption[3D-UNet上采样路径上反卷积层块和池化层的结构]
+%        {3D-UNet上采样路径上翻卷积层块和池化层的结构}
+%        {The deconvolution block and pooling layer in the up-sampling path of 3D-UNet}
+%    \label{fig:deconvblock}
+%\end{figure}
 
-我们的3D-UNet主干网络包括编码器Encoder和解码器Decoder两大部分，编码器主要用来实现图像的特征提取，扩大感受野，输出具有
+
+3D-UNet主干网络包括编码器Encoder和解码器Decoder两大部分，编码器主要用来实现图像的特征提取，扩大感受野，输出具有
 类别信息的高层语义特征。解码器则逐步恢复分辨率，从而提取到低层的位置信息。更重要的是，在编码器和解码器对应的层次之间，引入
 跳跃连接，将包含丰富细节信息的编码器特征拼接到解码器的高级分类特征信息中来，这样两种特征信息互相补充，最后输出每个像素的分类
-概率图。我们的3D-UNet网络结构详情如图\ref{fig:3DUNetStructure}所示。由于图形横向宽度较大，所以将其横向放置。将CT体数据(网络左侧)
+概率图。本文的3D-UNet网络结构详情如\autoref{fig:3DUNetStructure}所示。由于图形横向宽度较大，所以将其横向放置。将CT体数据(网络左侧)
 \begin{figure}[!ht]
     \centering
     \includegraphics[height=\textwidth, width=0.83\textheight, angle=90]{3DUNet_Structure_landscape}
-    \bicaption[本文所设计与使用的3D-UNet网络结构]
-        {本文所设计与使用的3D-UNet网络结构}
-        {The 3D-UNet structure we designed in this thesis}
+    \bicaption[本文采用的3D-UNet网络结构]
+        {本文采用的3D-UNet网络结构}
+        {The 3D-UNet structure we adopted in this thesis}
     \label{fig:3DUNetStructure}
 \end{figure}
-送入网络之前，我们将其裁切为一个一个$D80 \times H192 \times W304$规格的长方体\footnote{我们将在后文讲述为什么裁切
-成$D80 \times H192 \times W304$规格的。}，网络学习长方体的图像特征，分割长方体内的支气管分支。训练完成后我们将属于同
+送入网络之前，需要将其裁切为一个一个$D80 \times H192 \times W304$规格的长方体(\textcolor{black}{裁切规格详见\ref{sec:ATM22}节的说明})，网络学习长方体的图像特征，分割长方体内的支气管分支。训练完成后再将属于同
 一个原始CT图像的所有长方体拼接起来，最终分割出来完整的支气管气道树（网络右侧）。在长方体上面标出来的数字表示经过卷积操作后输出
 的特征通道数，而在长方体侧面标注的诸如$D20 \times H48 \times W76$表示经过池化后，长方体的体积扩大或缩小，也就是长方体内
 体素的分辨率增大或减小。需要指出的是，在U型结构的右侧，每一个层靠近跳跃连接的箭头处都有一个并排的长方体柱，那表示跳跃连接将
-下采样路径上每一个卷积层块的特征输出拼接到上采样路径上每一个对应的反卷积层块的输入特征来。
+下采样路径的每一个卷积层块的特征输出拼接到上采样路径的每一个对应的反卷积层块的输入特征来。
 
-上述的3D-UNet网络结构是本文所设计与使用，并编程实现的CT图像支气管气道树分割网络。我们将以此3D-UNet网络作为基准\footnote{\textcolor{red}{需要指出一点，
+上述的3D-UNet网络结构是本文所设计与采用，并编程实现的CT图像支气管气道树分割网络。我们将以此3D-UNet网络作为基准\footnote{\textcolor{black}{需要指出一点，
 本文后面所提到的3D-UNet网络基准模型，3D-UNet基准网络或基准模型都指的是该3D-UNet网络，它们是在不同语境下的叫法。}}，通过实验
 分析3D-UNet的分割结果和性能指标（包括但不限于假阳性率False Positive Rate、 真阳性率True Positive Rate、骰子相似度
 系数Dice Similarity Coefficient、分支检出率Branch Detected、检测到的树长Tree Length Detected和精度等指标），提出
-我们的改进方法。我们将在后面的章节展开讲述我们的改进方法，并通过实验来对比验证我们的改进方法是否有效，是否提高了分割效果和性能。
+改进方法。后面的章节将展开讲述这些改进方法，并通过实验来对比验证所提出的改进方法是否有效，是否提高了分割效果和性能。
 
 \subsection{损失函数、优化器与学习率调整}
 \subsubsection{Dice Loss损失函数}
-我们为3D-UNet网络基准模型采用普遍的骰子损失函数Dice Loss, 其计算公式\ref{eq:dice_loss}
+本文为3D-UNet网络基准模型采用普遍的骰子损失函数Dice Loss, 其计算\autoref{eq:dice_loss}
 \begin{equation}\label{eq:dice_loss}
     L_{dice}\left(Cuboid_{pred}, Cuboid_{gt}\right) = 1 - \frac{2\sum{\left(Cuboid_{pred} \cdot Cuboid_{gt}\right)} + \epsilon}
     {\sum{Cuboid_{pred}} + \sum{Cuboid_{gt}} + \epsilon}
@@ -230,9 +321,9 @@ $Cuboid_{pred} \cdot Cuboid_{gt}$表示这2个三维矩阵的点积。
 
 \subsubsection{Focal Loss损失函数}
 
-一个肺部CT扫描图像中，支气管体素占全部体素的比例是很低的，从表\ref{tbl:bronchus_voxels}就可以看出，前景体素（即支气管体素）与背景体素（即除支气管体素之外的体素）的比例分别达到了$5:1000$、$3:10000$、$9:10000$、$7:10000$、 $6:10000$，这是一种严重的类别不平衡。正是这种严重类别不平衡，就会使得训练过程中损失会逐渐偏向背景体素，直至完全主导了损失，完全压过了前景体素对损失的贡献。类别不平衡会带来如下问题：
+一个肺部CT扫描图像中，支气管体素占全部体素的比例是很低的，从\autoref{tbl:bronchus_voxels}就可以看出，前景体素（即支气管体素）与背景体素（即除支气管体素之外的体素）的比例分别达到了$5:1000$、$3:10000$、$9:10000$、$7:10000$、 $6:10000$，这是一种严重的类别不平衡。正是这种严重类别不平衡，就会使得训练过程中损失会逐渐偏向背景体素，直至完全主导了损失，完全压过了前景体素对损失的贡献。类别不平衡会带来如下问题：
 \begin{enumerate}
-	\item[1)]训练效率低下。因为绝大部分是无用的背景体素，没有贡献有用的学习信息。这也是为什么我们要对原始的CT图像进
+	\item[1)]训练效率低下。因为绝大部分是无用的背景体素，没有贡献有用的学习信息。这也是为什么要对原始的CT图像进
 					行裁切（见\ref{sec:ATM22}小节），裁切掉大部分的黑色背景，只保留肺的最小包围框作为有效的区域。即使裁
 					切掉了大部分背景区域，但前景体素占比仍然极端稀疏。
 	\item[2)]这些无用的背景体素主导了损失，压倒了训练，导致模型退化。
@@ -259,7 +350,7 @@ $\mathit{gt}$为该体素的真实值，则交叉熵损失$\mathit{CELoss}(p, \m
 \begin{equation}
 	\mathit{CELoss}(p, \mathit{gt}) = \mathit{CELoss}(p_t) = -\log{\left(p_t\right)}
 \end{equation}
-在交叉熵损失函数中，为了对抗这种类别不平衡问题，我们通常会引入一个权重因子$\alpha_t$将交叉熵损失函数改进为加权交叉
+在交叉熵损失函数中，为了对抗这种类别不平衡问题，通常会引入一个权重因子$\alpha_t$将交叉熵损失函数改进为加权交叉
 熵损失函数Weighted Cross Entrophy Loss，也有论文称其为$\alpha$平衡交叉熵损失函数。
 \begin{equation}
 	\mathit{WCELoss}(p_t) = -\alpha_t \log{\left(p_t\right)}
@@ -275,7 +366,10 @@ $\mathit{gt}$为该体素的真实值，则交叉熵损失$\mathit{CELoss}(p, \m
 		{Trunk trachea is easy to segment, but distall bronchus are quite hard to segment.}
 	\label{fig:easy_hard_bronchus}
 \end{figure}
-同一个ATM\_060\_0000病例，在第392层切片处截取到的是粗大的气管，而在第119层切片处截取的却是细微的末梢支气管。很显然，分割粗大的枝干气管体素比细微的末梢支气管体素要容易得多。因此在训练中我们需要做出一些调整，降低易于分割的体素的权重，提升难以分割的体素的权重，为了分割出更多的支气管体素，做出这种倾斜是十分必要的。基于这种考虑，我们对加权交叉熵损失函数引入一个调节因素$(1 - p_t)^{\gamma}$，改变加权交叉熵损失为
+同一个ATM\_060\_0000病例，在第392层切片处截取到的是粗大的气管，而在第119层切片处截取的却是细微的末梢支气管。很显然，
+分割粗大的枝干气管体素比细微的末梢支气管体素要容易得多。因此在训练中需要做出一些调整，降低易于分割的体素的权重，提升难以
+分割的体素的权重，为了分割出更多的支气管体素，做出这种倾斜是十分必要的。基于这种考虑，对加权交叉熵损失函数引入一个
+调节因素$(1 - p_t)^{\gamma}$，改变加权交叉熵损失为
 \begin{equation}
 	\mathit{WCELoss}\left(p_t\right) \longrightarrow \mathit{FLoss}\left(p_t\right) = - \alpha_{t} \cdot \left(1 - p_t\right)^{\gamma} \cdot \log{\left(p_t\right)}
 \end{equation}
@@ -295,12 +389,12 @@ Focal Loss损失函数的$\alpha$、$\gamma$两个超参数，我们通过不断
 	\end{cases}
 \end{equation}
 
-最后，我们综合Dice Loss和Focal Loss两个损失函数，将它们相加。因此，本文对3D-UNet网络基准模型使用的最终的损失函数为：
+最后综合Dice Loss和Focal Loss两个损失函数，将它们相加。因此，本文对3D-UNet网络基准模型使用的最终的损失函数为：
 \begin{equation}\label{eq:total_loss}
 	\mathit{TotalLoss} = L_{dice}\left(Cuboid_{pred}, Cuboid_{gt}\right) + L_{focal}(p, gt)
 \end{equation}
-特别需要指出的是，我们将Dice Loss损失与Focal Loss损失相加求和，从数值上看可能有相互抵消或增强的意味，但它们对梯度的计
-算是相互独立的。根据梯度的计算方法，$\mathit{TotalLoss}$的梯度$\nabla{\mathit{TotalLoss}}$由$L_{dice}$和$L_{focal}$的梯度$\nabla{L_{dice}}$、$\nabla{L_{focal}}$分别计算而来，在误差反向传播的过程中，它们都会更新参
+特别需要指出的是，将Dice Loss损失与Focal Loss损失相加求和，从数值上看可能有相互抵消或增强的意味，但它们对梯度的计
+算是相互独立的。根据梯度的计算方法，$\mathit{TotalLoss}$的梯度$\nabla_{\mathit{TotalLoss}}$由$L_{dice}$和$L_{focal}$的梯度$\nabla{L_{dice}}$、$\nabla{L_{focal}}$分别计算而来，在误差反向传播的过程中，它们都会更新参
 数的，而不会相互抵消或增强的。
 
 
@@ -324,10 +418,10 @@ Focal Loss损失函数的$\alpha$、$\gamma$两个超参数，我们通过不断
         \bottomrule
     \end{tabular}
 \end{table}
-从表\ref{tbl:bronchus_voxels}可以看出，支气管体素占比都不到$0.1\%$，因此我们弃选随机梯度下降(Stochastic Gradient
-Descend, SGD)优化器。为了更好地利用稀疏梯度信息，达到更好地收敛，我们选择Adam优化器。但是对Adam优化器，我们做了一些修改，
-采用动态调整学习率。
-让我们来看看Adam优化器\cite{Kingma2014AdamAM}计算梯度和更新参数的过程，来解释我们为什么采用动态调整学习率的方法。
+从\autoref{tbl:bronchus_voxels}可以看出，支气管体素占比都不到$0.1\%$，因此我们弃选随机梯度下降(Stochastic Gradient
+Descend, SGD)优化器。为了更好地利用稀疏梯度信息，达到更好地收敛而选择Adam优化器\cite{Kingma2014AdamAM}。但是对Adam优化器，
+我们做了一些修改，采用动态调整学习率。
+接下来看看Adam优化器计算梯度和更新参数的过程，来解释为什么采用动态调整学习率的方法。
 
 令网络模型的参数向量$\theta$在$t$时间步
 \begin{equation}
@@ -354,14 +448,14 @@ Adam优化器会首先计算在$t$时间步的梯度$grad_{t}$
 \end{equation}
 其中$\beta_{2}$为指数衰减率，控制之前梯度的平方的影响，对梯度的平方进行加权平均，默认取0.999。
 
-\noindent{}由于一阶矩估计$m_{t}$初始化为0，即$m_{0} = 0$，这会导致$m_{t}$偏向于0,特别是在训练早期阶段。为此我们需要对$m_{t}$进行
+\noindent{}由于一阶矩估计$m_{t}$初始化为0，即$m_{0} = 0$，这会导致$m_{t}$偏向于0,特别是在训练早期阶段。为此需要对$m_{t}$进行
 偏差纠正，降低偏差对训练早期的影响。
 \begin{equation}
     \widehat{m_t} = \frac{m_t}{1 - \beta_{1}^{t}}
 \end{equation}
 其中$\beta_{1}^{t}$表示计算指数衰减率$\beta_{1}$的$t$次幂。
 
-\noindent{}同样地，我们也需要对二阶矩阵估计$v_{t}$进行偏差纠正。
+\noindent{}同样地也需要对二阶矩阵估计$v_{t}$进行偏差纠正。
 \begin{equation}
     \widehat{v_t} = \frac{v_t}{1 - \beta_{2}^{t}}
 \end{equation}
@@ -384,11 +478,10 @@ $\sqrt{\widehat{v_t}}$之比。为防止除零而引入平滑常数$\epsilon = 1
     \end{bmatrix}_{t-1} -
     {lr} * \frac{\widehat{m_t}}{\sqrt{\widehat{v_t}} + \epsilon}
 \end{equation}
-在式\ref{eq:adam_update_params}中，若分母$\sqrt{\widehat{v_t}}+\epsilon$过小，就会产生过大的参数$\theta_{t}$，
-这会导致在接近最优值的“山峰”或“山谷”时会反复振荡，所以我们采取降低学习率的方法来稍微抵消一些。在训练的过程中，我们会逐渐地
-动态地降低学习率。具体降低学习率的策略是：如果训练时的损失保持在一个平台超过10个epoch，我们就会降低学习率10倍, 
-在训练后期我们会将这个周期拉长为20个epoch。初始学习率设置为$3 \times {10}^{-3}$，动态降低学习率按照表
-\ref{tbl:descend_lr}的规律来进行调整。
+在\autoref{eq:adam_update_params}中，若分母$\sqrt{\widehat{v_t}}+\epsilon$过小，就会产生过大的参数$\theta_{t}$，
+这会导致在接近最优值的“山峰”或“山谷”时会反复振荡，所以采取降低学习率的方法来稍微抵消一些。在训练的过程中会逐渐地
+动态地降低学习率。具体降低学习率的策略是：如果训练时的损失保持在一个平台超过10个epoch，就会降低学习率10倍, 
+在训练后期会将这个周期拉长为20个epoch。初始学习率设置为$3 \times {10}^{-3}$，动态降低学习率按照\autoref{tbl:descend_lr}的规律来进行调整。
 \begin{table}[!htp]
     \bicaption[动态降低学习率]{动态降低学习率}{Dynamically descent the learning rate}
     \label{tbl:descend_lr}
@@ -410,7 +503,7 @@ $\sqrt{\widehat{v_t}}$之比。为防止除零而引入平滑常数$\epsilon = 1
 \subsection{模型实现和运行环境}
 本文的模型是采用Python v3.10.9版本编写的，基于PyTorch v1.13.1框架实现3D-UNet模型的。本文的代码编写调试和模型训练均是
 在上海交通大学高性能计算中心提供的AI超算平台上进行的。该AI超算平台由8台DGX-2组成，每台DGX-2配备16块NVIDIA Tesla V100显卡，
-深度学习张量计算能力达到16PFLOPS。详细的配置与计算能力如表\ref{tbl:AT_platform}所示：
+深度学习张量计算能力达到16PFLOPS。详细的配置与计算能力如\autoref{tbl:AT_platform}所示：
 \begin{table}[!htp]
     \bicaption[人工智能超算平台资源]{人工智能超算平台资源}{The computation resource of AI supercomputer platform}
     \label{tbl:AT_platform}
@@ -425,34 +518,35 @@ $\sqrt{\widehat{v_t}}$之比。为防止除零而引入平滑常数$\epsilon = 1
         \bottomrule
     \end{tabular}
 \end{table}
-本文的实验被分配最多8块显卡，由于有多个对比实验同时运行，因此不是8块显卡被一个实验独占使用。一般地我为轻计算量的实验分配2块
+本文的实验被分配最多8块显卡，由于有多个对比实验同时运行，因此不是8块显卡被一个实验独占使用。一般地为轻计算量的实验分配2块
 显卡，为重计算量的实验分配4块显卡。这样在同一个时间段就可以同时执行多个计算任务，使对比实验可以并行进行。
 
 由于本文的实验是在超级计算机上执行，完全不同于传统的普通台式机、工作站等环境，因此有必要讲解清楚本文的实验运行环境。AI超算平台
-使用Slurm作业调度系统(如图\ref{fig:slurm_job_system})来执行超算用户提交的计算任务，用户需要编写专有的Slurm作业脚本来提交作业请求。
+使用Slurm作业调度系统(如\autoref{fig:slurm_job_system})来执行超算用户提交的计算任务，用户需要编写专有的Slurm作业脚本来提交作业请求。
 \begin{figure}[!htp]
     \centering
     \includegraphics[width=0.8\textwidth]{Supercomputer_Slurm_Job_system}
     \bicaption[AI超算平台Slurm作业调度系统]
-        {AI超算平台Slurm作业调度系统\parencite{HpcSlurm2022}}
+        {AI超算平台Slurm作业调度系统\cite{HpcSlurm2022}}
         {The Slurm job scheduling system on AI supercomputer platform}
     \label{fig:slurm_job_system}
 \end{figure}
 Slurm脚本里指定当前作业需要用到的CPU核数，需要用到多少张GPU显卡，多少个进程，占用多少个计算节点。这是大规模并行计算需要指定
-的计算资源。除此之外，还要配置Python-PyTorch环境，用户准备好可执行程序启动方式，设置好参数选项。最后通过 
-\$sbatch Airway3DSegment\_Baseline.slurm命令提交作业，Slurm作业调度系统分配好计算资源后才开始执行计算任务。详情
-请见附录\ref{code:slurm_job_script}的Airway3DSegment\_Baseline.slurm作业脚本代码。
+的计算资源。除此之外，还要配置Python-PyTorch环境，用户准备好可执行程序启动方式，设置好参数选项。最后在Shell终端通过 
+\verb|sbatch Airway3DSegment_Baseline.slurm|\\命令提交作业，Slurm作业调度系统分配好计算资源后才开始执行计算任务。详情
+请见附录\ref{code:slurm_job_script}的\verb|Airway3DSegment_Baseline.slurm|作业脚本代码。
 
 \section{数据集ATM22}\label{sec:ATM22dataset}\label{sec:ATM22}
 本文使用的数据集是公开的ATM22数据集\cite{Zhang2022CFDA, Zhang2021Airway, Yu2022Bronchi, Qin2019AirwayNet}，
 是由上海交通大学医疗机器人研究院联合上海胸科医院从多家医疗机构，多台不同品牌型号的CT扫描仪收集500例就诊者的胸腔扫描图像，然后
 由三名具有五年以上专业经验的放射科医生对气道树结构进行精细的标注。ATM22数据集融合了EXACT'09数据集和LIDC-IDRI部分病例
-的数据。我们随机选取了66例CT扫描图像作为训练集， 9例作为验证集，19例作为测试集。训练集、验证集和测试集的比例基本按照70:10:20
+的数据。\textcolor{black}{ATM22数据集的500例胸腔CT扫描图像，每例包含$[157, 1125]$不等的切片\cite{zhang2023multisite}，切片的层间距范围是$[0.450, 1.000]mm$, 
+每张切片的分辨率是$512 \times 512 pixels$，像素间距范围是$[0.500, 0.919]mm$。}我从中随机选取了66例CT扫描图像作为训练集， 9例作为验证集，19例作为测试集。训练集、验证集和测试集的比例基本按照70:10:20
 的比例来。由于ATM22数据集是采自不同医疗机构、不同品牌型号的CT扫描仪，因此我们对数据进行了预处理，将这些CT图像的体素强度统一截断
-在$[-1000, 400]$亨式单位Hounsfield unit的窗口范围内，并归一化到$[0, 1]$范围。
+在$[-1000, 400]$亨氏单位(Hounsfield unit)的窗口范围内，并归一化到$[0, 1]$范围。
 
 ATM22数据集里的CT图像切片的尺寸基本都是H512 $\times$ W512个像素，存在很大面积的黑色背景，为了避免学习到肺部之外的无关
-区域，我们对其进行裁切，只保留肺的最小包围框作为有效的区域，输入给深度网络进行学习。裁切前后的肺部区域效果对比如图
+区域，需要对其进行裁切，只保留肺的最小包围框作为有效的区域，输入给深度网络进行学习。通过编写一个程序进行自动裁切，裁切前后的肺部区域效果对比如图
 \ref{fig:cropimage}所示，
 \begin{figure}[htbp]
     \centering
@@ -463,17 +557,17 @@ ATM22数据集里的CT图像切片的尺寸基本都是H512 $\times$ W512个像�
 \end{figure}
 裁切后不仅可以减少计算量，最重要的是排除无关区域对网络的权重与偏置参数产生影响。
 
-经过上述的裁切后，CT图像体的体积大幅缩小，就拿图\ref{fig:cropimage}的ATM\_001\_0000病例来说，CT图像体从
+经过上述的裁切后，CT图像体的体积大幅缩小，就拿\autoref{fig:cropimage}的ATM\_001\_0000病例来说，CT图像体从
 $D679 \times H512 \times W512$缩减到$D595 \times H225 \times W333$。但即使如此，对于单个GPU单元显存来说仍然比较大，
-为此，我们将CT图像体切割成$D80 \times H192 \times W304$尺寸的长方体子块。本文使用由上海交通大学高性能计算中心提供的AI超算平台
-来进行训练与计算的。AI超算的显卡型号为NVIDIA Tesla V100，切割成这样的长方体子块最大化利用了GPU的资源又不至于撑爆，可以
+为此将CT图像体切割成$D80 \times H192 \times W304$尺寸的长方体子块。本文使用由上海交通大学高性能计算中心提供的AI超算平台
+来进行训练与计算的。AI超算的显卡型号为NVIDIA Tesla V100，切割成这样的长方体子块最大化利用了GPU的资源而又不至于撑爆，可以
 允许调整Batch size。本文的网络在训练时分别使用了$1 / 2 / 4 / 8$四种不同的Batch size， 经测试验证$D80 \times H192 \times W304$
-的长方体子块在GPU显存中均运行良好。我们对训练集、验证集和测试集的CT图像体采用了如此相同的切割方法和尺寸。当然，你可能根据你的
-GPU显存资源决定切割的长方体子块的大小，显存资源比较大则可以选择切割成更大的长方体子块。我们对CT图像体采用滑动窗口的切割方式，
-在训练阶段滑动窗口的大小为$D64 \times H96 \times W152$，在验证和测试阶段则的滑动窗口大小为$D64 \times H72 \times W72$.
+的长方体子块在GPU显存中均运行良好， 因此对训练集、验证集和测试集的CT图像一致地都采用了如此相同的切割方法和尺寸。当然，你可能根据你的
+GPU显存资源决定切割的长方体子块的大小，显存资源比较大则可以选择切割成更大的长方体子块。对CT图像体采用滑动窗口的切割方式，
+在训练阶段滑动窗口的大小为$D64 \times H96 \times W152$，在验证和测试阶段的滑动窗口大小为$D64 \times H72 \times W72$.
 滑动窗口的意思是每次切割之前沿着宽度W、高度H、深度D方向逐次移动指定的距离。
 
-为了增强训练效果，也是为了大幅扩大数据量，我们对每个切割的长方体子块图像块进行了数据增强，具体的数据增强方式有：
+为了增强训练效果，也是为了大幅扩大数据量，对每个切割的长方体子块图像块进行了数据增强，具体的数据增强方式有：
 \begin{enumerate}\label{enum:data_augmentation}
     \item {沿深度、高度、宽度三个轴随机翻转 RandomFlip}
     \item {随机仿射变换并重采样 RandomAffine}
@@ -483,7 +577,7 @@ GPU显存资源决定切割的长方体子块的大小，显存资源比较大�
     \item {添加随机spike伪影，在图像空间产生不同方向的条纹 RandomSpike}
     \item {添加随机残影 RandomGhosting}
 \end{enumerate}
-以上数据增强方式，我们通过组合不同的增强方式来联合增强切割的长方体子块图像数据。我们还加入随机概率作用于这些数据增强方式，
+以上这些数据增强方式，通过组合不同的增强方式来联合增强切割的长方体子块图像数据，另外还加入随机概率作用于这些数据增强方式，
 进一步增强图像数据。
 
 
@@ -527,7 +621,7 @@ GPU显存资源决定切割的长方体子块的大小，显存资源比较大�
 前的气管称为第0代气管，从第一个分岔出来的左右肺主气管称为第1代气管，然后分岔到上/中/下肺叶的气管称为第2代气管，再分岔到段支气管
 的称为第3代气管。如此类推，每分岔一个支气管，气管的代就增加1。气管的代越高，表示气管管腔直径就越细小。}并提取尽可能多的分支。
 
-如何计算这些评价指标，我们以模型预测的支气管体素对比真实的支气管体素的比对表\ref{tbl:metrics_calculation}来说明，
+如何计算这些评价指标，以模型预测的支气管体素对比真实的支气管体素的比对\autoref{tbl:metrics_calculation}来说明，
 并定义计算方法。
 \begin{table}[!htp]
     \bicaption[评价指标计算方法说明]{评价指标计算方法说明}{The explanation of metrics calculation}
@@ -548,7 +642,7 @@ GPU显存资源决定切割的长方体子块的大小，显存资源比较大�
         \hline
     \end{tabular}
 \end{table}
-依据表\ref{tbl:metrics_calculation}，上述的指标按如下的公式计算：
+依据\autoref{tbl:metrics_calculation}，上述的指标按如下的公式计算：
 \begin{enumerate}
     \item 假阳性率
     
@@ -595,12 +689,12 @@ GPU显存资源决定切割的长方体子块的大小，显存资源比较大�
     其中${Len}_{seg}$表示分割结果中检测到的所有分支的中心线长度之和，${Len}_{gt}$表示真实存在的所有分支的中心线长度之和。
 \end{enumerate}
 
-经过模型训练后分割出来的支气管气道树，我们可以将其导入到ITK-SNAP\cite{Yushkevich2006ITKSNAP}软件中显示分割效果。这里
-我们选择ATM\_054\_0000这个病例来可视化支气管气道树分割3D模型（这是经过3D-UNet基准网络分割的结果），如图
+经过模型训练后分割出来的支气管气道树，可以将其导入到ITK-SNAP\cite{Yushkevich2006ITKSNAP}软件中显示分割效果。这里
+选择ATM\_054\_0000这个病例来可视化支气管气道树分割3D模型（这是经过3D-UNet基准网络分割的结果），如图
 \ref{fig:airway_tree_model}所示。
-\begin{figure}[!htp]
+\begin{figure}[ht]
     \centering
-    \includegraphics[width=0.8\textwidth]{visualize_colored_airway_tree}
+    \includegraphics[width=0.9\textwidth]{visualize_colored_airway_tree}
     \bicaption[支气管气道树分割的3D模型]
         {支气管气道树分割的3D模型}
         {The 3D model of airway tree after segmentation}
@@ -609,7 +703,7 @@ GPU显存资源决定切割的长方体子块的大小，显存资源比较大�
 图例中\textcolor{green}{绿色}的表示\textcolor{green}{假阳性}体素，\textcolor{red}{红色}的表示\textcolor{red}{假阴性}
 体素，\textcolor{blue}{蓝色}的表示\textcolor{blue}{真阳性}体素。
 
-假阳性体素说明分割模型发生了误检，从图\ref{fig:airway_tree_model}可以明显看出绿色的体素跟气道树枝杆是分离的，不属于支气管
+假阳性体素说明分割模型发生了误检，从\autoref{fig:airway_tree_model}可以明显看出绿色的体素跟气道树枝干是分离的，不属于支气管
 体素，而应该是黑色的背景体素，但3D-UNet分割模型却错误地认为是支气管体素。 假阴性说明分割模型发生了漏检，红色的体素原本是真实
 存在的支气管，但3D-UNet分割模型漏掉了这些真实存在的支气管体素。这些漏掉的真实存在的支气管体素都是在支气管气道树的末端，是
 属于非常细小的支气管，3D-UNet分割模型没有把这些细小的支气管体素分割出来，说明分割模型的能力还不够精细。最后，蓝色的体素则是
@@ -621,12 +715,12 @@ GPU显存资源决定切割的长方体子块的大小，显存资源比较大�
 
 \section{实验结果与分析}\label{sec:baseline_experiment}
 \subsection{3D-UNet基准网络训练过程}\label{sec:baseline_experiment_training}
-我们将3D-UNet基准网络放在上海交通大学高性能计算中心的AI超级计算机上进行训练，输入是从ATM22数据集上随机挑选66例肺部CT扫描图像，按照
+本实验将3D-UNet基准网络放在上海交通大学高性能计算中心的AI超级计算机上进行训练，输入是从ATM22数据集上随机挑选66例肺部CT扫描图像，按照
 \ref{sec:ATM22}节介绍的裁切方法去掉无关的黑色背景区域，只保留肺部最小包围框作为有效学习区域。然后将这些经裁切的Cuboid体数据
 按照$D64 \times H96 \times W152$的滑动窗口步长随机切割成$D80 \times H192 \times W304$的子块，每个子块都经过
 \ref{enum:data_augmentation}节所述的7种数据增强方法进行增强。Label数据也是66例同病例的CT体数据，按照同样的方式进行
 裁切和切割成$D80 \times H192 \times W304$的子块，但这些Label子块不进行数据增强。每一个图像Cuboid体数据子块与对应的
-Label体数据子块绑定在一起。训练集、验证集和测试集的CT图像切割情况如表\ref{tbl:dataset_overview}所示。
+Label体数据子块绑定在一起。训练集、验证集和测试集的CT图像切割情况如\autoref{tbl:dataset_overview}所示。
 \begin{table}[!htp]
     \bicaption[训练集、验证集和测试集的数据一览]{训练集、验证集和测试集的数据一览}
         {Overview of the cropped CT cube images among trainset, validateset and testset}
@@ -642,12 +736,12 @@ Label体数据子块绑定在一起。训练集、验证集和测试集的CT图�
         \hline
     \end{tabular}
 \end{table}
-我们还会在将这些子块送给网络进行学习前会进行一次洗牌，完全打乱2202个子块的顺序，每一个迭代周期都会洗牌一次。同样地，我们也对
+另外还会在将这些子块送给网络进行学习前进行一次洗牌，完全打乱2202个子块的顺序，每一个迭代周期都会洗牌一次。同样地也对
 验证集的415个子块和测试集的770个子块在每个迭代周期都进行洗牌。
 
-在训练过程中，我们使用TensorBoard收集每一个迭代周期Epoch的损失函数值，我们密切注视着损失函数的曲线。
-我们观察到40多个迭代周期后，损失函数曲线已经平缓了，趋于收敛了，在60个迭代周期后我们便结束了训练过程。训练过程中的损失函数
-曲线如图\ref{fig:lossfn_curve}所示。
+在训练过程中使用PyTorch提供的TensorBoard功能收集每一个迭代周期Epoch的损失函数值，并密切注视着损失函数的曲线。
+观察了40多个迭代周期后，损失函数曲线已经平缓了，趋于收敛了，在60个迭代周期后便结束了训练过程。训练过程中的损失函数
+曲线如\autoref{fig:lossfn_curve}所示。
 \begin{figure}[!htp]
     \centering
     \includegraphics[width=\textwidth]{train_mean_loss_curve}
@@ -657,21 +751,20 @@ Label体数据子块绑定在一起。训练集、验证集和测试集的CT图�
     \label{fig:lossfn_curve}
 \end{figure}
 在训练过程中，第一个迭代周期我们就对验证集的9例CT图像进行分割，输出每例CT图像的支气管气道树3D模型和指标数据。当然这个分割结果
-肯定是非常糟糕的，但我们将它视为检验程序正确运行的参照物，训练迈出第一步的标志。之后每经过10个迭代周期，程序就会对验证集和测试集
+肯定是非常糟糕的，但可将它视为检验程序正确运行的参照物，训练迈出第一步的标志。之后每经过10个迭代周期，程序就会对验证集和测试集
 里的CT图像进行分割，输出并保存每例CT图像的支气管气道树3D模型和指标数据。每5个迭代周期都会保存模型的Check Point状态和参数，
-并以model\_epochnum.ckpt文件名(如第35个迭代周期的模型名字就是model\_035.ckpt)格式保存下来。这样可使我们能够在训练中断后
+并以model\_epochnum.ckpt文件名(如第35个迭代周期的模型名字就是model\_035.ckpt)格式保存下来。这样可使得即使训练中断后也可以
 沿着上次的model\_xxx.ckpt继续训练，而不用浪费时间从头开始训练。训练完成后将模型Check Point状态和参数保存为model\_latest.ckpt，
-作为后续验证过程和测试过程的预训练模型，直接加以使用。除了保存模型Check Point状态后参数外，我们在每10个迭代周期将指标数据
-保存进TensorBoard。累积这些数据帮助我们观察网络的优化发展状况，分析这些数据帮助我们找到改进方向。
+作为后续验证过程和测试过程的预训练模型，直接加以使用。除了保存模型Check Point状态后参数外，还在每10个迭代周期将指标数据
+保存进TensorBoard。累积这些数据帮助研究者观察网络的优化发展状况，分析这些数据帮助研究者找到改进方向。
 
-在验证过程中，我们直接使用预训练模型model\_latest.ckpt对验证集里的9例CT图像进行分割，输出每例CT图像的支气管气道树3D模型
-和指标数据。在测试过程中，我们对测试集里的19例CT图像执行同样的操作。我们将在\ref{subsec:experiment_results}节展示这些
-实验结果。
+在验证过程中直接使用预训练模型model\_latest.ckpt对验证集里的9例CT图像进行分割，输出每例CT图像的支气管气道树3D模型
+和指标数据。在测试过程中对测试集里的19例CT图像执行同样的操作。实验结果将在\ref{subsec:experiment_results}节进行展示。
 
 以上的训练、验证和测试过程均在一次提交的Slurm作业里完成。 3D-UNet基准网络使用了2张NVIDIA Tesla V100显卡，Batch-size
 设置为4,即一次读入4个$D80 \times H192 \times W304$的子块，2202个子块需要551次循环才能算完，启动4个进程进行并行计算。
 训练过程每个迭代周期平均耗时658.7秒，验证过程跟训练过程同样的设置，每迭代周期平均耗时4137.6秒，而测试过程每迭代周期平均耗时9309.6秒。
-详细的运行时间见表\ref{tbl:time_consumption}。为什么每迭代周期验证耗时和测试耗时都明显比训练耗时要长得多？ 这里需要解释一下。
+详细的运行时间见\autoref{tbl:time_consumption}。为什么每迭代周期验证耗时和测试耗时都明显比训练耗时要长得多？ 这里需要解释一下。
 验证过程需要对9例CT图像计算评价指标数据，还需要计算产生三维气道树模型。每计算一个三维气道树模型需要耗时6分钟之久，计算BD和TLD两个
 指标也需要耗时5分钟左右。重要的是，计算三维气道树模型和BD、TLD指标数据无法使用GPU进行并行计算而加速，只能采用CPU串行计算方式。
 这主要是三维气道树模型和BD、TLD指标的计算涉及到很多的逻辑判断，加之Python Numpy库函数没有GPU版本的，所以无法使用GPU加速计算。
@@ -731,23 +824,23 @@ Label体数据子块绑定在一起。训练集、验证集和测试集的CT图�
     }
 \end{table}
 验证集有9例CT图像，测试集有19例CT图像都需要计算指标数据和产生三维支气管气道树模型，所以每个迭代周期测试集计算耗时是验证集计算耗时
-2倍多。 但好在我们不是每个迭代周期都会去计算验证集和测试集，而是每隔10个迭代周期才去计算一次。验证集在第一个迭代周期被计算一次，而
+2倍多。 但好在不是每个迭代周期都会去计算验证集和测试集，而是每隔10个迭代周期才去计算一次。验证集在第一个迭代周期被计算一次，而
 测试集并没有被计算。
 
-表\ref{tbl:time_consumption}反映了我们的整个实验过程。经历了60个迭代周期训练过程完成。在第61个迭代周期，我们使用训练获得的最新模型
+\autoref{tbl:time_consumption}反映了整个实验过程。经历了60个迭代周期训练过程完成。在第61个迭代周期，使用训练获得的最新模型
 参数（即加载最新的预训练模型model\_latest.ckpt）来执行验证过程，第62个迭代周期执行测试过程。最后，3D-UNet基准网络训练、验证和测试全过程
-总耗时38小时50分钟，完成一个完整实验。\textcolor{red}{需要说明的是：此处的总耗时38个多小时是训练、验证和测试进行62个迭代周期所耗费的
+总耗时38小时50分钟，完成一个完整实验。\textcolor{black}{需要说明的是：此处的总耗时38个多小时是训练、验证和测试进行62个迭代周期所耗费的
 时间。在实际应用中，当部署好预训练模型后，输入一个肺部CT扫描图像到输出支气管气道树分割结果的时间只需10秒左右。这个分割速度已经
 能够满足临床术前的要求。}
 
 \subsection{实验结果和分析}\label{subsec:experiment_results}
-上述的训练、验证和测试过程完成后，我们来展示实验结果。由于篇幅的原因，我们挑选验证集里的9例CT图像，展示支气管气道树3D模型的
-可视化效果和他们的指标数据。而对于测试集里的19例CT图像，19张支气管气道树3D模型图片实在太多放不下，我们只展示19组指标数据。
+上述的训练、验证和测试过程完成后，可以来展示实验结果了。由于篇幅的原因，只挑选验证集里的9例CT图像，展示支气管气道树3D模型的
+可视化效果和他们的指标数据。而对于测试集里的19例CT图像，19张支气管气道树3D模型图片实在太多放不下，就只展示19组指标数据。
 
 我们将进行横向和纵向的对比。
 \begin{enumerate}
-    \item[A.] 在横向对比时，我们对验证集的9例CT图像，每例CT图像均匀地取5张切片，选取中间的那张切片。排列这9张
-切片看看它们的分割效果和指标数据，如表\ref{tbl:hcomparison_metrics}所示。
+    \item[A.] 在横向对比时，对验证集的9例CT图像，每例CT图像均匀地取5张切片，选取中间的那张切片。排列这9张
+切片看看它们的分割效果和指标数据，如\autoref{tbl:hcomparison_metrics}所示。
 
     \begin{table}[!htp]
         \bicaption[验证集CT切片图像分割效果与指标横向比较]
@@ -797,12 +890,12 @@ Label体数据子块绑定在一起。训练集、验证集和测试集的CT图�
         }
     \end{table}
     
-    需要说明的是，表\ref{tbl:hcomparison_metrics}中的指标数据是基于当前切片计算的，不是基于整个气道树来计算的，因此就不
+    需要说明的是，\autoref{tbl:hcomparison_metrics}中的指标数据是基于当前切片计算的，不是基于整个气道树来计算的，因此就不
     带有BD和TLD两个指标的数据了。还有一点，切片图像中由绿色像素框起来的区域是真实的气管，红色的像素是分割出来的。绿色像素覆盖
     在红色像素上，对于没有覆盖住而露出来的红色像素是假阳性的。
     
-    \item[B.] 在纵向对比时，我们挑选ATM\_054\_0000这个病例，将第10个迭代周期，第20/30/40/50/60个迭代周期里的Slice
-    \#264拿出来对比，看看它们的分割效果和指标数据，如表\ref{tbl:vcomparison_metrics}所示。
+    \item[B.] 在纵向对比时，挑选ATM\_054\_0000这个病例，将第10个迭代周期，第20/30/40/50/60个迭代周期里的Slice
+    \#264拿出来对比，看看它们的分割效果和指标数据，如\autoref{tbl:vcomparison_metrics}所示。
     \begin{table}[ht]
         \bicaption[验证集ATM\_054\_0000病例第264张切片图像分割效果与指标纵向比较]
             {验证集ATM\_054\_0000病例第264张切片图像分割效果与指标纵向比较}
@@ -840,17 +933,17 @@ Label体数据子块绑定在一起。训练集、验证集和测试集的CT图�
 
 \end{enumerate}
 
-从表\ref{tbl:hcomparison_metrics}看，ATM\_174\_0000 Slice \#74的Sensitivity和DSC两项指标表现得最差，这是因为
+从\autoref{tbl:hcomparison_metrics}看，ATM\_174\_0000 Slice \#74的Sensitivity和DSC两项指标表现得最差，这是因为
 该CT图像的切片数量最少，其支气管气道明显狭窄，可能患有肺部疾病。倒数第二差的是ATM\_505\_0000 Slice \#177这张切片，存在
 很多红色的像素表明假阴性像素很多，它们通常是一些比较细小的支气管。分割网络遗漏掉了这些真实存在的支气管体素。在这9例CT切片图像
 中分割最好的当属于ATM\_688\_0000 Slice \#292， Sensitivity, Precision, DSC分别取得了97.62\%, 94.411\%, 96.15\%
 的高分。这表明分割网络对于肺叶支气管、段支气管这种中等管腔直径的支气管能很清晰地分割出来。
 
-从表\ref{tbl:vcomparison_metrics}看，随着训练的持续进行，从第20个迭代周期开始，分割性能就逐渐开始稳定下来。Sensitivity,
+从\autoref{tbl:vcomparison_metrics}看，随着训练的持续进行，从第20个迭代周期开始，分割性能就逐渐开始稳定下来。Sensitivity,
 Precision和DSC都已经达到了92\%以上的优秀表现。不管是对于左右肺主气管、肺叶支气管，还是很细小的段支气管都可能清晰地分割出来，
 证明3D-UNet基准网络性能基本上能达到临床应用的水平。
 
-最后我们来看看3D-UNet网络对整个支气管气道树的分割表现。对于测试集的19例CT图像的分割，其性能指标如表
+最后来看看3D-UNet网络对整个支气管气道树的分割表现。对于测试集的19例CT图像的分割，其性能指标如表
 \ref{tbl:testset_airway_tree_metrics}所示。其中黑色加粗打双下划线的表示在当前指标表现最出色的。
 \begin{table}[ht]
     % \zihao{8}
@@ -885,10 +978,10 @@ Precision和DSC都已经达到了92\%以上的优秀表现。不管是对于左�
         \bottomrule
     \end{tabular}
 \end{table}
-从表\ref{tbl:testset_airway_tree_metrics}可以看出，ATM\_245\_0000这一例CT图像分割表现最好，BD和TLD两个指标竟然
+从\autoref{tbl:testset_airway_tree_metrics}可以看出，ATM\_245\_0000这一例CT图像分割表现最好，BD和TLD两个指标竟然
 达到例100\%, 这说明已经将支气管气道树中的分支全部检测出来，也获得了最长的分支中心线长度之和。
 
-对于验证集的9例CT图像，我们不仅要展示支气管气道树分割的可视化结果，如图\ref{fig:visualize_airway_3d_model}所示。
+对于验证集的9例CT图像，不仅要展示支气管气道树分割的可视化结果，如\autoref{fig:visualize_airway_3d_model}所示。
 %\begin{table}[!htp]
 %    \bicaption[验证集9例CT图像的支气管气道树分割可视化3D模型]
 %        {验证集9例CT图像的支气管气道树分割可视化3D模型}
@@ -917,7 +1010,6 @@ Precision和DSC都已经达到了92\%以上的优秀表现。不管是对于左�
 %        \hline
 %    \end{tabular}
 %\end{table}
-
 \begin{figure}[!htp]
 	\centering
 	\begin{subfigure}{0.325\textwidth}
@@ -969,8 +1061,7 @@ Precision和DSC都已经达到了92\%以上的优秀表现。不管是对于左�
         {Visualize the airway 3D model of 9 CT cases in validateset}
 	\label{fig:visualize_airway_3d_model}
 \end{figure}
-
-还有完整的指标数据，见表\ref{tbl:validateset_airway_tree_metrics}。
+还有完整的指标数据，见\autoref{tbl:validateset_airway_tree_metrics}。
 \begin{table}[!htp]
     \bicaption[验证集9例CT图像的支气管气道树分割指标]
         {验证集9例CT图像的支气管气道树分割指标}
@@ -993,27 +1084,27 @@ Precision和DSC都已经达到了92\%以上的优秀表现。不管是对于左�
         \bottomrule
     \end{tabular}
 \end{table}
-在图\ref{fig:visualize_airway_3d_model}中我们看到ATM\_174\_0000和\\ATM\_505\_0000两个病例中出现大量的红色的假阴性
-体素。结合表\ref{tbl:validateset_airway_tree_metrics}中这两个病例的BD、TLD两项指标低至30\%的不正常现象\footnote{
-表\ref{tbl:validateset_airway_tree_metrics}中红色标记的数据}，而Precision
+在\autoref{fig:visualize_airway_3d_model}中可以看到ATM\_174\_0000和\\ATM\_505\_0000两个病例中出现大量的红色的假阴性
+体素。结合\autoref{tbl:validateset_airway_tree_metrics}中这两个病例的BD、TLD两项指标低至30\%的不正常现象\footnote{
+\autoref{tbl:validateset_airway_tree_metrics}中红色标记的数据}，而Precision
 能够达到90\%以上。纵览这9张气道树3D分割图，其他7张图都没有在气管、左右肺主气管发生漏检。 
-所以，我们推断ATM\_174\_0000和ATM\_505\_0000两个病例的支气管气道树异常的原因可能是：
+因而可以推断ATM\_174\_0000和ATM\_505\_0000两个病例的支气管气道树异常的原因可能是：
 \begin{enumerate}
     \item[a)] 图像异位，做标注工作的临床医生没有看到明确的支气管管壁边缘而没有标注;
     \item[b)] 患者有严重的肺部疾病，支气管管壁破裂或缺失。
 \end{enumerate}
 我们更倾向于后者。
 
-在此需要强调一点，我们是将3D-UNet作为我们的基准网络，所以在此没有做消融研究Ablation Study，没有凸显3D-UNet网络比其他
-已知网络更优秀。从上述的实验结果展示和分析，我们认识到3D-UNet网络存在不足之处，后面的章节以3D-UNet网络为基础，在此之上进行
+在此需要强调一点，本文是将3D-UNet作为基准网络，所以在此没有做消融研究Ablation Study，没有凸显3D-UNet网络比其他
+已知网络更优秀。从上述的实验结果展示和分析来看，3D-UNet网络也存在不足之处，后面的章节以3D-UNet网络为基础，在此之上进行
 改进。
 
 \section{本章小结}
 
-本章详细讲述了3D-UNet这一基准网络，我们在基于CT扫描图像的支气管气道树分割任务中采用3D-UNet网络来对肺部支气管进行分割，我们
+本章详细讲述了3D-UNet这一基准网络，在基于CT扫描图像的支气管气道树分割任务中采用3D-UNet网络来对肺部支气管进行分割，其
 使用Python语言与PyTorch深度学习框架设计实现了一个3D-UNet分割网络，针对ATM22数据集进行特定的优化设计。我们在上海交通大学
-高性能计算中心的AI超算上训练网络，训练完成后在验证集和测试集上输出完整的支气管气道树三维模型和评价指标数据。我们展示了实验结果，
-可视化显示支气管气道树的3D模型，分析这些实验数据，并对两个明显异常的病例进行分析推断异常的产生原因。
+高性能计算中心的AI超算上训练网络，训练完成后在验证集和测试集上输出完整的支气管气道树三维模型和评价指标数据。展示实验结果，
+可视化显示支气管气道树的3D模型，分析这些实验数据，并对两个明显异常的病例进行分析，推断异常的产生原因。
 
 通过以上实验证明了3D-UNet网络可以胜任三维支气管气道树的分割任务，但在精度准确率、FPR和DSC等指标方面还不够，需要进一步改进3D-UNet
 网络。后文在此实验的基础上研究如何改进该网络，以更好更精确地分割支气管气道树三维模型。
