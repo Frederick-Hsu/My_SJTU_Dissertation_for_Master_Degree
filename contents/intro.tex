@@ -226,7 +226,7 @@
 	（见\autoref{fig:UNETR}所示），实现了State-of-the-art (SOTA)医疗图像分割性能新记录。
 	\begin{figure}[hbp]
 		\centering
-		\includegraphics[scale=0.2]{Overview_of_UNETR}
+		\includegraphics[width=0.7\textwidth]{Overview_of_UNETR}
 		\bicaption[UNET网络基本结构]
 			{UNETR网络基本结构\cite{unetr}}
 			{The basic structure of UNETR network}
@@ -253,13 +253,13 @@
 	上对平均Tree Length Detected取得了SOTA性能。
 	\begin{figure}[!htp]
 		\centering
-		\begin{subfigure}{0.39\textwidth}
+		\begin{subfigure}{0.9\textwidth}
 			\centering
 			\includegraphics[width=\textwidth]{TACNet_Flowchart}
 			\caption{TACNet气道树分割流程}
 		\end{subfigure}
-		\hfill
-		\begin{subfigure}{0.6\textwidth}
+		\vfill
+		\begin{subfigure}{0.9\textwidth}
 			\centering
 			\includegraphics[width=\textwidth]{TACNet_architecture}
 			\caption{TACNet网络结构}
@@ -300,7 +300,7 @@
 	 肺部支气管气道是一棵树的形状，从CT图像中提取支气管树可视为支气管镜手术导航的细粒度图。上海交通大学医疗机器人研究院的Yu Weihao等人\cite{Yu2022TNN}将图神
 	 经网络的概念迁移过来，创新性地提出了一种基于图神经网络的结构，并命名为树网络(Tree Neural Network, TNN\cite{Yu2022TNN})。这种树网络结构巧妙地将支气管分支看成是映射
 	 到图空间的节点，提取气道树视为构建节点之间连接的边，也就是支气管分支连接的超边(Hyperedges)，见\autoref{fig:TNN}所示。
-	 \begin{figure}[htpb]
+	 \begin{figure}[hbp]
 	 	\centering
 	 	\includegraphics[width=\textwidth]{TNN}
 	 	\bicaption[创新性的树网络结构]
@@ -321,10 +321,13 @@
 	
 	像肺部支气管、血管、动静脉等管状物体，在CT扫描的切片图像中，前景像素（指支气管管腔、管壁的像素）与背景像素（指除了支气管管腔管壁的像素之外的像素）个数对比
 	差别巨大，这就造成严重的类别不平衡。而绝大部分卷积网络都严重依赖标注数据，标注数据缺乏，高质量的标注数据更是稀少，这将导致分割效果大打折扣。肺部树状的支气管、
-	肺动脉和肺静脉都是非常纤薄的，在肺部都是发散地分布着。这完全不同于肝脏、肾脏和胰腺这些块状器官\footnote{块状器官指的是肝脏、肾脏和胰腺在CT图像上看起来是一个
-	大的区块，非常易于辨认，也容易做区块边缘分割。}，标注这些块状器官的前景像素(Pixel)或体素(Voxel)\footnote{注：像素Pixel指在平面图像中一个 高 $\times$ 宽 为
-	($H \times W = 1 \times 1$)的平面网格，体素Voxel指的是在CT这样的三维图像上一个 深 $\times$ 高 $\times$ 宽为
-	($D \times H \times W = 1 \times 1 \times 1$)的立方体格，其中$D = 1$指的是一个轴向切片的厚度。}与背景像素或体素相差不甚巨大，但对于肺部支气管，标注的
+	肺动脉和肺静脉都是非常纤薄的，在肺部都是发散地分布着。这完全不同于肝脏、肾脏和胰腺这些块状器官
+	\footnote{块状器官指的是肝脏、肾脏和胰腺在CT图像上看起来是一个
+	大的区块，非常易于辨认，也容易做区块边缘分割。}，标注这些块状器官的前景像素(Pixel)或体素(Voxel)
+%	\footnote{注：像素Pixel指在平面图像中一个 高 $\times$ 宽 为
+%	($H \times W = 1 \times 1$)的平面网格，体素Voxel指的是在CT这样的三维图像上一个 深 $\times$ 高 $\times$ 宽为
+%	($D \times H \times W = 1 \times 1 \times 1$)的立方体格，其中$D = 1$指的是一个轴向切片的厚度。}
+	与背景像素或体素相差不甚巨大，但对于肺部支气管，标注的
 	像素或体素个数与背景像素或体素个数相比则差距悬殊。在单张切片$H \times W = 512 \times 512$这样的高扫描分辨率下，叶支气管Lobar bronchus、段支气管
 	Segmental bronchi分别可能只有4个，3个到2个像素，而小叶支气管Lobular bronchi则只有1个像素甚至不到1个像素。这种毛细的管状物不仅加剧了精细标注的难度，
 	也导致标注的前景像素与背景像素对比，强烈不平衡。

@@ -40,10 +40,12 @@ CNN的基本网络结构如\autoref{fig:CNN_basic_structure}所示：
     \end{bmatrix}
 \end{equation}
 
-CT扫描图像在$H3 \times W3$窗口内的Hounsfield unit\cite{HU2016CT}灰度\footnote{Hounsfield unit(亨氏单位)
-是放射科医生在解释CT图像时使用的相对定量的无线电密度测量单位。CT重建时使用身体组织对辐射的吸收/衰减系数来生成灰度图像。
-身体组织的物理密度与X射线束的吸收/衰减成正比。Hounsfield unit称为CT值的单位，是根据X射线束的线性衰减系数进行线性
-变换计算而来的。}像素矩阵$X_{hu.gray}$
+CT扫描图像在$H3 \times W3$窗口内的Hounsfield unit\cite{HU2016CT}灰度
+%\footnote{Hounsfield unit(亨氏单位)
+%是放射科医生在解释CT图像时使用的相对定量的无线电密度测量单位。CT重建时使用身体组织对辐射的吸收/衰减系数来生成灰度图像。
+%身体组织的物理密度与X射线束的吸收/衰减成正比。Hounsfield unit称为CT值的单位，是根据X射线束的线性衰减系数进行线性
+%变换计算而来的。}
+像素矩阵$X_{hu.gray}$
 \begin{equation}
     X_{hu.gray} = \begin{bmatrix}
         x_1 & x_2 & x_3 \\
@@ -70,7 +72,7 @@ CT扫描图像在$H3 \times W3$窗口内的Hounsfield unit\cite{HU2016CT}灰度\
 其中$b$为偏置参数Bias
 
 \autoref{eq:conv}是在二维图像平面上的卷积操作，若在CT三维体数据上进行卷积运算，则卷积核尺寸扩展为$D3 \times H3 \times W3$
-，相应地Hounsfield unit灰度像素矩阵也同步扩展到三维。三维卷积的操作如\autoref{fig:3D_Conv}所阐述。
+，相应地像素矩阵也同步扩展到三维。三维卷积的操作如\autoref{fig:3D_Conv}所阐述。
 \begin{figure}[!htp]
     \centering
     \includegraphics[width=0.5\textwidth]{Convolution_pricinple}
@@ -774,7 +776,7 @@ Label体数据子块绑定在一起。训练集、验证集和测试集的CT图�
         {3D-UNet基准网络训练、验证、测试耗时一览表}
         {Time consumption of training, validating and testing on 3D-UNet baseline}
     \label{tbl:time_consumption}
-    \scalebox{0.8}{
+    \scalebox{0.85}{
     \begin{tabular}{c|c|c|c||c|c|c|c}
         \hline
         \multicolumn{8}{c}{运行时间 (单位: 秒)} \\
@@ -902,7 +904,7 @@ Label体数据子块绑定在一起。训练集、验证集和测试集的CT图�
             {Vertical comparison of segmentation and metrics for ATM\_054\_0000 slice \#264}
         \label{tbl:vcomparison_metrics}
         \centering
-        \scalebox{0.93}{
+        \scalebox{1}{
         \begin{tabular}{|c|c|c|}
             \hline
             ATM\_054\_0000 & ATM\_054\_0000 & ATM\_054\_0000 \\
